@@ -22,19 +22,12 @@ addEventListener('message', async (e: MessageEvent) => {
     ffmpeg.on('progress', ({ progress }: { progress: number }) => {
       postMessage({ type: 'progress', value: Math.round(progress * 100) });
     });
-
-    const ext = config.outputFormat ?? 'json';
-    const inputName = `in_${Date.now()}.mp4`;
+    const ext = config.outputFormat ?? 'mp4';
+    const inputName = `in_${Date.now()}.${config.file.name.split('.').pop() ?? 'mp4'}`;
     const outputName = `out_${Date.now()}.${ext}`;
-    const inputFile = config.file ?? config.inputFile;
-    if (!inputFile) throw new Error('No input file');
-
-    const inputData = await fetchFile(inputFile);
+    const inputData = await fetchFile(config.file);
     ffmpeg.writeFile(inputName, inputData);
-
-    // ffprobe JSON output mode
-    await ffmpeg.exec(['-i', inputName, '-c:v', 'libx264', '-preset', 'ultrafast', outputName]);
-
+    await ffmpeg.exec(['-ss', String(config.startTime), '-i', inputName, '-t', String(config.endTime - config.startTime), '-c', 'copy', outputName]);
     const data = await ffmpeg.readFile(outputName);
     const blob = new Blob([data as unknown as BlobPart], { type: `video/${ext}` });
     ffmpeg.deleteFile(inputName);
