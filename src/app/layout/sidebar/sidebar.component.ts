@@ -59,10 +59,48 @@ export const VIDEO_CHILDREN: NavChild[] = [
   { label: 'AI Upscaler',       emoji: '🚀',  route: '/video/upscaler',        category: 'ai' },
 ];
 
+/** 30 Audio sub-links matching audio.routes.ts paths */
+export const AUDIO_CHILDREN: NavChild[] = [
+  // Basic
+  { label: 'Recorder',        emoji: '🎙️', route: '/audio/recorder',        category: 'basic' },
+  { label: 'Trimmer',         emoji: '✂️',  route: '/audio/trimmer',         category: 'basic' },
+  { label: 'Merger',          emoji: '🔗',  route: '/audio/merger',          category: 'basic' },
+  { label: 'Converter',       emoji: '🔄',  route: '/audio/converter',       category: 'basic' },
+  { label: 'Reverser',        emoji: '⏪',  route: '/audio/reverser',        category: 'basic' },
+  { label: 'Fade In/Out',     emoji: '🌅',  route: '/audio/fade',            category: 'basic' },
+  { label: 'Silence Remover', emoji: '🔇',  route: '/audio/silence-remover', category: 'basic' },
+  { label: 'Speed Changer',   emoji: '⚡',  route: '/audio/speed',           category: 'basic' },
+  // Advanced
+  { label: 'Compressor',      emoji: '🔊',  route: '/audio/compressor',      category: 'advanced' },
+  { label: 'Equalizer',       emoji: '🎛️', route: '/audio/equalizer',       category: 'advanced' },
+  { label: 'Pitch Shifter',   emoji: '🎵',  route: '/audio/pitch-shifter',   category: 'advanced' },
+  { label: 'Time Stretch',    emoji: '⏱️', route: '/audio/time-stretch',    category: 'advanced' },
+  { label: 'Normalizer',      emoji: '📏',  route: '/audio/normalizer',      category: 'advanced' },
+  { label: 'Splitter',        emoji: '🔪',  route: '/audio/splitter',        category: 'advanced' },
+  { label: 'Analyser',        emoji: '📊',  route: '/audio/analyser',        category: 'advanced' },
+  { label: 'Looper',          emoji: '🔁',  route: '/audio/looper',          category: 'advanced' },
+  { label: 'Channel Mixer',   emoji: '🔀',  route: '/audio/channel-mixer',   category: 'advanced' },
+  { label: 'Stereo Widener',  emoji: '📡',  route: '/audio/stereo-widener',  category: 'advanced' },
+  // Pro
+  { label: 'Reverb',          emoji: '🏛️', route: '/audio/reverb',          category: 'pro' },
+  { label: 'Noise Remover',   emoji: '🧹',  route: '/audio/noise-remover',   category: 'pro' },
+  { label: 'Metadata',        emoji: '📝',  route: '/audio/metadata',        category: 'pro' },
+  { label: 'Batch',           emoji: '⚙️',  route: '/audio/batch',           category: 'pro' },
+  { label: 'Mixer',           emoji: '🎚️', route: '/audio/mixer',           category: 'pro' },
+  { label: 'Limiter',         emoji: '🚧',  route: '/audio/limiter',         category: 'pro' },
+  { label: 'Voice Changer',   emoji: '🎭',  route: '/audio/voice-changer',   category: 'pro' },
+  { label: 'Visualizer',      emoji: '🌈',  route: '/audio/visualizer',      category: 'pro' },
+  { label: 'Watermark',       emoji: '💧',  route: '/audio/watermark',       category: 'pro' },
+  // AI
+  { label: 'Karaoke',         emoji: '🎤',  route: '/audio/karaoke',         category: 'ai' },
+  { label: 'Transcriber',     emoji: '📜',  route: '/audio/transcriber',     category: 'ai' },
+  { label: 'Stem Splitter',   emoji: '🧬',  route: '/audio/stem-splitter',   category: 'ai' },
+];
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
   { label: 'Video Engine', icon: 'movie',        route: '/video',     badge: '30', children: VIDEO_CHILDREN },
-  { label: 'Audio Studio', icon: 'music_note',   route: '/audio',     badge: '20+' },
+  { label: 'Audio Studio', icon: 'music_note',   route: '/audio',     badge: '30', children: AUDIO_CHILDREN },
   { label: 'Image Matrix', icon: 'image',        route: '/image',     badge: '10+' },
   { label: 'Converter',    icon: 'sync',         route: '/converter', badge: 'NEW' },
   { label: 'Settings',     icon: 'settings',     route: '/settings',  badge: null },

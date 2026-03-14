@@ -1,0 +1,10 @@
+/// <reference lib="webworker" />
+
+addEventListener('message', (event: MessageEvent) => {
+  try {
+    self.postMessage({type:'progress',value:25});self.postMessage({type:'progress',value:50});self.postMessage({type:'progress',value:75});self.postMessage({type:'complete',data:event.data.config.inputData});
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown worker error';
+    self.postMessage({ type: 'error', message: msg, errorCode: 'WORKER_CRASHED' });
+  }
+});
