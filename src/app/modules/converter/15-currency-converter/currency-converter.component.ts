@@ -5,10 +5,8 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { CurrencyConverterActions, selectCurrencyConverterState } from './currency-converter.store';
 
 const OUTPUT_FORMATS: FormatOption[] = [
@@ -24,7 +22,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
 @Component({
   selector: 'app-currency-converter',
   standalone: true,
-  imports: [CommonModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent, ConverterExportPanelComponent],
+  imports: [CommonModule, ConverterFormatSelectorComponent, ConverterProgressRingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
