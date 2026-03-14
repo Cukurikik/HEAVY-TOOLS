@@ -28,7 +28,7 @@ const { file, _targetFormat = 'mp4', qualityPreset = 'balanced' } = config;
 const inName = 'in.' + (file.name.split('.').pop() || 'mp4');
 const outName = 'out.' + _targetFormat;
 ffmpeg.writeFile(inName, await fetchFile(file));
-const args = [];
+let args: string[] = [];
 const presetMap: Record<string, string> = { fast: 'ultrafast', balanced: 'medium', best: 'slow' };
 const preset = presetMap[qualityPreset] || 'medium';
 if (_targetFormat === 'gif') {

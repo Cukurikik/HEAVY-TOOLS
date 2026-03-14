@@ -166,7 +166,7 @@ export class ColorGradingComponent implements OnDestroy {
 
   onSlider(key: string, e: Event) {
     const val = +(e.target as HTMLInputElement).value;
-    (this as unknown as BlobPart)[key] = val;
+    (this as unknown as Record<string, number>)[key] = val;
     this.store.dispatch(ColorGradingActions.updateConfig({ config: { [key]: val } }));
   }
 

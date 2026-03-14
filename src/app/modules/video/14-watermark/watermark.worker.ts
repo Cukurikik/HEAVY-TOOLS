@@ -28,7 +28,7 @@ const { file, text = '', position = 'bottom-right', opacity = 0.5, imageFile } =
 const inName = 'in.mp4';
 const outName = 'watermarked.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
-const args = [];
+let args: string[] = [];
 if (imageFile) {
   const wmName = 'wm.png';
   ffmpeg.writeFile(wmName, await fetchFile(imageFile));
