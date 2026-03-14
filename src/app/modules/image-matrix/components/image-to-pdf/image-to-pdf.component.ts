@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ImageUtilsService } from '../../services/image-utils.service';
@@ -43,7 +44,7 @@ import { ImageUtilsService } from '../../services/image-utils.service';
           <img [src]="resultUrl" alt="Result" class="w-full rounded-xl max-h-[500px] object-contain bg-black/40" />
           <div class="flex gap-3">
             <button (click)="reset()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors">New</button>
-            <a [href]="resultUrl" download="output.png" class="inline-flex items-center gap-2 bg-gradient-to-r from-accent-cyan to-accent-purple px-6 py-3 rounded-xl font-bold">
+            <a [href]="_rawUrl" download="output.png" class="inline-flex items-center gap-2 bg-gradient-to-r from-accent-cyan to-accent-purple px-6 py-3 rounded-xl font-bold">
               <mat-icon>download</mat-icon> Download
             </a>
           </div>
@@ -56,7 +57,9 @@ export class ImageToPdfComponent {
   private imageUtils = inject(ImageUtilsService);
   selectedFile: File | null = null;
   isProcessing = false;
-  resultUrl: string | null = null;
+  private sanitizer = inject(DomSanitizer);
+  resultUrl: SafeUrl | null = null;
+  _rawUrl: string | null = null;
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -75,7 +78,8 @@ export class ImageToPdfComponent {
       const canvas = document.createElement('canvas');
       this.imageUtils.drawImageToCanvas(img, canvas);
       const file = await this.imageUtils.canvasToFile(canvas, 'output.png');
-      this.resultUrl = URL.createObjectURL(file);
+      this._rawUrl = URL.createObjectURL(file);
+      this.resultUrl = this.sanitizer.bypassSecurityTrustUrl(this._rawUrl);
     } catch (e) {
       console.error('Processing failed:', e);
     } finally {
@@ -84,7 +88,7 @@ export class ImageToPdfComponent {
   }
 
   reset() {
-    if (this.resultUrl) URL.revokeObjectURL(this.resultUrl);
+    if (this._rawUrl) URL.revokeObjectURL(this._rawUrl);
     this.selectedFile = null;
     this.resultUrl = null;
   }

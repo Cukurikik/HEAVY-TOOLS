@@ -85,7 +85,7 @@ export class LimiterEffects {
     withLatestFrom(this.store.select(limiterFeature.selectLimiterState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(limiterActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => limiterActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(limiterActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

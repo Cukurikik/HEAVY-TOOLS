@@ -25,6 +25,17 @@ const angularApp = new AngularNodeAppEngine();
  */
 
 /**
+ * CRITICAL: COOP/COEP headers for SharedArrayBuffer (required by FFmpeg WASM & Web Workers)
+ * Without these headers, SharedArrayBuffer is unavailable and video/audio processing will fail.
+ */
+app.use((_req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+});
+
+/**
  * Serve static files from /browser
  */
 app.use(

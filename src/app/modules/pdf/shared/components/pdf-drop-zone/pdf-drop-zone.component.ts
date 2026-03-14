@@ -50,8 +50,9 @@ export class PdfDropZoneComponent {
   }
 
   onFileSelected(e: Event) {
-    if (e.target.files?.length) {
-      this.handleFiles(Array.from(e.target.files));
+    const input = e.target as HTMLInputElement;
+    if (input?.files?.length) {
+      this.handleFiles(Array.from(input.files));
     }
   }
 

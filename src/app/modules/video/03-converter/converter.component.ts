@@ -155,12 +155,12 @@ export class ConverterComponent implements OnDestroy {
     }
   }
 
-  onFormatChange(format: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as unknown as BlobPart } }));
+  onFormatChange(format: 'mp4' | 'webm' | 'mov' | 'avi' | 'mkv' | 'gif') {
+    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format } }));
   }
 
-  onPresetChange(preset: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as unknown as BlobPart } }));
+  onPresetChange(preset: 'fast' | 'balanced' | 'best') {
+    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset } }));
   }
 
   onProcess() {

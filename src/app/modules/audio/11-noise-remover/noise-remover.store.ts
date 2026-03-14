@@ -83,7 +83,7 @@ export class NoiseRemoverEffects {
     withLatestFrom(this.store.select(noiseRemoverFeature.selectNoiseRemoverState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(noiseRemoverActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => noiseRemoverActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(noiseRemoverActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

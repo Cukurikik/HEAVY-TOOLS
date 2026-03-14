@@ -83,7 +83,7 @@ export class AudioMixerEffects {
     withLatestFrom(this.store.select(audioMixerFeature.selectAudioMixerState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(audioMixerActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => audioMixerActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(audioMixerActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

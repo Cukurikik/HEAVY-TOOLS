@@ -87,7 +87,7 @@ export class DynamicsCompressorEffects {
     withLatestFrom(this.store.select(dynamicsCompressorFeature.selectDynamicsCompressorState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(dynamicsCompressorActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => dynamicsCompressorActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(dynamicsCompressorActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

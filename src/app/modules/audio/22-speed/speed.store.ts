@@ -83,7 +83,7 @@ export class AudioSpeedEffects {
     withLatestFrom(this.store.select(audioSpeedFeature.selectAudioSpeedState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(audioSpeedActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => audioSpeedActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(audioSpeedActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

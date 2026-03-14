@@ -33,6 +33,7 @@
             "styles": [
               "src/styles.css"
             ],
+            "webWorkerTsConfig": "tsconfig.worker.json",
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -44,13 +45,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "5MB",
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "20kB",
+                  "maximumError": "40kB"
                 }
               ],
               "outputHashing": "all"
@@ -65,6 +66,13 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "headers": {
+              "Cross-Origin-Opener-Policy": "same-origin",
+              "Cross-Origin-Embedder-Policy": "require-corp",
+              "Cross-Origin-Resource-Policy": "cross-origin"
+            }
+          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"

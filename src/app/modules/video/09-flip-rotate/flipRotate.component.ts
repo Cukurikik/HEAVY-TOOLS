@@ -161,17 +161,17 @@ export class FlipRotateComponent implements OnDestroy {
 
   onRotate(deg: number) {
     this.rotation = deg;
-    this.store.dispatch(FlipRotateActions.updateConfig({ config: { rotation: deg } as unknown as BlobPart }));
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { rotation: deg } }));
   }
 
   toggleFlipH() {
     this.flipH = !this.flipH;
-    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipH: this.flipH } as unknown as BlobPart }));
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipH: this.flipH } }));
   }
 
   toggleFlipV() {
     this.flipV = !this.flipV;
-    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipV: this.flipV } as unknown as BlobPart }));
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipV: this.flipV } }));
   }
 
   onProcess() {

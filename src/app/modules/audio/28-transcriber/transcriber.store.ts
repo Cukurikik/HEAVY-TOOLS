@@ -85,7 +85,7 @@ export class TranscriberEffects {
     withLatestFrom(this.store.select(transcriberFeature.selectTranscriberState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(transcriberActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => transcriberActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(transcriberActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

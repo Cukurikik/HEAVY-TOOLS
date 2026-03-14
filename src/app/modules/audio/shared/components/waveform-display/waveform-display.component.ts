@@ -29,8 +29,8 @@ export class WaveformDisplayComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void { this.draw(); }
   ngOnChanges(): void { this.draw(); }
 
-  onCanvasClick(e: MouseEvent): void {
-    if (!this.waveformData) return;
+  onCanvasClick(e: MouseEvent | Event): void {
+    if (!this.waveformData || !(e instanceof MouseEvent)) return;
     const rect = (e.target as HTMLElement).getBoundingClientRect();
     const pct = (e.clientX - rect.left) / rect.width;
     this.seek.emit(pct * this.waveformData.duration);

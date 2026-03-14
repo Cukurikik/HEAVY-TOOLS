@@ -82,7 +82,7 @@ export class StereoWidenerEffects {
     withLatestFrom(this.store.select(stereoWidenerFeature.selectStereoWidenerState)),
     exhaustMap(([, state]) => {
       if (!state.inputFile) return of(stereoWidenerActions.processingFailure({ errorCode: 'INVALID_PARAMS', message: 'No input file', retryable: true }));
-      return from(this.svc.processAudio(state.inputFile, {})).pipe(
+      return from(this.svc.processAudio(state.inputFile)).pipe(
         map(blob => stereoWidenerActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 })),
         catchError(err => of(stereoWidenerActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: err?.message ?? 'Processing failed', retryable: true })))
       );

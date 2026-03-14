@@ -65,7 +65,7 @@ import { audioSplitterFeature, audioSplitterActions } from './splitter.store';
           <!-- Player + Export -->
           @if ((state$ | async)?.outputBlob) {
             <app-audio-player [audioBlob]="(state$ | async)?.outputBlob ?? null"></app-audio-player>
-            <app-audio-export-panel [disabled]="(state$ | async) === false?.outputBlob"
+            <app-audio-export-panel [disabled]="!(state$ | async)?.outputBlob"
               [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
               (download)="onDownload()"></app-audio-export-panel>
           }
