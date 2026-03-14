@@ -30,7 +30,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if (clips.length > 0) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
               <div class="flex justify-between items-center">
-                <label class="text-xs text-white/40 uppercase tracking-wider">Clips ({{ clips.length }})</label>
+                <span class="text-xs text-white/40 uppercase tracking-wider">Clips ({{ clips.length }})</span>
                 <button (click)="clearClips()" class="text-xs text-red-400 hover:text-red-300 transition-colors">Clear All</button>
               </div>
 
