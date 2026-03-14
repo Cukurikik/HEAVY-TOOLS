@@ -5,8 +5,7 @@
     "packageManager": "npm",
     "schematicCollections": [
       "angular-eslint"
-    ],
-    "analytics": "90a64cfc-5e7d-4e92-bde3-3e8d42687be0"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -38,16 +37,15 @@
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            },
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            }
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2MB",
-                  "maximumError": "5MB"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -67,12 +65,6 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": {
-            "headers": {
-              "Cross-Origin-Opener-Policy": "same-origin",
-              "Cross-Origin-Embedder-Policy": "require-corp"
-            }
-          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"

@@ -34,10 +34,10 @@ export interface Tool {
 export class ToolCardComponent {
   private router = inject(Router);
   tool = input.required<Tool>();
+  basePath = input<string>('video');
 
   navigate() {
-    // Navigate to tool specific route
-    // this.router.navigate(['/tool', this.tool().id]);
+    this.router.navigate([this.basePath(), this.tool().id]);
   }
 
   getStatusClass(status: string): string {

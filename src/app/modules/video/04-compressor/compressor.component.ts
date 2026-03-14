@@ -1,192 +1,205 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
-import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
-import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
-import { CompressorActions, selectCompressorState, selectCompressorIsLoading, selectCompressorCanProcess } from './compressor.store';
-import { FFmpegService } from '../shared/engine/ffmpeg.service';
-import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { CompressorActions, selectCompressorState, selectStatus, selectProgress, selectOutputBlob } from './compressor.store';
+import { CompressorService } from './compressor.service';
 
 @Component({
   selector: 'app-compressor',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-200">
-          📦 Video Compressor
+    <div class="p-8 max-w-4xl mx-auto space-y-8">
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold flex items-center gap-3">
+          <mat-icon class="text-accent-cyan">compress</mat-icon>
+          Video Compressor
         </h1>
-        <p class="text-white/50 text-sm">Reduce file size with CRF quality control — powered by FFmpeg WASM</p>
+        <p class="text-text-secondary">Reduce video file size with target size input or CRF quality control.</p>
       </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
-
-          @if ((state$ | async)?.videoMeta; as meta) {
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-              <!-- Metadata -->
-              <div class="grid grid-cols-3 gap-3 text-center">
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Duration</p>
-                  <p class="text-sm font-semibold text-orange-400">{{ meta.duration | number:'1.0-0' }}s</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Resolution</p>
-                  <p class="text-sm font-semibold text-white">{{ meta.width }}×{{ meta.height }}</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Original Size</p>
-                  <p class="text-sm font-semibold text-white">{{ (state$ | async)?.originalSizeMB | number:'1.0-1' }} MB</p>
-                </div>
+      <div class="glass-panel p-8 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-6 min-h-[300px] relative overflow-hidden group">
+        @if ((status$ | async) === 'idle' || (status$ | async) === null || (status$ | async) === undefined) {
+          <div class="flex flex-col items-center gap-4 text-center">
+            <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent-cyan/20 transition-colors duration-500">
+              <mat-icon class="text-4xl text-text-secondary group-hover:text-accent-cyan transition-colors">upload_file</mat-icon>
+            </div>
+            <div>
+              <p class="text-lg font-medium">Drop your video here</p>
+              <p class="text-sm text-text-secondary">or click to browse files</p>
+            </div>
+            <input type="file" class="absolute inset-0 opacity-0 cursor-pointer" (change)="onFileSelected($event)" accept="video/*">
+          </div>
+        } @else if ((status$ | async) === 'loading' || (status$ | async) === 'processing') {
+          <div class="flex flex-col items-center gap-6 w-full max-w-md">
+            <div class="relative w-24 h-24">
+              <svg class="w-full h-full rotate-[-90deg]">
+                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white/5" />
+                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" 
+                        class="text-accent-cyan transition-all duration-300"
+                        [style.stroke-dasharray]="276.46"
+                        [style.stroke-dashoffset]="276.46 * (1 - ((progress$ | async) || 0) / 100)" />
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center font-bold text-xl">
+                {{ progress$ | async }}%
               </div>
-
-              <!-- CRF Slider -->
-              <div class="space-y-3">
-                <div class="flex justify-between items-center">
-                  <label class="text-xs text-white/40 uppercase tracking-wider">Quality (CRF)</label>
-                  <span class="text-sm font-bold" [class.text-emerald-400]="crfValue < 20"
-                    [class.text-cyan-400]="crfValue >= 20 && crfValue < 30"
-                    [class.text-orange-400]="crfValue >= 30 && crfValue < 40"
-                    [class.text-red-400]="crfValue >= 40">{{ crfValue }}</span>
-                </div>
-                <input type="range" min="0" max="51" step="1" [value]="crfValue"
-                  (input)="onCrfChange(+($any($event.target)).value)"
-                  class="w-full h-2 rounded-full appearance-none cursor-pointer bg-gradient-to-r from-emerald-500 via-cyan-500 via-orange-400 to-red-500" />
-                <div class="flex justify-between text-[10px] text-white/30">
-                  <span>🔬 Lossless</span>
-                  <span>⚖️ Balanced</span>
-                  <span>📦 Tiny File</span>
-                </div>
-              </div>
-
-              <!-- Quick CRF Presets -->
-              <div class="grid grid-cols-4 gap-2">
-                @for (p of crfPresets; track p.crf) {
-                  <button (click)="onCrfChange(p.crf)"
-                    class="py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
-                    [class.bg-orange-500]="crfValue === p.crf"
-                    [class.text-black]="crfValue === p.crf"
-                    [class.bg-white/5]="crfValue !== p.crf"
-                    [class.text-white/50]="crfValue !== p.crf">{{ p.label }}</button>
-                }
-              </div>
-
-              <!-- Estimated Output -->
-              @if ((state$ | async)?.originalSizeMB; as origMB) {
-                <div class="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
-                  <span class="text-xs text-white/40">Estimated Output</span>
-                  <span class="text-sm font-bold text-orange-400">~{{ estimateSize(origMB) | number:'1.0-1' }} MB</span>
-                </div>
+            </div>
+            <p class="text-accent-cyan animate-pulse font-medium">
+              {{ (status$ | async) === 'loading' ? 'Analyzing Video...' : 'Compressing Frames...' }}
+            </p>
+          </div>
+        } @else if ((status$ | async) === 'done') {
+          <div class="flex flex-col items-center gap-6 text-center">
+            <div class="w-20 h-20 rounded-full bg-status-success/20 flex items-center justify-center">
+              <mat-icon class="text-5xl text-status-success">check_circle</mat-icon>
+            </div>
+            <div>
+              <p class="text-xl font-bold">Compression Complete!</p>
+              <p class="text-sm text-text-secondary">Your video has been compressed.</p>
+              @if ((state$ | async)?.outputSizeMB; as outSize) {
+                <p class="text-xs text-accent-cyan mt-2 font-mono">
+                  New Size: {{ outSize | number:'1.1-1' }} MB 
+                  ({{ (100 - (outSize / ((state$ | async)?.videoMeta?.size || 1) * 1024 * 1024 * 100)) | number:'1.0-0' }}% reduction)
+                </p>
               }
-
-              <!-- Process Button -->
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
-                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-black hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
-                @if (isLoading$ | async) {
-                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Compressing...
-                } @else { 📦 Compress Video }
+            </div>
+            <div class="flex gap-4">
+              <button (click)="download()" class="px-6 py-3 rounded-xl bg-accent-cyan text-black font-bold hover:scale-105 transition-transform flex items-center gap-2">
+                <mat-icon>download</mat-icon> Download
+              </button>
+              <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+                Start Over
               </button>
             </div>
-          }
-
-          @if ((state$ | async)?.status === 'error') {
-            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">
-              ⚠️ {{ (state$ | async)?.errorMessage }}
+          </div>
+        } @else if ((status$ | async) === 'error') {
+          <div class="flex flex-col items-center gap-6 text-center text-status-error">
+            <mat-icon class="text-6xl">error_outline</mat-icon>
+            <div>
+              <p class="text-xl font-bold">Something went wrong</p>
+              <p class="text-sm opacity-80">{{ (state$ | async)?.errorMessage }}</p>
             </div>
-          }
-        </div>
-
-        <div class="space-y-4">
-          @if ((state$ | async)?.inputFile) {
-            <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
-          }
-          @if ((state$ | async)?.status === 'processing') {
-            <div class="flex justify-center p-8">
-              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Compressing..." [size]="120" />
-            </div>
-          }
-          @if ((state$ | async)?.status === 'done') {
-            <div class="space-y-3">
-              @if ((state$ | async)?.outputSizeMB; as outMB) {
-                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-sm text-emerald-400 text-center">
-                  ✅ Compressed! {{ (state$ | async)?.originalSizeMB | number:'1.0-1' }} MB → {{ outMB | number:'1.0-1' }} MB
-                </div>
-              }
-              <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null"
-                [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-                defaultFilename="omni_compressed" />
-            </div>
-          }
-        </div>
+            <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+              Try Again
+            </button>
+          </div>
+        }
       </div>
+
+      @if ((state$ | async)?.videoMeta; as meta) {
+        <div class="glass-panel p-6 rounded-2xl border border-white/5 space-y-6">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-lg">Compression Settings</h3>
+            <span class="text-accent-cyan font-mono text-sm">CRF: {{ (state$ | async)?.crf }}</span>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="flex justify-between text-xs text-text-secondary uppercase tracking-widest">
+              <span>High Quality (Lower Compression)</span>
+              <span>Low Quality (Higher Compression)</span>
+            </div>
+            <input type="range" min="18" max="51" [value]="(state$ | async)?.crf" 
+                   (input)="onCrfChange($event)"
+                   class="w-full h-2 bg-white/5 rounded-lg appearance-none cursor-pointer accent-accent-cyan">
+            <p class="text-xs text-text-secondary italic">
+              * CRF 23-28 is usually the sweet spot for balance between size and quality.
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex justify-center pt-4">
+          <button (click)="start()" [disabled]="(status$ | async) !== 'idle'" 
+                  class="px-12 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold text-lg shadow-glow hover:scale-105 disabled:opacity-50 disabled:scale-100 transition-all duration-300">
+            COMPRESS VIDEO
+          </button>
+        </div>
+      }
     </div>
-  `,
+  `
 })
-export class CompressorComponent implements OnDestroy {
+export class CompressorComponent {
   private store = inject(Store);
-  private ffmpeg = inject(FFmpegService);
-  private bridge = inject(WorkerBridgeService);
+  public service = inject(CompressorService);
 
   state$ = this.store.select(selectCompressorState);
-  isLoading$ = this.store.select(selectCompressorIsLoading);
-  canProcess$ = this.store.select(selectCompressorCanProcess);
+  status$ = this.store.select(selectStatus);
+  progress$ = this.store.select(selectProgress);
+  outputBlob$ = this.store.select(selectOutputBlob);
 
-  crfValue = 23;
-
-  crfPresets = [
-    { crf: 18, label: '🔬 High' },
-    { crf: 23, label: '⚖️ Medium' },
-    { crf: 28, label: '📦 Small' },
-    { crf: 35, label: '🗜️ Tiny' },
-  ];
-
-  async onFileSelected(files: File[]) {
-    const file = files[0];
-    this.store.dispatch(CompressorActions.loadFile({ file }));
-    this.store.dispatch(CompressorActions.updateConfig({ config: { originalSizeMB: file.size / 1_048_576 } }));
-    try {
-      const meta = await this.ffmpeg.getMetadata(file);
-      this.store.dispatch(CompressorActions.loadMetaSuccess({ meta }));
-    } catch {
-      this.store.dispatch(CompressorActions.loadMetaFailure({ errorCode: 'FILE_CORRUPTED', message: 'Could not read video metadata.' }));
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.store.dispatch(CompressorActions.loadFile({ file }));
+      
+      // Mock meta loading
+      setTimeout(() => {
+        this.store.dispatch(CompressorActions.loadMetaSuccess({
+          meta: {
+            duration: 120,
+            width: 1920,
+            height: 1080,
+            codec: 'h264',
+            size: file.size
+          }
+        }));
+      }, 1000);
     }
   }
 
-  onCrfChange(value: number) {
-    this.crfValue = value;
-    this.store.dispatch(CompressorActions.updateConfig({ config: { crfValue: value } }));
+  onCrfChange(event: Event) {
+    const crf = Number((event.target as HTMLInputElement).value);
+    this.store.dispatch(CompressorActions.updateCrf({ crf }));
   }
 
-  estimateSize(originalMB: number): number {
-    // Rough estimation: CRF 23 ≈ 50% size, each +6 ≈ halves again
-    const ratio = Math.pow(0.5, (this.crfValue - 18) / 6);
-    return originalMB * Math.max(ratio, 0.02);
-  }
-
-  onProcess() {
+  start() {
     this.store.dispatch(CompressorActions.startProcessing());
+    
+    const worker = new Worker(new URL('./compressor.worker', import.meta.url));
+    
     this.state$.subscribe(state => {
-      if (!state.inputFile) return;
-      this.bridge.process<unknown, Blob>(
-        () => new Worker(new URL('./compressor.worker', import.meta.url), { type: 'module' }),
-        { file: state.inputFile, crfValue: state.crfValue, outputFormat: 'mp4' }
-      ).subscribe(msg => {
-        if (msg.type === 'progress') this.store.dispatch(CompressorActions.updateProgress({ progress: msg.value ?? 0 }));
-        else if (msg.type === 'complete' && msg.data) {
-          const blob = msg.data as Blob;
-          this.store.dispatch(CompressorActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
-        } else if (msg.type === 'error') {
-          this.store.dispatch(CompressorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Compression failed' }));
-        }
-      });
+      if (state.status === 'processing' && state.inputFile) {
+        worker.postMessage({ config: { 
+          inputFile: state.inputFile, 
+          crf: state.crf
+        } });
+      }
+    }).unsubscribe();
+
+    worker.onmessage = ({ data }) => {
+      if (data.type === 'progress') {
+        this.store.dispatch(CompressorActions.updateProgress({ progress: data.value }));
+      } else if (data.type === 'complete') {
+        this.store.dispatch(CompressorActions.processingSuccess({ 
+          outputBlob: data.data, 
+          outputSizeMB: data.data.size / 1024 / 1024 
+        }));
+        worker.terminate();
+      } else if (data.type === 'error') {
+        this.store.dispatch(CompressorActions.processingFailure({ 
+          errorCode: data.errorCode, 
+          message: data.message 
+        }));
+        worker.terminate();
+      }
+    };
+  }
+
+  download() {
+    this.outputBlob$.subscribe(blob => {
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `compressed_video_${Date.now()}.mp4`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 150);
+      }
     }).unsubscribe();
   }
 
-  ngOnDestroy() { this.store.dispatch(CompressorActions.resetState()); }
+  reset() {
+    this.store.dispatch(CompressorActions.resetState());
+  }
 }

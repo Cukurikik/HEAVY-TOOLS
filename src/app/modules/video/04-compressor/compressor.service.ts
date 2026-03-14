@@ -2,10 +2,17 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class CompressorService {
-  // -crf 23 -preset medium output.mp4
-  buildArgs(inputName: string, outputName: string, config: Record<string, unknown>): string[] {
-    return ['-i', inputName, outputName];
+  // -i input -vcodec libx264 -crf 28 output.mp4
+  buildArgs(inputName: string, outputName: string, crf: number): string[] {
+    return [
+      '-i', inputName,
+      '-vcodec', 'libx264',
+      '-crf', crf.toString(),
+      '-preset', 'ultrafast',
+      outputName
+    ];
   }
+  
   formatTime(s: number): string {
     const m = Math.floor(s / 60);
     const sec = Math.floor(s % 60).toString().padStart(2, '0');

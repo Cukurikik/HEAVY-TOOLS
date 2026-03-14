@@ -1,143 +1,199 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
-import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
-import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
-import { StabilizerActions, selectStabilizerState, selectStabilizerIsLoading, selectStabilizerCanProcess } from './stabilizer.store';
-import { FFmpegService } from '../shared/engine/ffmpeg.service';
-import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { StabilizerActions, selectStabilizerState, selectStatus, selectProgress, selectOutputBlob } from './stabilizer.store';
+import { StabilizerService } from './stabilizer.service';
 
 @Component({
   selector: 'app-stabilizer',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-200">
-          🎯 Video Stabilizer
+    <div class="p-8 max-w-4xl mx-auto space-y-8">
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold flex items-center gap-3">
+          <mat-icon class="text-accent-cyan">shutter_speed</mat-icon>
+          Video Stabilizer
         </h1>
-        <p class="text-white/50 text-sm">Remove camera shake using FFmpeg vidstab filter (two-pass stabilization)</p>
+        <p class="text-text-secondary">Remove camera shake and stabilize your footage using advanced motion analysis.</p>
       </header>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone
-            accept="video/*"
-            label="Drop video file here or click to browse"
-            (filesSelected)="onFileSelected($event)"
-          />
-
-          @if ((state$ | async)?.videoMeta; as meta) {
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-              <div class="grid grid-cols-3 gap-3 text-center">
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Duration</p>
-                  <p class="text-sm font-semibold text-cyan-400">{{ meta.duration | number:'1.0-0' }}s</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Resolution</p>
-                  <p class="text-sm font-semibold text-white">{{ meta.width }}x{{ meta.height }}</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Codec</p>
-                  <p class="text-sm font-semibold text-white">{{ meta.codec }}</p>
-                </div>
+      <div class="glass-panel p-8 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-6 min-h-[300px] relative overflow-hidden group">
+        @if ((status$ | async) === 'idle' || (status$ | async) === null || (status$ | async) === undefined) {
+          <div class="flex flex-col items-center gap-4 text-center">
+            <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent-cyan/20 transition-colors duration-500">
+              <mat-icon class="text-4xl text-text-secondary group-hover:text-accent-cyan transition-colors">upload_file</mat-icon>
+            </div>
+            <div>
+              <p class="text-lg font-medium">Drop your video here</p>
+              <p class="text-sm text-text-secondary">or click to browse files</p>
+            </div>
+            <input type="file" class="absolute inset-0 opacity-0 cursor-pointer" (change)="onFileSelected($event)" accept="video/*">
+          </div>
+        } @else if ((status$ | async) === 'loading' || (status$ | async) === 'processing') {
+          <div class="flex flex-col items-center gap-6 w-full max-w-md">
+            <div class="relative w-24 h-24">
+              <svg class="w-full h-full rotate-[-90deg]">
+                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white/5" />
+                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" 
+                        class="text-accent-cyan transition-all duration-300"
+                        [style.stroke-dasharray]="276.46"
+                        [style.stroke-dashoffset]="276.46 * (1 - ((progress$ | async) || 0) / 100)" />
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center font-bold text-xl">
+                {{ progress$ | async }}%
               </div>
-              <button
-                [disabled]="!(canProcess$ | async) || (isLoading$ | async)"
-                (click)="onProcess()"
-                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-[0_0_30px_rgba(0,245,255,0.4)] disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                @if (isLoading$ | async) {
-                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Processing...
-                } @else { 🎯 Process }
+            </div>
+            <p class="text-accent-cyan animate-pulse font-medium">
+              {{ (status$ | async) === 'loading' ? 'Analyzing Motion...' : 'Stabilizing Frames...' }}
+            </p>
+          </div>
+        } @else if ((status$ | async) === 'done') {
+          <div class="flex flex-col items-center gap-6 text-center">
+            <div class="w-20 h-20 rounded-full bg-status-success/20 flex items-center justify-center">
+              <mat-icon class="text-5xl text-status-success">check_circle</mat-icon>
+            </div>
+            <div>
+              <p class="text-xl font-bold">Stabilization Complete!</p>
+              <p class="text-sm text-text-secondary">Your footage is now smooth.</p>
+            </div>
+            <div class="flex gap-4">
+              <button (click)="download()" class="px-6 py-3 rounded-xl bg-accent-cyan text-black font-bold hover:scale-105 transition-transform flex items-center gap-2">
+                <mat-icon>download</mat-icon> Download
+              </button>
+              <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+                Start Over
               </button>
             </div>
-          }
-
-          @if ((state$ | async)?.status === 'error') {
-            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">
-              ⚠️ {{ (state$ | async)?.errorMessage }}
+          </div>
+        } @else if ((status$ | async) === 'error') {
+          <div class="flex flex-col items-center gap-6 text-center text-status-error">
+            <mat-icon class="text-6xl">error_outline</mat-icon>
+            <div>
+              <p class="text-xl font-bold">Something went wrong</p>
+              <p class="text-sm opacity-80">{{ (state$ | async)?.errorMessage }}</p>
             </div>
-          }
-        </div>
-
-        <div class="space-y-4">
-          @if ((state$ | async)?.inputFile) {
-            <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
-          }
-          @if ((state$ | async)?.status === 'processing') {
-            <div class="flex justify-center p-8">
-              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Processing..." [size]="120" />
-            </div>
-          }
-          @if ((state$ | async)?.status === 'done') {
-            <app-export-panel
-              [outputBlob]="(state$ | async)?.outputBlob ?? null"
-              [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              defaultFilename="omni_stabilizer"
-            />
-          }
-        </div>
+            <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+              Try Again
+            </button>
+          </div>
+        }
       </div>
+
+      @if ((state$ | async)?.videoMeta; as meta) {
+        <div class="glass-panel p-6 rounded-2xl border border-white/5 space-y-6">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-lg">Stabilization Settings</h3>
+            <span class="text-accent-cyan font-mono text-sm">Smoothing: {{ (state$ | async)?.smoothing }}</span>
+          </div>
+          
+          <div class="space-y-4">
+            <div class="flex justify-between text-xs text-text-secondary uppercase tracking-widest">
+              <span>Low Smoothing</span>
+              <span>High Smoothing</span>
+            </div>
+            <input type="range" min="1" max="50" [value]="(state$ | async)?.smoothing" 
+                   (input)="onSmoothingChange($event)"
+                   class="w-full h-2 bg-white/5 rounded-lg appearance-none cursor-pointer accent-accent-cyan">
+            <p class="text-xs text-text-secondary italic">
+              * Higher smoothing values result in more stable but potentially more cropped video.
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex justify-center pt-4">
+          <button (click)="start()" [disabled]="(status$ | async) !== 'idle'" 
+                  class="px-12 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold text-lg shadow-glow hover:scale-105 disabled:opacity-50 disabled:scale-100 transition-all duration-300">
+            STABILIZE VIDEO
+          </button>
+        </div>
+      }
     </div>
-  `,
+  `
 })
-export class StabilizerComponent implements OnDestroy {
+export class StabilizerComponent {
   private store = inject(Store);
-  private ffmpeg = inject(FFmpegService);
-  private bridge = inject(WorkerBridgeService);
+  public service = inject(StabilizerService);
 
   state$ = this.store.select(selectStabilizerState);
-  isLoading$ = this.store.select(selectStabilizerIsLoading);
-  canProcess$ = this.store.select(selectStabilizerCanProcess);
+  status$ = this.store.select(selectStatus);
+  progress$ = this.store.select(selectProgress);
+  outputBlob$ = this.store.select(selectOutputBlob);
 
-  async onFileSelected(files: File[]) {
-    const file = files[0];
-    this.store.dispatch(StabilizerActions.loadFile({ file }));
-    try {
-      const meta = await this.ffmpeg.getMetadata(file);
-      this.store.dispatch(StabilizerActions.loadMetaSuccess({ meta }));
-    } catch {
-      this.store.dispatch(StabilizerActions.loadMetaFailure({
-        errorCode: 'FILE_CORRUPTED',
-        message: 'Could not read video metadata.'
-      }));
+  onFileSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.store.dispatch(StabilizerActions.loadFile({ file }));
+      
+      // Mock meta loading
+      setTimeout(() => {
+        this.store.dispatch(StabilizerActions.loadMetaSuccess({
+          meta: {
+            duration: 120,
+            width: 1920,
+            height: 1080,
+            codec: 'h264',
+            size: file.size
+          }
+        }));
+      }, 1000);
     }
   }
 
-  onProcess() {
+  onSmoothingChange(event: Event) {
+    const smoothing = Number((event.target as HTMLInputElement).value);
+    this.store.dispatch(StabilizerActions.updateSmoothing({ smoothing }));
+  }
+
+  start() {
     this.store.dispatch(StabilizerActions.startProcessing());
+    
+    const worker = new Worker(new URL('./stabilizer.worker', import.meta.url));
+    
     this.state$.subscribe(state => {
-      if (!state.inputFile) return;
-      this.bridge.process<unknown, Blob>(
-        () => new Worker(new URL('./stabilizer.worker', import.meta.url), { type: 'module' }),
-        { file: state.inputFile }
-      ).subscribe(msg => {
-        if (msg.type === 'progress') {
-          this.store.dispatch(StabilizerActions.updateProgress({ progress: msg.value ?? 0 }));
-        } else if (msg.type === 'complete' && msg.data) {
-          const blob = msg.data as Blob;
-          this.store.dispatch(StabilizerActions.processingSuccess({
-            outputBlob: blob,
-            outputSizeMB: blob.size / 1_048_576
-          }));
-        } else if (msg.type === 'error') {
-          this.store.dispatch(StabilizerActions.processingFailure({
-            errorCode: msg.errorCode ?? 'UNKNOWN_ERROR',
-            message: msg.message ?? 'Processing failed'
-          }));
-        }
-      });
+      if (state.status === 'processing' && state.inputFile) {
+        worker.postMessage({ config: { 
+          inputFile: state.inputFile, 
+          smoothing: state.smoothing
+        } });
+      }
+    }).unsubscribe();
+
+    worker.onmessage = ({ data }) => {
+      if (data.type === 'progress') {
+        this.store.dispatch(StabilizerActions.updateProgress({ progress: data.value }));
+      } else if (data.type === 'complete') {
+        this.store.dispatch(StabilizerActions.processingSuccess({ 
+          outputBlob: data.data, 
+          outputSizeMB: data.data.size / 1024 / 1024 
+        }));
+        worker.terminate();
+      } else if (data.type === 'error') {
+        this.store.dispatch(StabilizerActions.processingFailure({ 
+          errorCode: data.errorCode, 
+          message: data.message 
+        }));
+        worker.terminate();
+      }
+    };
+  }
+
+  download() {
+    this.outputBlob$.subscribe(blob => {
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `stabilized_video_${Date.now()}.mp4`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 150);
+      }
     }).unsubscribe();
   }
 
-  ngOnDestroy() {
+  reset() {
     this.store.dispatch(StabilizerActions.resetState());
   }
 }
