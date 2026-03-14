@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
-import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
 import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { MergerActions, selectMergerState, selectMergerIsLoading, selectMergerCanProcess } from './merger.store';
@@ -12,76 +11,71 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 @Component({
   selector: 'app-merger',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
       <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-200">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">
           🔗 Video Merger
         </h1>
-        <p class="text-white/50 text-sm">Concatenate multiple video files in custom order using FFmpeg concat protocol</p>
+        <p class="text-white/50 text-sm">Merge multiple video clips into one seamless video</p>
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="space-y-4">
-          <app-file-drop-zone
-            accept="video/*"
-            label="Drop video file here or click to browse"
-            (filesSelected)="onFileSelected($event)"
-          />
+          <app-file-drop-zone accept="video/*" label="Drop video clips here (multiple files)" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
 
-          @if ((state$ | async)?.videoMeta; as meta) {
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
-              <div class="grid grid-cols-3 gap-3 text-center">
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Duration</p>
-                  <p class="text-sm font-semibold text-cyan-400">{{ meta.duration | number:'1.0-0' }}s</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Resolution</p>
-                  <p class="text-sm font-semibold text-white">{{ meta.width }}x{{ meta.height }}</p>
-                </div>
-                <div class="p-2 rounded-lg bg-white/5">
-                  <p class="text-xs text-white/40">Codec</p>
-                  <p class="text-sm font-semibold text-white">{{ meta.codec }}</p>
-                </div>
+          <!-- Clips List -->
+          @if (clips.length > 0) {
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <div class="flex justify-between items-center">
+                <label class="text-xs text-white/40 uppercase tracking-wider">Clips ({{ clips.length }})</label>
+                <button (click)="clearClips()" class="text-xs text-red-400 hover:text-red-300 transition-colors">Clear All</button>
               </div>
-              <button
-                [disabled]="!(canProcess$ | async) || (isLoading$ | async)"
-                (click)="onProcess()"
-                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-[0_0_30px_rgba(0,245,255,0.4)] disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+
+              <div class="space-y-2 max-h-64 overflow-y-auto">
+                @for (clip of clips; track $index) {
+                  <div class="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/10">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">{{ $index + 1 }}</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm text-white truncate">{{ clip.name }}</p>
+                      <p class="text-xs text-white/30">{{ (clip.size / 1_048_576) | number:'1.0-1' }} MB</p>
+                    </div>
+                    <button (click)="removeClip($index)" class="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-lg hover:bg-red-500/10 transition-all">✕</button>
+                  </div>
+                }
+              </div>
+
+              <!-- Add More -->
+              <button (click)="addMoreInput.click()" class="w-full py-2 rounded-lg border border-dashed border-white/20 text-xs text-white/40 hover:text-white/60 hover:border-white/40 transition-all">
+                + Add More Clips
+              </button>
+              <input #addMoreInput type="file" accept="video/*" multiple class="hidden" (change)="onAddMore($event)" />
+
+              <button [disabled]="clips.length < 2 || (isLoading$ | async)" (click)="onProcess()"
+                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
                   <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Processing...
-                } @else { 🔗 Process }
+                  Merging...
+                } @else { 🔗 Merge {{ clips.length }} Clips }
               </button>
             </div>
           }
 
           @if ((state$ | async)?.status === 'error') {
-            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">
-              ⚠️ {{ (state$ | async)?.errorMessage }}
-            </div>
+            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
           }
         </div>
 
         <div class="space-y-4">
-          @if ((state$ | async)?.inputFile) {
-            <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
-          }
           @if ((state$ | async)?.status === 'processing') {
             <div class="flex justify-center p-8">
-              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Processing..." [size]="120" />
+              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Merging clips..." [size]="120" />
             </div>
           }
           @if ((state$ | async)?.status === 'done') {
-            <app-export-panel
-              [outputBlob]="(state$ | async)?.outputBlob ?? null"
-              [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              defaultFilename="omni_merger"
-            />
+            <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_merged" />
           }
         </div>
       </div>
@@ -97,47 +91,44 @@ export class MergerComponent implements OnDestroy {
   isLoading$ = this.store.select(selectMergerIsLoading);
   canProcess$ = this.store.select(selectMergerCanProcess);
 
-  async onFileSelected(files: File[]) {
-    const file = files[0];
-    this.store.dispatch(MergerActions.loadFile({ file }));
-    try {
-      const meta = await this.ffmpeg.getMetadata(file);
-      this.store.dispatch(MergerActions.loadMetaSuccess({ meta }));
-    } catch {
-      this.store.dispatch(MergerActions.loadMetaFailure({
-        errorCode: 'FILE_CORRUPTED',
-        message: 'Could not read video metadata.'
-      }));
+  clips: File[] = [];
+
+  onFilesSelected(files: File[]) {
+    this.clips = [...this.clips, ...files];
+    if (files.length > 0) {
+      this.store.dispatch(MergerActions.loadFile({ file: files[0] }));
     }
   }
 
-  onProcess() {
-    this.store.dispatch(MergerActions.startProcessing());
-    this.state$.subscribe(state => {
-      if (!state.inputFile) return;
-      this.bridge.process<unknown, Blob>(
-        () => new Worker(new URL('./merger.worker', import.meta.url), { type: 'module' }),
-        { file: state.inputFile }
-      ).subscribe(msg => {
-        if (msg.type === 'progress') {
-          this.store.dispatch(MergerActions.updateProgress({ progress: msg.value ?? 0 }));
-        } else if (msg.type === 'complete' && msg.data) {
-          const blob = msg.data as Blob;
-          this.store.dispatch(MergerActions.processingSuccess({
-            outputBlob: blob,
-            outputSizeMB: blob.size / 1_048_576
-          }));
-        } else if (msg.type === 'error') {
-          this.store.dispatch(MergerActions.processingFailure({
-            errorCode: msg.errorCode ?? 'UNKNOWN_ERROR',
-            message: msg.message ?? 'Processing failed'
-          }));
-        }
-      });
-    }).unsubscribe();
+  onAddMore(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.clips = [...this.clips, ...Array.from(input.files)];
+    }
+    input.value = '';
   }
 
-  ngOnDestroy() {
-    this.store.dispatch(MergerActions.resetState());
+  removeClip(index: number) {
+    this.clips = this.clips.filter((_, i) => i !== index);
   }
+
+  clearClips() { this.clips = []; }
+
+  onProcess() {
+    this.store.dispatch(MergerActions.startProcessing());
+    this.bridge.process<unknown, Blob>(
+      () => new Worker(new URL('./merger.worker', import.meta.url), { type: 'module' }),
+      { clips: this.clips.map(f => ({ file: f })), outputFormat: 'mp4' }
+    ).subscribe(msg => {
+      if (msg.type === 'progress') this.store.dispatch(MergerActions.updateProgress({ progress: msg.value ?? 0 }));
+      else if (msg.type === 'complete' && msg.data) {
+        const blob = msg.data as Blob;
+        this.store.dispatch(MergerActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
+      } else if (msg.type === 'error') {
+        this.store.dispatch(MergerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Merge failed' }));
+      }
+    });
+  }
+
+  ngOnDestroy() { this.store.dispatch(MergerActions.resetState()); }
 }

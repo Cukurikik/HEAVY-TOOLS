@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkerBridgeService } from '../../engine/worker-bridge.service';
 import type { ExportConfig } from '../../types/video.types';
@@ -50,10 +50,10 @@ export class ExportPanelComponent {
   @Input() outputSizeMB: number | null = null;
   @Output() download = new EventEmitter<ExportConfig>();
 
+  private bridge = inject(WorkerBridgeService);
+
   selectedFormat = signal('mp4');
   customFilename = signal('');
-
-  constructor(private bridge: WorkerBridgeService) {}
 
   onFilenameInput(event: Event) {
     const val = (event.target as HTMLInputElement).value;
