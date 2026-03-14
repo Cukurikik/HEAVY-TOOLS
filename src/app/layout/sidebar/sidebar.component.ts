@@ -97,10 +97,52 @@ export const AUDIO_CHILDREN: NavChild[] = [
   { label: 'Stem Splitter',   emoji: '🧬',  route: '/audio/stem-splitter',   category: 'ai' },
 ];
 
+/** 30 PDF sub-links matching pdf.routes.ts paths */
+export const PDF_CHILDREN: NavChild[] = [
+  // Basic
+  { label: 'Merger',          emoji: '🔗',  route: '/pdf/merger',          category: 'basic' },
+  { label: 'Splitter',        emoji: '✂️',  route: '/pdf/splitter',        category: 'basic' },
+  { label: 'Compressor',      emoji: '🗜️',  route: '/pdf/compressor',      category: 'basic' },
+  { label: 'Converter',       emoji: '🔄',  route: '/pdf/converter',       category: 'basic' },
+  { label: 'Page Rotator',    emoji: '🔄',  route: '/pdf/rotator',         category: 'basic' },
+  { label: 'Crop / Resize',   emoji: '📐',  route: '/pdf/crop-resize',     category: 'basic' },
+  
+  // Advanced
+  { label: 'Metadata Editor', emoji: '📋',  route: '/pdf/metadata-editor', category: 'advanced' },
+  { label: 'Digital Signer',  emoji: '✍️',  route: '/pdf/digital-signer',  category: 'advanced' },
+  { label: 'Redactor',        emoji: '⬛',  route: '/pdf/redactor',        category: 'advanced' },
+  { label: 'Annotator',       emoji: '🖍️',  route: '/pdf/annotator',       category: 'advanced' },
+  { label: 'Form Filler',     emoji: '📄',  route: '/pdf/form-filler',     category: 'advanced' },
+  { label: 'Page Reorderer',  emoji: '📑',  route: '/pdf/page-reorderer',  category: 'advanced' },
+  { label: 'Thumbnails',      emoji: '📸',  route: '/pdf/thumbnail-generator', category: 'advanced' },
+  { label: 'Compare',         emoji: '⚖️',  route: '/pdf/compare',         category: 'advanced' },
+  { label: 'Bookmark Editor', emoji: '🔖',  route: '/pdf/bookmark-editor', category: 'advanced' },
+  { label: 'Batch Processor', emoji: '⚙️',  route: '/pdf/batch-processor', category: 'advanced' },
+  { label: 'Flattener',       emoji: '🥞',  route: '/pdf/flattener',       category: 'advanced' },
+  { label: 'Optimizer',       emoji: '⚡',  route: '/pdf/optimizer',       category: 'advanced' },
+  { label: 'Repair',          emoji: '🛠️',  route: '/pdf/repair',          category: 'advanced' },
+
+  // Pro 
+  { label: 'Text Extractor',  emoji: '📝',  route: '/pdf/text-extractor',  category: 'pro' },
+  { label: 'Image Extractor', emoji: '🖼️',  route: '/pdf/image-extractor', category: 'pro' },
+  { label: 'Password Protect',emoji: '🔒',  route: '/pdf/password-protector', category: 'pro' },
+  { label: 'Unlocker',        emoji: '🔓',  route: '/pdf/unlocker',        category: 'pro' },
+  { label: 'Watermark',       emoji: '💧',  route: '/pdf/watermark',       category: 'pro' },
+  { label: 'To Word',         emoji: '📝',  route: '/pdf/to-word',         category: 'pro' },
+  { label: 'To Excel',        emoji: '📊',  route: '/pdf/to-excel',        category: 'pro' },
+  { label: 'To PPT',          emoji: '📽️',  route: '/pdf/to-powerpoint',   category: 'pro' },
+  { label: 'To HTML',         emoji: '🌐',  route: '/pdf/to-html',         category: 'pro' },
+  { label: 'To Image Batch',  emoji: '🔢',  route: '/pdf/to-image-batch',  category: 'pro' },
+
+  // AI
+  { label: 'OCR',             emoji: '🔍',  route: '/pdf/ocr',             category: 'ai' },
+];
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
   { label: 'Video Engine', icon: 'movie',        route: '/video',     badge: '30', children: VIDEO_CHILDREN },
   { label: 'Audio Studio', icon: 'music_note',   route: '/audio',     badge: '30', children: AUDIO_CHILDREN },
+  { label: 'PDF Tools',    icon: 'picture_as_pdf', route: '/pdf',     badge: '30', children: PDF_CHILDREN },
   { label: 'Image Matrix', icon: 'image',        route: '/image',     badge: '10+' },
   { label: 'Converter',    icon: 'sync',         route: '/converter', badge: 'NEW' },
   { label: 'Settings',     icon: 'settings',     route: '/settings',  badge: null },

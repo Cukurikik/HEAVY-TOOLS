@@ -19,6 +19,12 @@ export const routes: Routes = [
           { path: '', loadChildren: () => import('./modules/audio/audio.routes').then(m => m.AUDIO_ROUTES) }
         ]
       },
+      {
+        path: 'pdf',
+        children: [
+          { path: '', loadChildren: () => import('./modules/pdf/pdf.routes').then(m => m.PDF_ROUTES) }
+        ]
+      },
       { path: 'image',     loadComponent: () => import('./modules/image-matrix/image-matrix.component').then(m => m.ImageMatrixComponent) },
       { path: 'converter', loadComponent: () => import('./modules/converter/converter.component').then(m => m.ConverterComponent) },
       { path: 'settings',  loadComponent: () => import('./modules/settings/settings.component').then(m => m.SettingsComponent) },
