@@ -7,19 +7,36 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="bg-[#12121a] rounded-xl p-4 border border-white/5 space-y-3">
+    <div class="group bg-[#0a0a0f]/80 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-lg hover:border-white/20 hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-300 space-y-4 animate-fade-in-up">
       <audio #audioEl [src]="blobUrl()" (timeupdate)="onTimeUpdate(audioEl)"
              (ended)="isPlaying.set(false)" (loadedmetadata)="totalTime.set(audioEl.duration)"></audio>
-      <div class="flex items-center gap-4">
-        <button class="w-10 h-10 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 transition-colors"
-                (click)="togglePlay(audioEl)">
-          {{ isPlaying() ? '⏸' : '▶' }}
-        </button>
-        <input type="range" class="flex-1 accent-cyan-400 h-1" min="0" [max]="totalTime()" step="0.1"
-               [value]="currentTime()" (input)="onSeek(audioEl, $event)">
-        <span class="text-white/50 text-xs font-mono min-w-[80px] text-right">
-          {{ formatTime(currentTime()) }} / {{ formatTime(totalTime()) }}
-        </span>
+             
+      <div class="flex flex-col gap-3">
+        <!-- Progress Bar (Range Input Customization) -->
+        <div class="relative w-full h-2 bg-white/5 rounded-full overflow-hidden group/slider cursor-pointer">
+          <input type="range" 
+                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" 
+                 min="0" [max]="totalTime()" step="0.1" [value]="currentTime()" 
+                 (input)="onSeek(audioEl, $event)">
+          <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full z-10 pointers-events-none group-hover/slider:shadow-[0_0_10px_rgba(34,211,238,0.8)] transition-all"
+               [style.width.%]="totalTime() > 0 ? (currentTime() / totalTime()) * 100 : 0"></div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <button class="relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 group/btn"
+                  (click)="togglePlay(audioEl)">
+             <div class="absolute inset-0 bg-cyan-500/20 rounded-full blur-md group-hover/btn:bg-cyan-500/40 group-hover/btn:scale-110 transition-all duration-300"></div>
+             <div class="relative w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 text-black rounded-full flex items-center justify-center group-hover/btn:scale-105 shadow-md">
+                <span class="text-lg translate-x-[1px] font-black">{{ isPlaying() ? '⏸' : '▶' }}</span>
+             </div>
+          </button>
+          
+          <div class="flex items-baseline gap-1 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
+            <span class="text-cyan-400 font-mono text-sm tracking-widest font-bold drop-shadow-sm">{{ formatTime(currentTime()) }}</span>
+            <span class="text-white/30 text-xs mx-1">/</span>
+            <span class="text-white/50 font-mono text-xs tracking-wider">{{ formatTime(totalTime()) }}</span>
+          </div>
+        </div>
       </div>
     </div>
   `

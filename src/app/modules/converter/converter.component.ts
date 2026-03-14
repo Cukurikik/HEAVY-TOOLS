@@ -18,7 +18,7 @@ export const CONVERTER_TOOLS: Tool[] = [
     <div class="p-8 space-y-8 max-w-7xl mx-auto">
       <header class="flex items-center justify-between mb-12">
         <div>
-          <h1 class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-status-warning to-accent-pink mb-2">
+          <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-status-warning to-accent-pink mb-2">
             Universal Converter
           </h1>
           <p class="text-text-secondary">Data transmutation and archive extraction.</p>

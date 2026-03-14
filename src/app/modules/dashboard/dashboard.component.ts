@@ -15,7 +15,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
       <!-- Hero Section -->
       <section class="hero-section flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         <div class="space-y-4">
-          <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-purple">
+          <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-purple">
             Omni-Tool Dashboard
           </h1>
           <p class="text-xl text-text-secondary max-w-2xl">
@@ -77,9 +77,9 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
 
       <!-- Quick Access Grid -->
       <section>
-        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-2xl font-semibold mb-6 flex items-center gap-2">
           <mat-icon class="text-accent-cyan">bolt</mat-icon> Quick Access
-        </h2>
+        </h1>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           @for (tool of quickTools; track tool.id) {
             <app-tool-card class="tool-card-item" [tool]="tool" />
@@ -89,9 +89,9 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
 
       <!-- System Status Panel -->
       <section class="glass-panel rounded-2xl p-8">
-        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-2xl font-semibold mb-6 flex items-center gap-2">
           <mat-icon class="text-accent-purple">memory</mat-icon> System Status
-        </h2>
+        </h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">FFmpeg Engine</span>

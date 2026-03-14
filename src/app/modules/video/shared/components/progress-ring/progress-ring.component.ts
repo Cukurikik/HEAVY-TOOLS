@@ -7,17 +7,36 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="flex flex-col items-center gap-2">
-      <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" [attr.r]="radius" fill="none" stroke="rgba(255,255,255,0.08)" [attr.stroke-width]="strokeWidth"/>
-        <circle cx="50" cy="50" [attr.r]="radius" fill="none" [attr.stroke]="color" [attr.stroke-width]="strokeWidth"
-          stroke-linecap="round" [attr.stroke-dasharray]="circumference" [attr.stroke-dashoffset]="dashOffset"
-          transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 0.4s ease"
-          [style.filter]="'drop-shadow(0 0 6px ' + color + ')'"/>
-        <text x="50" y="50" text-anchor="middle" dominant-baseline="central"
-          fill="white" font-size="18" font-weight="700" font-family="monospace">{{ progress }}%</text>
-      </svg>
-      @if (label) { <p class="text-xs text-white/60 text-center">{{ label }}</p> }
+    <div class="relative flex flex-col items-center justify-center p-6 bg-[#0a0a0f]/50 backdrop-blur-xl rounded-3xl border border-white/5 shadow-2xl transition-all duration-500 animate-fade-in-up">
+      <!-- Glow behind ring -->
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-3xl blur-xl"></div>
+      
+      <div class="relative z-10 flex flex-col items-center gap-4">
+        <svg [attr.width]="size" [attr.height]="size" viewBox="0 0 100 100" class="drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+          <!-- Background Track -->
+          <circle cx="50" cy="50" [attr.r]="radius" fill="none" stroke="rgba(255,255,255,0.05)" [attr.stroke-width]="strokeWidth"/>
+          
+          <!-- Animated Progress Ring -->
+          <circle cx="50" cy="50" [attr.r]="radius" fill="none" [attr.stroke]="color" [attr.stroke-width]="strokeWidth"
+            stroke-linecap="round" [attr.stroke-dasharray]="circumference" [attr.stroke-dashoffset]="dashOffset"
+            transform="rotate(-90 50 50)" class="transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+            [style.filter]="'drop-shadow(0 0 8px ' + color + ')'"/>
+            
+          <!-- Inner Text Container -->
+          <foreignObject x="0" y="0" width="100" height="100">
+            <div class="w-full h-full flex flex-col items-center justify-center overflow-visible">
+              <span class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 drop-shadow-md tracking-tighter">{{ progress }}%</span>
+            </div>
+          </foreignObject>
+        </svg>
+        
+        @if (label) { 
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+            <p class="text-sm font-medium text-white/80 tracking-wide">{{ label }}</p> 
+          </div>
+        }
+      </div>
     </div>
   `
 })

@@ -13,7 +13,7 @@ import { SpeedControllerService } from './speed-controller.service';
   template: `
     <div class="p-8 max-w-4xl mx-auto space-y-8">
       <header class="space-y-2">
-        <h1 class="text-3xl font-bold flex items-center gap-3">
+        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold flex items-center gap-3">
           <mat-icon class="text-accent-cyan">speed</mat-icon>
           Speed Controller
         </h1>
@@ -60,12 +60,18 @@ import { SpeedControllerService } from './speed-controller.service';
               <p class="text-sm text-text-secondary">Your video speed has been modified.</p>
             </div>
             <div class="flex gap-4">
-              <button (click)="download()" class="px-6 py-3 rounded-xl bg-accent-cyan text-black font-bold hover:scale-105 transition-transform flex items-center gap-2">
+              <button (click)="download()" class="relative flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all duration-300 transform hover:-translate-y-1 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <span class="relative z-10 flex items-center gap-2">
                 <mat-icon>download</mat-icon> Download
-              </button>
-              <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+              </span>
+      </button>
+              <button (click)="reset()" class="relative flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all duration-300 transform hover:-translate-y-1 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <span class="relative z-10 flex items-center gap-2">
                 Start Over
-              </button>
+              </span>
+      </button>
             </div>
           </div>
         } @else if ((status$ | async) === 'error') {
@@ -75,9 +81,12 @@ import { SpeedControllerService } from './speed-controller.service';
               <p class="text-xl font-bold">Something went wrong</p>
               <p class="text-sm opacity-80">{{ (state$ | async)?.errorMessage }}</p>
             </div>
-            <button (click)="reset()" class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
+            <button (click)="reset()" class="relative flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all duration-300 transform hover:-translate-y-1 group disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
+        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+        <span class="relative z-10 flex items-center gap-2">
               Try Again
-            </button>
+            </span>
+      </button>
           </div>
         }
       </div>

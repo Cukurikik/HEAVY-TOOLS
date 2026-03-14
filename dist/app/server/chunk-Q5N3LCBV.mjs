@@ -1,0 +1,2 @@
+import './polyfills.server.mjs';
+import{i as e,j as c}from"./chunk-XKEEYXLL.mjs";var s=c("app"),p=e(s,t=>t.sidebar),l=e(p,t=>t.collapsed),S=e(p,t=>t.activeRoute),r=e(s,t=>t.system),n=e(r,t=>t.networkStatus),i=e(r,t=>t.memoryUsage),o=e(s,t=>t.tasks),m=e(o,t=>t.active),x=e(o,t=>t.history),A=e(o,t=>t.totalCompleted);export{l as a,S as b,r as c,o as d};

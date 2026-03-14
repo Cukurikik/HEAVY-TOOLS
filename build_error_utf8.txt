@@ -1,0 +1,92 @@
+﻿
+> ai-studio-angular-app@0.0.0 build
+> ng build
+
+[33mΓ¥»[39m Building...
+[32mΓ£ö[39m Building...
+[35mPrerendered 0 static routes.[39m
+Application bundle generation failed. [10.655 seconds] - 2026-03-14T21:05:50.460Z
+
+node.exe : [1m[33m[33mΓû▓ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ToolCardComponent is not used within the template of 
+DashboardComponent[0m [1m[35m[plugin angular-compiler][0m
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\IKYY\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([1m[33m[33mΓ...r-compiler][0m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+    src/app/modules/dashboard/dashboard.component.ts:11:41:
+[37m      11 Γöé   imports: [CommonModule, MatIconModule, [32mToolCardComponent[37m],
+         Γò╡                                          [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "h2". It may happen when the tag has already been closed by 
+another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/modules/dashboard/dashboard.component.ts:82:8:
+[37m      82 Γöé         [32m</h2>[37m
+         Γò╡         [32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by 
+another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/modules/dashboard/dashboard.component.ts:88:6:
+[37m      88 Γöé       [32m</section>[37m
+         Γò╡       [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "h2". It may happen when the tag has already been closed by another 
+tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/modules/dashboard/dashboard.component.ts:94:8:
+[37m      94 Γöé         [32m</h2>[37m
+         Γò╡         [32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by 
+another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/modules/dashboard/dashboard.component.ts:125:6:
+[37m      125 Γöé       [32m</section>[37m
+          Γò╡       [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "h2". It may happen when the tag has already been closed by another 
+tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/modules/settings/settings.component.ts:22:8:
+[37m      22 Γöé         [32m</h2>[37m
+         Γò╡         [32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by 
+another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/modules/settings/settings.component.ts:47:6:
+[37m      47 Γöé       [32m</section>[37m
+         Γò╡       [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "h2". It may happen when the tag has already been closed by another 
+tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/modules/settings/settings.component.ts:52:8:
+[37m      52 Γöé         [32m</h2>[37m
+         Γò╡         [32m~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG5002: Unexpected closing tag "section". It may happen when the tag has already been closed by 
+another tag. For more info see https://www.w3.org/TR/html5/syntax.html#closing-elements-that-have-implied-end-tags[0m [1m[35m[plugin 
+angular-compiler][0m
+
+    src/app/modules/settings/settings.component.ts:79:6:
+[37m      79 Γöé       [32m</section>[37m
+         Γò╡       [32m~~~~~~~~~~[0m
+
+[39m[22m
