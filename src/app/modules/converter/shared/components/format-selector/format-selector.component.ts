@@ -20,7 +20,7 @@ export interface FormatOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-2">
-      <label class="text-xs text-white/40 uppercase tracking-wider font-semibold">Output Format</label>
+      <span class="text-xs text-white/40 uppercase tracking-wider font-semibold" style="display: block;">Output Format</span>
       <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
         @for (fmt of formats; track fmt.value) {
           <button

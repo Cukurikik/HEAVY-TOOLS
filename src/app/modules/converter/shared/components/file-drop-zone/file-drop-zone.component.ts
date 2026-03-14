@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
       (dragover)="onDragOver($event)"
       (dragleave)="onDragLeave($event)"
       (drop)="onDrop($event)"
-      (click)="fileInput.click()">
+      (click)="fileInput.click()" (keydown.enter)="fileInput.click()" tabindex="0">
 
       <input
         #fileInput

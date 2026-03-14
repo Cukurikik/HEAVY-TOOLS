@@ -16,13 +16,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400">💬 Subtitle Burner</h1>
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400">💬 Subtitle Burner</h1>
         <p class="text-white/50 text-sm">Hardcode SRT/ASS subtitles permanently into the video</p>
       </header>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -40,14 +35,14 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               <!-- SRT Upload -->
               <div class="space-y-2">
                 <p class="text-sm text-white/60">Subtitle File (.srt / .ass)</p>
-                <label class="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-white/20 hover:border-yellow-400/50 bg-white/5 cursor-pointer transition-all">
+                <span class="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-white/20 hover:border-yellow-400/50 bg-white/5 cursor-pointer transition-all" style="display: block;">
                   <span class="text-2xl">📄</span>
                   <div>
                     <p class="text-sm text-white/80">{{ subtitleFileName || 'Click to select subtitle file' }}</p>
                     <p class="text-xs text-white/40">Supports .srt, .ass, .ssa</p>
                   </div>
                   <input type="file" accept=".srt,.ass,.ssa,.vtt" (change)="onSubtitleFile($event)" class="hidden" />
-                </label>
+                </span>
               </div>
 
               <!-- Font Size -->
@@ -90,7 +85,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 </div>
               </div>
 
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async) || !subtitleFile" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async) || !subtitleFile" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-black hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
                   <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Burning...
@@ -108,10 +103,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_subtitled" /> }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class SubtitleBurnerComponent implements OnDestroy {

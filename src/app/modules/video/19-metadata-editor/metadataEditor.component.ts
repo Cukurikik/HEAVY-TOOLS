@@ -16,13 +16,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-300">🏷️ Metadata Editor</h1>
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-300">🏷️ Metadata Editor</h1>
         <p class="text-white/50 text-sm">Edit video metadata tags: title, artist, year, comment, genre</p>
       </header>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -38,7 +33,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
               @for (field of metaFields; track field.key) {
                 <div class="space-y-1">
-                  <label class="text-sm text-white/60">{{ field.icon }} {{ field.label }}</label>
+                  <span class="text-sm text-white/60" style="display: block;">{{ field.icon }} {{ field.label }}</span>
                   <input [type]="field.type" [value]="metaValues[field.key] || ''" (input)="onMetaChange(field.key, $event)"
                     [placeholder]="field.placeholder"
                     class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:border-emerald-400 focus:outline-none transition-colors" />
@@ -49,7 +44,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 ℹ️ Metadata editing uses stream copy (-c copy) so it's instant and lossless — no re-encoding needed!
               </div>
 
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async)" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-green-500 text-black hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) { <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Saving... } @else { 🏷️ Save Metadata }
               </button>
@@ -63,10 +58,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_metadata" /> }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class MetadataEditorComponent implements OnDestroy {

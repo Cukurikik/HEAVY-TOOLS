@@ -15,7 +15,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
       <!-- Hero Section -->
       <section class="hero-section flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         <div class="space-y-4">
-          <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-purple">
+          <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-accent-purple">
             Omni-Tool Dashboard
           </h1>
           <p class="text-xl text-text-secondary max-w-2xl">
@@ -77,9 +77,9 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
 
       <!-- Quick Access Grid -->
       <section>
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-2xl font-semibold mb-6 flex items-center gap-2">
+        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
           <mat-icon class="text-accent-cyan">bolt</mat-icon> Quick Access
-        </h1>
+        </h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           @for (tool of quickTools; track tool.id) {
             <app-tool-card class="tool-card-item" [tool]="tool" />
@@ -89,28 +89,28 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
 
       <!-- System Status Panel -->
       <section class="glass-panel rounded-2xl p-8">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight text-2xl font-semibold mb-6 flex items-center gap-2">
+        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
           <mat-icon class="text-accent-purple">memory</mat-icon> System Status
-        </h1>
+        </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">FFmpeg Engine</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.ffmpegLoaded" [class.text-status-warning]="!(system$ | async)?.ffmpegLoaded">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.ffmpegLoaded" [class.bg-status-warning]="!(system$ | async)?.ffmpegLoaded"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.ffmpegLoaded" [class.text-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.ffmpegLoaded" [class.bg-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined"></span>
               {{ (system$ | async)?.ffmpegLoaded ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">ONNX Runtime</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.onnxLoaded" [class.text-status-warning]="!(system$ | async)?.onnxLoaded">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.onnxLoaded" [class.bg-status-warning]="!(system$ | async)?.onnxLoaded"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.onnxLoaded" [class.text-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.onnxLoaded" [class.bg-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined"></span>
               {{ (system$ | async)?.onnxLoaded ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">OPFS Storage</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.opfsAvailable" [class.text-status-error]="!(system$ | async)?.opfsAvailable">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.opfsAvailable" [class.bg-status-error]="!(system$ | async)?.opfsAvailable"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.opfsAvailable" [class.text-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.opfsAvailable" [class.bg-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined"></span>
               {{ (system$ | async)?.opfsAvailable ? 'Available' : 'Unavailable' }}
             </span>
           </div>

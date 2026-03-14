@@ -16,13 +16,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-200">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-200">
           🔄 Format Converter
         </h1>
         <p class="text-white/50 text-sm">Convert video between MP4, WebM, MOV, GIF with codec selection</p>
@@ -52,7 +47,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
               <!-- Target Format Selector -->
               <div class="space-y-2">
-                <label class="text-xs text-white/40 uppercase tracking-wider">Target Format</label>
+                <span class="text-xs text-white/40 uppercase tracking-wider" style="display: block;">Target Format</span>
                 <div class="grid grid-cols-4 gap-2">
                   @for (fmt of formats; track fmt.value) {
                     <button (click)="onFormatChange(fmt.value)"
@@ -74,7 +69,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
               <!-- Quality Preset -->
               <div class="space-y-2">
-                <label class="text-xs text-white/40 uppercase tracking-wider">Quality Preset</label>
+                <span class="text-xs text-white/40 uppercase tracking-wider" style="display: block;">Quality Preset</span>
                 <div class="grid grid-cols-3 gap-2">
                   @for (preset of presets; track preset.value) {
                     <button (click)="onPresetChange(preset.value)"
@@ -91,7 +86,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               </div>
 
               <!-- Process Button -->
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async)" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-[0_0_30px_rgba(0,245,255,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
                   <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
@@ -125,10 +120,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class ConverterComponent implements OnDestroy {
@@ -165,11 +157,11 @@ export class ConverterComponent implements OnDestroy {
   }
 
   onFormatChange(format: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as any } }));
+    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as unknown as BlobPart } }));
   }
 
   onPresetChange(preset: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as any } }));
+    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as unknown as BlobPart } }));
   }
 
   onProcess() {

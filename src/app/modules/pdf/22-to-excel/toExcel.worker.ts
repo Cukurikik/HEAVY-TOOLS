@@ -14,11 +14,11 @@ addEventListener('message', async (e: MessageEvent) => {
      doc.setTitle('OMNI-TOOL MODIFIED');
      
      const modifiedBuffer = await doc.save();
-     const outputBlob = new Blob([modifiedBuffer as any], { type: 'application/pdf' });
+     const outputBlob = new Blob([modifiedBuffer as unknown as BlobPart], { type: 'application/pdf' });
      
      postMessage({ type: 'progress', value: 100 });
      postMessage({ type: 'complete', data: outputBlob });
-  } catch(e: any) {
-     postMessage({ type: 'error', errorCode: 'WORKER_CRASHED', message: e.message });
+  } catch(e: unknown) {
+     postMessage({ type: 'error', errorCode: 'WORKER_CRASHED', message: (e as Error).message });
   }
 });

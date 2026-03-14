@@ -11,7 +11,7 @@ addEventListener('message', async (event: MessageEvent) => {
     // Extract input data
     const file = config.file as File | undefined;
     const inputText = config.inputText as string | undefined;
-    const outputFormat = config.outputFormat as string;
+    
 
     postMessage({ type: 'progress', value: 30 });
 

@@ -31,7 +31,7 @@ const audioName = 'in.mp3';
 const outName = 'replaced.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
 if (audioFile) ffmpeg.writeFile(audioName, await fetchFile(audioFile));
-let args = [];
+const args = [];
 if (!audioFile) {
   args = ['-i', inName, '-an', '-c:v', 'copy', outName];
 } else if (mixMode === 'mix') {

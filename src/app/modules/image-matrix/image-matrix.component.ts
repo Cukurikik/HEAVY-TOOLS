@@ -21,7 +21,7 @@ export const IMAGE_TOOLS: Tool[] = [
     <div class="p-8 space-y-8 max-w-7xl mx-auto">
       <header class="flex items-center justify-between mb-12">
         <div>
-          <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-status-success mb-2">
+          <h1 class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-status-success mb-2">
             Image Matrix
           </h1>
           <p class="text-text-secondary">GPU-accelerated image processing and AI vision.</p>

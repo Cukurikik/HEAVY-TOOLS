@@ -31,7 +31,7 @@ const outName = 'speed.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
 const pts = 1 / speed;
 const vf = 'setpts=' + pts.toFixed(4) + '*PTS';
-let args = ['-i', inName, '-vf', vf];
+const args = ['-i', inName, '-vf', vf];
 if (audioMode === 'mute') args.push('-an');
 else {
   let r = speed;

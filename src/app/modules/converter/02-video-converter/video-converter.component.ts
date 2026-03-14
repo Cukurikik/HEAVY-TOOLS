@@ -29,13 +29,8 @@ const OUTPUT_FORMATS: FormatOption[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
           🎬 Video Format Converter
         </h1>
         <p class="text-white/50 text-sm">Convert between MP4, MKV, MOV, AVI, WEBM with codec and quality controls</p>
@@ -50,13 +45,13 @@ const OUTPUT_FORMATS: FormatOption[] = [
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="text-xs text-white/40">CRF Quality (0-51)</label>
+                  <span class="text-xs text-white/40" style="display: block;">CRF Quality (0-51)</span>
                   <input type="range" min="0" max="51" [value]="(state$ | async)?.crf ?? 23"
                     (input)="onCRFChange(+($any($event.target)).value)" class="w-full accent-blue-400" />
                   <span class="text-xs text-white/50">{{ (state$ | async)?.crf }}</span>
                 </div>
                 <div>
-                  <label class="text-xs text-white/40">Encoding Speed</label>
+                  <span class="text-xs text-white/40" style="display: block;">Encoding Speed</span>
                   <select (change)="onSpeedChange(($any($event.target)).value)"
                     class="w-full px-2 py-1 mt-1 text-sm bg-white/5 border border-white/15 rounded-lg text-white">
                     <option value="ultrafast">Ultrafast</option>
@@ -88,10 +83,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
           }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class VideoConverterComponent implements OnDestroy {

@@ -16,13 +16,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">📺 Picture-in-Picture</h1>
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">📺 Picture-in-Picture</h1>
         <p class="text-white/50 text-sm">Overlay a smaller video on top of a main video</p>
       </header>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -36,11 +31,11 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 <div class="p-2 rounded-lg bg-white/5"><p class="text-xs text-white/40">Codec</p><p class="text-sm font-semibold text-white">{{ meta.codec }}</p></div>
               </div>
               <!-- Overlay Upload -->
-              <label class="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-white/20 hover:border-sky-400/50 bg-white/5 cursor-pointer transition-all">
+              <span class="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-white/20 hover:border-sky-400/50 bg-white/5 cursor-pointer transition-all" style="display: block;">
                 <span class="text-2xl">🎬</span>
                 <div><p class="text-sm text-white/80">{{ overlayName || 'Select overlay (PiP) video' }}</p><p class="text-xs text-white/40">This will appear in the corner</p></div>
                 <input type="file" accept="video/*" (change)="onOverlay($event)" class="hidden" />
-              </label>
+              </span>
               <!-- Position -->
               <div class="space-y-2">
                 <p class="text-sm text-white/60">PiP Position</p>
@@ -58,7 +53,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 <div class="flex justify-between text-sm"><span class="text-white/60">PiP Size</span><span class="text-sky-400 font-mono">{{ pipScale }}%</span></div>
                 <input type="range" min="10" max="50" [value]="pipScale" (input)="pipScale=+gv($event)" class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400" />
               </div>
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async) || !overlayFile" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async) || !overlayFile" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-sky-500 to-blue-500 text-white hover:shadow-[0_0_30px_rgba(56,189,248,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) { <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Processing... } @else { 📺 Create PiP }
               </button>
@@ -72,10 +67,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_pip" /> }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class PipComponent implements OnDestroy {

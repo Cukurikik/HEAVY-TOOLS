@@ -36,7 +36,7 @@ if (rotation === 90) filters.push('transpose=1');
 else if (rotation === 180) filters.push('transpose=1,transpose=1');
 else if (rotation === 270) filters.push('transpose=2');
 else if (rotation !== 0) filters.push('rotate=' + rotation + '*PI/180');
-let args = ['-i', inName];
+const args = ['-i', inName];
 if (filters.length > 0) {
   args.push('-vf', filters.join(','));
   args.push('-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'copy');

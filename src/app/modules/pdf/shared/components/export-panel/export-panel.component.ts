@@ -17,9 +17,11 @@ import { CommonModule } from '@angular/common';
         <span class="font-bold text-white">{{ outputSizeMB | number:'1.2-2' }} MB</span>
       </div>
       
-      <a *ngIf="outputBlob" [href]="downloadUrl" [download]="defaultFilename" class="block w-full text-center py-3 bg-green-500 hover:bg-green-400 text-black font-bold rounded-xl transition-all hover:scale-[1.02]">
+      @if (outputBlob) {
+<a  [href]="downloadUrl" [download]="defaultFilename" class="block w-full text-center py-3 bg-green-500 hover:bg-green-400 text-black font-bold rounded-xl transition-all hover:scale-[1.02]">
         ⬇️ Download Output
       </a>
+}
     </div>
   `
 })

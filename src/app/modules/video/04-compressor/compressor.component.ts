@@ -16,13 +16,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-    <div class="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
-      <div class="relative bg-[#0a0a0f]/80 backdrop-blur-2xl rounded-3xl p-8 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 space-y-8">
       <header class="space-y-1">
-        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-lg tracking-tight" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-200">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-200">
           📦 Video Compressor
         </h1>
         <p class="text-white/50 text-sm">Reduce file size with CRF quality control — powered by FFmpeg WASM</p>
@@ -53,7 +48,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               <!-- CRF Slider -->
               <div class="space-y-3">
                 <div class="flex justify-between items-center">
-                  <label class="text-xs text-white/40 uppercase tracking-wider">Quality (CRF)</label>
+                  <span class="text-xs text-white/40 uppercase tracking-wider" style="display: block;">Quality (CRF)</span>
                   <span class="text-sm font-bold" [class.text-emerald-400]="crfValue < 20"
                     [class.text-cyan-400]="crfValue >= 20 && crfValue < 30"
                     [class.text-orange-400]="crfValue >= 30 && crfValue < 40"
@@ -90,7 +85,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               }
 
               <!-- Process Button -->
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async)" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-black hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
                   <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
@@ -130,10 +125,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
         </div>
       </div>
-          </div>
-      </div>
     </div>
-  </div>
   `,
 })
 export class CompressorComponent implements OnDestroy {

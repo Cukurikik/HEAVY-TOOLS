@@ -29,7 +29,7 @@ const { file, outputFormat = 'mp3' } = config;
 const inName = 'in.mp4';
 const outName = 'out.' + outputFormat;
 ffmpeg.writeFile(inName, await fetchFile(file));
-let args = [];
+const args = [];
 if (outputFormat === 'mp3') args = ['-i', inName, '-vn', '-q:a', '0', '-map', 'a', outName];
 else if (outputFormat === 'wav') args = ['-i', inName, '-vn', '-c:a', 'pcm_s16le', '-map', 'a', outName];
 else args = ['-i', inName, '-vn', '-c:a', 'copy', '-map', 'a', outName];

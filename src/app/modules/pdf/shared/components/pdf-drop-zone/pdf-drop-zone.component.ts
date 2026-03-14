@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
       (dragover)="onDragOver($event)" 
       (dragleave)="onDragLeave($event)" 
       (drop)="onDrop($event)"
-      (click)="fileInput.click()"
+      (click)="fileInput.click()" (keydown.enter)="fileInput.click()" tabindex="0"
       [class.border-cyan-500]="isDragging"
       [class.bg-cyan-500]="isDragging"
       [class.bg-opacity-10]="isDragging"

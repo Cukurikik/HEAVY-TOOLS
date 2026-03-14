@@ -30,7 +30,7 @@ const inName = 'in.mp4';
 const outName = 'reversed.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
 const vf = 'reverse';
-let args = reverseAudio 
+const args = reverseAudio 
   ? ['-i', inName, '-vf', vf, '-af', 'areverse', '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', outName]
   : ['-i', inName, '-vf', vf, '-an', '-c:v', 'libx264', '-preset', 'ultrafast', outName];
 await ffmpeg.exec(args);

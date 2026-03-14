@@ -1,4 +1,4 @@
-import { createAction, createFeature, createReducer, createSelector, on, props } from '@ngrx/store';
+import { createAction, createFeature, createReducer, on, props } from '@ngrx/store';
 import { VideoMeta, VideoErrorCode } from '../shared/types/video.types';
 
 export interface SpeedControllerState {
