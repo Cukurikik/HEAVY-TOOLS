@@ -28671,33 +28671,33 @@ var App = class _App {
 var routes = [
   __spreadValues({
     path: "",
-    loadComponent: () => import("./chunk-TKMLSI7W.mjs").then((m) => m.ShellComponent),
+    loadComponent: () => import("./chunk-E3EKRBJH.mjs").then((m) => m.ShellComponent),
     children: [
       { path: "", loadComponent: () => import("./chunk-VUHLEJGA.mjs").then((m) => m.DashboardComponent) },
       {
         path: "video",
         children: [
           { path: "", loadComponent: () => import("./chunk-F7OTGKMI.mjs").then((m) => m.VideoEngineComponent) },
-          { path: "", loadChildren: () => import("./chunk-E6XRYG7Z.mjs").then((m) => m.VIDEO_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-SCVR7U64.mjs").then((m) => m.VIDEO_ROUTES) }
         ]
       },
       {
         path: "audio",
         children: [
-          { path: "", loadChildren: () => import("./chunk-5Y7UNJC4.mjs").then((m) => m.AUDIO_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-PLC2P6BZ.mjs").then((m) => m.AUDIO_ROUTES) }
         ]
       },
       {
         path: "pdf",
         children: [
-          { path: "", loadChildren: () => import("./chunk-BJZDL5JI.mjs").then((m) => m.PDF_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-SMC5TYCV.mjs").then((m) => m.PDF_ROUTES) }
         ]
       },
       { path: "image", loadComponent: () => import("./chunk-B676DUII.mjs").then((m) => m.ImageMatrixComponent) },
       {
         path: "converter",
         children: [
-          { path: "", loadChildren: () => import("./chunk-DCE65YVK.mjs").then((m) => m.CONVERTER_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-3B7YLHAB.mjs").then((m) => m.CONVERTER_ROUTES) }
         ]
       },
       { path: "settings", loadComponent: () => import("./chunk-ZBOHI5TO.mjs").then((m) => m.SettingsComponent) }

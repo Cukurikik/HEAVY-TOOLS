@@ -111,11 +111,20 @@ export class MuterComponent {
       setTimeout(() => {
         this.store.dispatch(MuterActions.loadMetaSuccess({
           meta: {
+            filename: file.name,
+            fileSizeMB: file.size / 1024 / 1024,
             duration: 120,
             width: 1920,
             height: 1080,
+            fps: 30,
             codec: 'h264',
-            size: file.size
+            audioCodec: 'aac',
+            audioBitrate: 128000,
+            videoBitrate: 2500000,
+            bitrate: 2628000,
+            sampleRate: 44100,
+            hasAudio: true,
+            aspectRatio: '16:9'
           }
         }));
       }, 1000);

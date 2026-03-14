@@ -148,7 +148,22 @@ export class AudioExtractorComponent implements OnDestroy {
       try {
         const meta = await this.service.getVideoMetadata(file);
         this.store.dispatch(AudioExtractorActions.loadMetaSuccess({
-          meta: { ...meta, codec: 'h264', size: file.size }
+          meta: {
+            filename: file.name,
+            fileSizeMB: file.size / 1024 / 1024,
+            duration: meta.duration,
+            width: meta.width,
+            height: meta.height,
+            fps: 30,
+            codec: 'h264',
+            audioCodec: 'aac',
+            audioBitrate: 128000,
+            videoBitrate: 2500000,
+            bitrate: 2628000,
+            sampleRate: 44100,
+            hasAudio: true,
+            aspectRatio: '16:9'
+          }
         }));
       } catch (error) {
         this.store.dispatch(AudioExtractorActions.processingFailure({ 

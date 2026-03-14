@@ -75,33 +75,33 @@ var App = class _App {
 var routes = [
   __spreadValues({
     path: "",
-    loadComponent: () => import("./chunk-7OJGM7FS.js").then((m) => m.ShellComponent),
+    loadComponent: () => import("./chunk-AIK3VSRE.js").then((m) => m.ShellComponent),
     children: [
       { path: "", loadComponent: () => import("./chunk-NN62CZZZ.js").then((m) => m.DashboardComponent) },
       {
         path: "video",
         children: [
           { path: "", loadComponent: () => import("./chunk-G3EIR3LM.js").then((m) => m.VideoEngineComponent) },
-          { path: "", loadChildren: () => import("./chunk-LZF3F3KO.js").then((m) => m.VIDEO_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-CBQY6EIP.js").then((m) => m.VIDEO_ROUTES) }
         ]
       },
       {
         path: "audio",
         children: [
-          { path: "", loadChildren: () => import("./chunk-K6HVGADY.js").then((m) => m.AUDIO_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-ECFKVZFB.js").then((m) => m.AUDIO_ROUTES) }
         ]
       },
       {
         path: "pdf",
         children: [
-          { path: "", loadChildren: () => import("./chunk-HUC2RSL5.js").then((m) => m.PDF_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-Q4QCD7FI.js").then((m) => m.PDF_ROUTES) }
         ]
       },
       { path: "image", loadComponent: () => import("./chunk-K66H6YRN.js").then((m) => m.ImageMatrixComponent) },
       {
         path: "converter",
         children: [
-          { path: "", loadChildren: () => import("./chunk-AFV4VAC3.js").then((m) => m.CONVERTER_ROUTES) }
+          { path: "", loadChildren: () => import("./chunk-N2JCE3YD.js").then((m) => m.CONVERTER_ROUTES) }
         ]
       },
       { path: "settings", loadComponent: () => import("./chunk-PZFVP6W7.js").then((m) => m.SettingsComponent) }
