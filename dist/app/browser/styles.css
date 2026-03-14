@@ -894,9 +894,6 @@
   .min-h-\[180px\] {
     min-height: 180px;
   }
-  .min-h-\[200px\] {
-    min-height: 200px;
-  }
   .min-h-\[300px\] {
     min-height: 300px;
   }
@@ -2349,9 +2346,6 @@
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
-  .px-8 {
-    padding-inline: calc(var(--spacing) * 8);
-  }
   .px-12 {
     padding-inline: calc(var(--spacing) * 12);
   }
@@ -2755,9 +2749,6 @@
   .text-yellow-400 {
     color: var(--color-yellow-400);
   }
-  .capitalize {
-    text-transform: capitalize;
-  }
   .lowercase {
     text-transform: lowercase;
   }
@@ -2788,9 +2779,6 @@
     .placeholder-white\/30::placeholder {
       color: color-mix(in oklab, var(--color-white) 30%, transparent);
     }
-  }
-  .accent-accent-cyan {
-    accent-color: var(--color-accent-cyan);
   }
   .accent-amber-400 {
     accent-color: var(--color-amber-400);
@@ -3123,11 +3111,6 @@
     }
   }
   @media (hover: hover) {
-    .group-hover\:text-accent-purple:is(:where(.group):hover *) {
-      color: var(--color-accent-purple);
-    }
-  }
-  @media (hover: hover) {
     .hover\:scale-105:hover {
       --tw-scale-x: 105%;
       --tw-scale-y: 105%;
@@ -3146,11 +3129,6 @@
   @media (hover: hover) {
     .hover\:scale-\[1\.02\]:hover {
       scale: 1.02;
-    }
-  }
-  @media (hover: hover) {
-    .hover\:border-accent-cyan:hover {
-      border-color: var(--color-accent-cyan);
     }
   }
   @media (hover: hover) {
@@ -3406,11 +3384,6 @@
       .hover\:text-white\/70:hover {
         color: color-mix(in oklab, var(--color-white) 70%, transparent);
       }
-    }
-  }
-  @media (hover: hover) {
-    .hover\:underline:hover {
-      text-decoration-line: underline;
     }
   }
   @media (hover: hover) {
