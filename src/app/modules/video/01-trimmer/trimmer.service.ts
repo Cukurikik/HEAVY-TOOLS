@@ -2,37 +2,17 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class TrimmerService {
-  // -ss start -i input -t duration -c copy output.mp4
-  buildArgs(inputName: string, outputName: string, start: number, duration: number): string[] {
-    return [
-      '-ss', start.toString(),
-      '-i', inputName,
-      '-t', duration.toString(),
-      '-c', 'copy',
-      outputName
-    ];
+  buildArgs(inputName: string, startTime: number, endTime: number, outputFormat: string): string[] {
+    return ['-ss', String(startTime), '-i', inputName, '-t', String(endTime - startTime), '-c', 'copy', `output.${outputFormat}`];
   }
-  
-  async getVideoMetadata(file: File): Promise<{ duration: number; width: number; height: number }> {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      video.onloadedmetadata = () => {
-        URL.revokeObjectURL(video.src);
-        resolve({
-          duration: video.duration,
-          width: video.videoWidth,
-          height: video.videoHeight
-        });
-      };
-      video.onerror = () => reject('Failed to load video metadata');
-      video.src = URL.createObjectURL(file);
-    });
+  validate(start: number, end: number): string | null {
+    if (end <= start) return 'End time must be after start time';
+    if ((end - start) < 0.1) return 'Clip must be at least 0.1 seconds';
+    return null;
   }
-
   formatTime(s: number): string {
     const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    const sec = (s % 60).toFixed(1).padStart(4, '0');
     return `${m}:${sec}`;
   }
 }

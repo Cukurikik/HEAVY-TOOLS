@@ -1,0 +1,1 @@
+export * from './page-thumbnail-strip.component';

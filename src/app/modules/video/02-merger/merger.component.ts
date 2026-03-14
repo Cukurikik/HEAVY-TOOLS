@@ -1,219 +1,134 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { MergerActions, selectMergerState, selectStatus, selectProgress, selectOutputBlob } from './merger.store';
-import { MergerService } from './merger.service';
-import { take, Subject, takeUntil } from 'rxjs';
+import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
+import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
+import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
+import { MergerActions, selectMergerState, selectMergerIsLoading, selectMergerCanProcess } from './merger.store';
+import { FFmpegService } from '../shared/engine/ffmpeg.service';
+import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
 @Component({
   selector: 'app-merger',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="p-8 max-w-4xl mx-auto space-y-8">
-      <header class="space-y-2">
-        <h1 class="text-3xl font-bold flex items-center gap-3">
-          <mat-icon class="text-accent-cyan">link</mat-icon>
-          Video Merger
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">
+          🔗 Video Merger
         </h1>
-        <p class="text-text-secondary">Concatenate multiple video files in custom order using FFmpeg.</p>
+        <p class="text-white/50 text-sm">Merge multiple video clips into one seamless video</p>
       </header>
 
-      <div class="glass-panel p-8 rounded-2xl border border-white/10 flex flex-col items-center justify-center gap-6 min-h-[300px] relative overflow-hidden group">
-        @if ((status$ | async) === 'idle' || (status$ | async) === null || (status$ | async) === undefined) {
-          <div class="flex flex-col items-center gap-4 text-center">
-            <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent-cyan/20 transition-colors duration-500">
-              <mat-icon class="text-4xl text-text-secondary group-hover:text-accent-cyan transition-colors">upload_file</mat-icon>
-            </div>
-            <div>
-              <p class="text-lg font-medium">Drop your videos here</p>
-              <p class="text-sm text-text-secondary">or click to browse files</p>
-            </div>
-            <input type="file" 
-                   id="video-upload"
-                   class="absolute inset-0 opacity-0 cursor-pointer" 
-                   (change)="onFileSelected($event)" 
-                   accept="video/*"
-                   aria-label="Upload video files">
-          </div>
-        } @else if ((status$ | async) === 'loading' || (status$ | async) === 'processing') {
-          <div class="flex flex-col items-center gap-6 w-full max-w-md">
-            <div class="relative w-24 h-24">
-              <svg class="w-full h-full rotate-[-90deg]" aria-hidden="true">
-                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white/5" />
-                <circle cx="48" cy="48" r="44" stroke="currentColor" stroke-width="8" fill="transparent" 
-                        class="text-accent-cyan transition-all duration-300"
-                        [style.stroke-dasharray]="276.46"
-                        [style.stroke-dashoffset]="276.46 * (1 - ((progress$ | async) || 0) / 100)" />
-              </svg>
-              <div class="absolute inset-0 flex items-center justify-center font-bold text-xl" aria-live="polite">
-                {{ progress$ | async }}%
-              </div>
-            </div>
-            <p class="text-accent-cyan animate-pulse font-medium">
-              {{ (status$ | async) === 'loading' ? 'Analyzing Video...' : 'Merging Frames...' }}
-            </p>
-          </div>
-        } @else if ((status$ | async) === 'done') {
-          <div class="flex flex-col items-center gap-6 text-center">
-            <div class="w-20 h-20 rounded-full bg-status-success/20 flex items-center justify-center">
-              <mat-icon class="text-5xl text-status-success">check_circle</mat-icon>
-            </div>
-            <div>
-              <p class="text-xl font-bold">Merge Complete!</p>
-              <p class="text-sm text-text-secondary">Your video is ready for download.</p>
-            </div>
-            <div class="flex gap-4">
-              <button (click)="download()" 
-                      (keyup.enter)="download()"
-                      tabindex="0"
-                      class="px-6 py-3 rounded-xl bg-accent-cyan text-black font-bold hover:scale-105 transition-transform flex items-center gap-2">
-                <mat-icon>download</mat-icon> Download
-              </button>
-              <button (click)="reset()" 
-                      (keyup.enter)="reset()"
-                      tabindex="0"
-                      class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
-                Start Over
-              </button>
-            </div>
-          </div>
-        } @else if ((status$ | async) === 'error') {
-          <div class="flex flex-col items-center gap-6 text-center text-status-error">
-            <mat-icon class="text-6xl">error_outline</mat-icon>
-            <div>
-              <p class="text-xl font-bold">Something went wrong</p>
-              <p class="text-sm opacity-80">{{ (state$ | async)?.errorMessage }}</p>
-            </div>
-            <button (click)="reset()" 
-                    (keyup.enter)="reset()"
-                    tabindex="0"
-                    class="px-6 py-3 rounded-xl bg-white/5 text-white font-medium hover:bg-white/10 transition-colors">
-              Try Again
-            </button>
-          </div>
-        }
-      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video clips here (multiple files)" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
 
-      @if ((state$ | async)?.videoMeta; as meta) {
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="glass-panel p-4 rounded-xl border border-white/5">
-            <p class="text-[10px] uppercase tracking-wider text-text-secondary mb-1">Duration</p>
-            <p class="font-mono text-lg">{{ service.formatTime(meta.duration) }}</p>
-          </div>
-          <div class="glass-panel p-4 rounded-xl border border-white/5">
-            <p class="text-[10px] uppercase tracking-wider text-text-secondary mb-1">Resolution</p>
-            <p class="font-mono text-lg">{{ meta.width }}x{{ meta.height }}</p>
-          </div>
-          <div class="glass-panel p-4 rounded-xl border border-white/5">
-            <p class="text-[10px] uppercase tracking-wider text-text-secondary mb-1">Codec</p>
-            <p class="font-mono text-lg uppercase">{{ meta.codec }}</p>
-          </div>
-          <div class="glass-panel p-4 rounded-xl border border-white/5">
-            <p class="text-[10px] uppercase tracking-wider text-text-secondary mb-1">Size</p>
-            <p class="font-mono text-lg">{{ (meta.size / 1024 / 1024) | number:'1.1-1' }} MB</p>
-          </div>
+          <!-- Clips List -->
+          @if (clips.length > 0) {
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-white/40 uppercase tracking-wider">Clips ({{ clips.length }})</span>
+                <button (click)="clearClips()" class="text-xs text-red-400 hover:text-red-300 transition-colors">Clear All</button>
+              </div>
+
+              <div class="space-y-2 max-h-64 overflow-y-auto">
+                @for (clip of clips; track $index) {
+                  <div class="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/10">
+                    <span class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">{{ $index + 1 }}</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm text-white truncate">{{ clip.name }}</p>
+                      <p class="text-xs text-white/30">{{ (clip.size / 1_048_576) | number:'1.0-1' }} MB</p>
+                    </div>
+                    <button (click)="removeClip($index)" class="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded-lg hover:bg-red-500/10 transition-all">✕</button>
+                  </div>
+                }
+              </div>
+
+              <!-- Add More -->
+              <button (click)="addMoreInput.click()" class="w-full py-2 rounded-lg border border-dashed border-white/20 text-xs text-white/40 hover:text-white/60 hover:border-white/40 transition-all">
+                + Add More Clips
+              </button>
+              <input #addMoreInput type="file" accept="video/*" multiple class="hidden" (change)="onAddMore($event)" />
+
+              <button [disabled]="clips.length < 2 || (isLoading$ | async)" (click)="onProcess()"
+                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
+                @if (isLoading$ | async) {
+                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  Merging...
+                } @else { 🔗 Merge {{ clips.length }} Clips }
+              </button>
+            </div>
+          }
+
+          @if ((state$ | async)?.status === 'error') {
+            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
+          }
         </div>
-        
-        <div class="flex justify-center pt-4">
-          <button (click)="start()" 
-                  (keyup.enter)="start()"
-                  [disabled]="(status$ | async) !== 'idle'" 
-                  tabindex="0"
-                  class="px-12 py-4 rounded-2xl bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-bold text-lg shadow-glow hover:scale-105 disabled:opacity-50 disabled:scale-100 transition-all duration-300">
-            START MERGING
-          </button>
+
+        <div class="space-y-4">
+          @if ((state$ | async)?.status === 'processing') {
+            <div class="flex justify-center p-8">
+              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Merging clips..." [size]="120" />
+            </div>
+          }
+          @if ((state$ | async)?.status === 'done') {
+            <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_merged" />
+          }
         </div>
-      }
+      </div>
     </div>
-  `
+  `,
 })
 export class MergerComponent implements OnDestroy {
   private store = inject(Store);
-  public service = inject(MergerService);
-  private destroy$ = new Subject<void>();
+  private ffmpeg = inject(FFmpegService);
+  private bridge = inject(WorkerBridgeService);
 
   state$ = this.store.select(selectMergerState);
-  status$ = this.store.select(selectStatus);
-  progress$ = this.store.select(selectProgress);
-  outputBlob$ = this.store.select(selectOutputBlob);
+  isLoading$ = this.store.select(selectMergerIsLoading);
+  canProcess$ = this.store.select(selectMergerCanProcess);
 
-  async onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.store.dispatch(MergerActions.loadFile({ file }));
-      
-      try {
-        const meta = await this.service.getVideoMetadata(file);
-        this.store.dispatch(MergerActions.loadMetaSuccess({
-          meta: {
-            ...meta,
-            codec: 'h264',
-            size: file.size
-          }
-        }));
-      } catch (error) {
-        this.store.dispatch(MergerActions.processingFailure({ 
-          errorCode: 'UNKNOWN_ERROR', 
-          message: String(error) 
-        }));
-      }
+  clips: File[] = [];
+
+  onFilesSelected(files: File[]) {
+    this.clips = [...this.clips, ...files];
+    if (files.length > 0) {
+      this.store.dispatch(MergerActions.loadFile({ file: files[0] }));
     }
   }
 
-  start() {
+  onAddMore(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      this.clips = [...this.clips, ...Array.from(input.files)];
+    }
+    input.value = '';
+  }
+
+  removeClip(index: number) {
+    this.clips = this.clips.filter((_, i) => i !== index);
+  }
+
+  clearClips() { this.clips = []; }
+
+  onProcess() {
     this.store.dispatch(MergerActions.startProcessing());
-    
-    const worker = new Worker(new URL('./merger.worker', import.meta.url));
-    
-    this.state$.pipe(takeUntil(this.destroy$)).subscribe(state => {
-      if (state.status === 'processing' && state.inputFile) {
-        worker.postMessage({ config: { inputFile: state.inputFile, outputFormat: state.outputFormat } });
-      }
-    });
-
-    worker.onmessage = ({ data }) => {
-      if (data.type === 'progress') {
-        this.store.dispatch(MergerActions.updateProgress({ progress: data.value }));
-      } else if (data.type === 'complete') {
-        this.store.dispatch(MergerActions.processingSuccess({ 
-          outputBlob: data.data, 
-          outputSizeMB: data.data.size / 1024 / 1024 
-        }));
-        worker.terminate();
-        this.destroy$.next();
-      } else if (data.type === 'error') {
-        this.store.dispatch(MergerActions.processingFailure({ 
-          errorCode: data.errorCode, 
-          message: data.message 
-        }));
-        worker.terminate();
-        this.destroy$.next();
-      }
-    };
-  }
-
-  download() {
-    this.outputBlob$.pipe(take(1)).subscribe(blob => {
-      if (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `merged_video_${Date.now()}.mp4`;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 150);
+    this.bridge.process<unknown, Blob>(
+      () => new Worker(new URL('./merger.worker', import.meta.url), { type: 'module' }),
+      { clips: this.clips.map(f => ({ file: f })), outputFormat: 'mp4' }
+    ).subscribe(msg => {
+      if (msg.type === 'progress') this.store.dispatch(MergerActions.updateProgress({ progress: msg.value ?? 0 }));
+      else if (msg.type === 'complete' && msg.data) {
+        const blob = msg.data as Blob;
+        this.store.dispatch(MergerActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
+      } else if (msg.type === 'error') {
+        this.store.dispatch(MergerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Merge failed' }));
       }
     });
   }
 
-  reset() {
-    this.store.dispatch(MergerActions.resetState());
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  ngOnDestroy() { this.store.dispatch(MergerActions.resetState()); }
 }

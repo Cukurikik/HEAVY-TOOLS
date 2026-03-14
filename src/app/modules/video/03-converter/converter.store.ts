@@ -1,5 +1,5 @@
 import { createAction, createFeature, createReducer, createSelector, on, props } from '@ngrx/store';
-import { VideoMeta, VideoErrorCode } from '../shared/types/video.types';
+import type { VideoMeta, VideoErrorCode } from '../shared/types/video.types';
 
 export interface ConverterState {
   inputFile: File | null;
@@ -16,23 +16,15 @@ export interface ConverterState {
   errorMessage: string | null;
   retryable: boolean;
 }
-
 const init: ConverterState = {
-  inputFile: null,
-  videoMeta: null,
+  inputFile: null, videoMeta: null,
   targetFormat: 'mp4',
   codec: 'libx264',
   qualityPreset: 'balanced',
   estimatedSizeMB: 0,
-  status: 'idle',
-  progress: 0,
-  outputBlob: null,
-  outputSizeMB: null,
-  errorCode: null,
-  errorMessage: null,
-  retryable: false
+  status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
+  errorCode: null, errorMessage: null, retryable: false
 };
-
 export const ConverterActions = {
   loadFile: createAction('[Converter] Load File', props<{ file: File }>()),
   loadMetaSuccess: createAction('[Converter] Meta OK', props<{ meta: VideoMeta }>()),
@@ -45,7 +37,6 @@ export const ConverterActions = {
   downloadOutput: createAction('[Converter] Download'),
   resetState: createAction('[Converter] Reset'),
 };
-
 export const converterFeature = createFeature({
   name: 'converter',
   reducer: createReducer(init,
@@ -60,7 +51,6 @@ export const converterFeature = createFeature({
     on(ConverterActions.resetState, () => init),
   )
 });
-
 export const { selectConverterState, selectStatus, selectProgress, selectOutputBlob } = converterFeature;
 export const selectConverterCanProcess = createSelector(selectConverterState, s => !!s.inputFile && s.status === 'idle');
 export const selectConverterIsLoading = createSelector(selectStatus, s => s === 'processing' || s === 'loading');

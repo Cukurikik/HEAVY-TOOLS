@@ -1,5 +1,5 @@
 import { createAction, createFeature, createReducer, createSelector, on, props } from '@ngrx/store';
-import { VideoMeta, VideoErrorCode } from '../shared/types/video.types';
+import type { VideoMeta, VideoErrorCode } from '../shared/types/video.types';
 
 export interface MergerState {
   inputFile: File | null;
@@ -15,22 +15,14 @@ export interface MergerState {
   errorMessage: string | null;
   retryable: boolean;
 }
-
 const init: MergerState = {
-  inputFile: null,
-  videoMeta: null,
+  inputFile: null, videoMeta: null,
   clips: [],
   encodeMode: 'copy',
   outputFormat: 'mp4',
-  status: 'idle',
-  progress: 0,
-  outputBlob: null,
-  outputSizeMB: null,
-  errorCode: null,
-  errorMessage: null,
-  retryable: false
+  status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
+  errorCode: null, errorMessage: null, retryable: false
 };
-
 export const MergerActions = {
   loadFile: createAction('[Merger] Load File', props<{ file: File }>()),
   loadMetaSuccess: createAction('[Merger] Meta OK', props<{ meta: VideoMeta }>()),
@@ -43,7 +35,6 @@ export const MergerActions = {
   downloadOutput: createAction('[Merger] Download'),
   resetState: createAction('[Merger] Reset'),
 };
-
 export const mergerFeature = createFeature({
   name: 'merger',
   reducer: createReducer(init,
@@ -58,7 +49,6 @@ export const mergerFeature = createFeature({
     on(MergerActions.resetState, () => init),
   )
 });
-
 export const { selectMergerState, selectStatus, selectProgress, selectOutputBlob } = mergerFeature;
 export const selectMergerCanProcess = createSelector(selectMergerState, s => !!s.inputFile && s.status === 'idle');
 export const selectMergerIsLoading = createSelector(selectStatus, s => s === 'processing' || s === 'loading');

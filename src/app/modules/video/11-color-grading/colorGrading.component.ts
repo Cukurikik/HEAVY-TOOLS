@@ -1,215 +1,204 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { colorGradingActions, colorGradingFeature } from './color-grading.store';
-import { ColorGradingService } from './color-grading.service';
+import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
+import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
+import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
+import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
+import { ColorGradingActions, selectColorGradingState, selectColorGradingIsLoading, selectColorGradingCanProcess } from './colorGrading.store';
+import { FFmpegService } from '../shared/engine/ffmpeg.service';
+import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
 @Component({
   selector: 'app-color-grading',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="p-8 glass-panel rounded-2xl max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-4 flex items-center gap-2">
-        <mat-icon class="text-accent-cyan">palette</mat-icon> Color Grading
-      </h2>
-      <p class="text-text-secondary mb-8">Adjust brightness, contrast, saturation, and gamma.</p>
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
+          🎨 Color Grading
+        </h1>
+        <p class="text-white/50 text-sm">Adjust brightness, contrast, saturation, hue of the entire video</p>
+      </header>
 
-      @if ((state$ | async)?.file === null || (state$ | async)?.file === undefined) {
-        <div (click)="fileInput.click()"
-             (keyup.enter)="fileInput.click()"
-             tabindex="0"
-             role="button"
-             class="aspect-video bg-black/40 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-white/20 hover:border-accent-cyan/50 transition-all cursor-pointer group">
-          <mat-icon class="text-6xl text-text-muted group-hover:text-accent-cyan transition-colors mb-4">cloud_upload</mat-icon>
-          <span class="text-text-muted group-hover:text-text-primary transition-colors">Click to upload video</span>
-          <input #fileInput type="file" (change)="onFileSelected($event)" accept="video/*" class="hidden">
-        </div>
-      }
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video to color grade" (filesSelected)="onFileSelected($event)" />
 
-      @if ((state$ | async)?.file; as file) {
-        <div class="space-y-6">
-          <!-- File Info -->
-          <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
-                <mat-icon class="text-accent-cyan">movie</mat-icon>
-              </div>
-              <div>
-                <h3 class="font-medium text-text-primary">{{ file.name }}</h3>
-                <p class="text-sm text-text-muted">{{ ((state$ | async)?.meta?.duration || 0) | number:'1.0-0' }}s • {{ (file.size / 1024 / 1024) | number:'1.1-1' }} MB</p>
-              </div>
-            </div>
-            <button (click)="reset()" class="p-2 hover:bg-white/10 rounded-full text-text-muted hover:text-accent-red transition-all">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-
-          <!-- Controls -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-6 p-6 bg-white/5 rounded-xl border border-white/10">
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label [for]="'brightness-' + file.name" class="text-sm font-medium">Brightness</label>
-                  <span class="text-xs text-accent-cyan">{{ (state$ | async)?.brightness }}</span>
+          @if ((state$ | async)?.videoMeta; as meta) {
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">Duration</p>
+                  <p class="text-sm font-semibold text-amber-400">{{ meta.duration | number:'1.0-0' }}s</p>
                 </div>
-                <input type="range" [id]="'brightness-' + file.name" min="-1" max="1" step="0.1" [value]="(state$ | async)?.brightness" 
-                       (input)="updateBrightness($event)"
-                       class="w-full accent-accent-cyan">
-              </div>
-
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label [for]="'contrast-' + file.name" class="text-sm font-medium">Contrast</label>
-                  <span class="text-xs text-accent-cyan">{{ (state$ | async)?.contrast }}</span>
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">Resolution</p>
+                  <p class="text-sm font-semibold text-white">{{ meta.width }}x{{ meta.height }}</p>
                 </div>
-                <input type="range" [id]="'contrast-' + file.name" min="0" max="2" step="0.1" [value]="(state$ | async)?.contrast" 
-                       (input)="updateContrast($event)"
-                       class="w-full accent-accent-cyan">
-              </div>
-            </div>
-
-            <div class="space-y-6 p-6 bg-white/5 rounded-xl border border-white/10">
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label [for]="'saturation-' + file.name" class="text-sm font-medium">Saturation</label>
-                  <span class="text-xs text-accent-cyan">{{ (state$ | async)?.saturation }}</span>
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">Codec</p>
+                  <p class="text-sm font-semibold text-white">{{ meta.codec }}</p>
                 </div>
-                <input type="range" [id]="'saturation-' + file.name" min="0" max="3" step="0.1" [value]="(state$ | async)?.saturation" 
-                       (input)="updateSaturation($event)"
-                       class="w-full accent-accent-cyan">
               </div>
 
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label [for]="'gamma-' + file.name" class="text-sm font-medium">Gamma</label>
-                  <span class="text-xs text-accent-cyan">{{ (state$ | async)?.gamma }}</span>
+              <!-- Brightness -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                  <span class="text-white/60">☀️ Brightness</span>
+                  <span class="text-amber-400 font-mono">{{ brightness }}</span>
                 </div>
-                <input type="range" [id]="'gamma-' + file.name" min="0.1" max="5" step="0.1" [value]="(state$ | async)?.gamma" 
-                       (input)="updateGamma($event)"
-                       class="w-full accent-accent-cyan">
+                <input type="range" min="-1" max="1" step="0.05" [value]="brightness"
+                  (input)="onSlider('brightness', $event)"
+                  class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400" />
               </div>
-            </div>
-          </div>
 
-          <!-- Action -->
-          <div class="flex flex-col gap-4">
-            @if ((state$ | async)?.outputUrl === null || (state$ | async)?.outputUrl === undefined) {
-              <button (click)="process()"
-                      [disabled]="(state$ | async)?.isProcessing"
-                      class="w-full py-4 bg-accent-cyan text-black font-bold rounded-xl hover:bg-accent-cyan/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
-                @if ((state$ | async)?.isProcessing === false || (state$ | async)?.isProcessing === null || (state$ | async)?.isProcessing === undefined) {
-                  <mat-icon>play_arrow</mat-icon>
-                }
-                @if ((state$ | async)?.isProcessing) {
-                  <span class="animate-spin rounded-full h-5 w-5 border-2 border-black/20 border-t-black"></span>
-                }
-                {{ (state$ | async)?.isProcessing ? 'Processing...' : 'Apply Grading' }}
+              <!-- Contrast -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                  <span class="text-white/60">🔲 Contrast</span>
+                  <span class="text-amber-400 font-mono">{{ contrast }}</span>
+                </div>
+                <input type="range" min="0" max="3" step="0.1" [value]="contrast"
+                  (input)="onSlider('contrast', $event)"
+                  class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400" />
+              </div>
+
+              <!-- Saturation -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                  <span class="text-white/60">🌈 Saturation</span>
+                  <span class="text-amber-400 font-mono">{{ saturation }}</span>
+                </div>
+                <input type="range" min="0" max="3" step="0.1" [value]="saturation"
+                  (input)="onSlider('saturation', $event)"
+                  class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400" />
+              </div>
+
+              <!-- Gamma -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-sm">
+                  <span class="text-white/60">🌓 Gamma</span>
+                  <span class="text-amber-400 font-mono">{{ gamma }}</span>
+                </div>
+                <input type="range" min="0.1" max="5" step="0.1" [value]="gamma"
+                  (input)="onSlider('gamma', $event)"
+                  class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400" />
+              </div>
+
+              <!-- LUT Presets -->
+              <div class="space-y-2">
+                <p class="text-sm text-white/60">Quick LUT Presets</p>
+                <div class="grid grid-cols-3 gap-2">
+                  @for (preset of lutPresets; track preset.label) {
+                    <button (click)="applyLut(preset)"
+                      class="p-2 rounded-lg border border-white/10 bg-white/5 text-xs text-white/70 hover:bg-amber-400/10 hover:border-amber-400/30 hover:text-amber-400 transition-all">
+                      {{ preset.icon }} {{ preset.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Reset -->
+              <button (click)="resetGrading()" class="w-full py-2 text-xs text-white/40 hover:text-white/70 transition-colors">
+                🔄 Reset to Default
               </button>
-            }
 
-            @if ((state$ | async)?.isProcessing) {
-              <div class="space-y-2">
-                <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div class="h-full bg-accent-cyan transition-all duration-300" [style.width.%]="(state$ | async)?.progress"></div>
-                </div>
-                <p class="text-center text-sm text-text-muted">Processing: {{ (state$ | async)?.progress }}%</p>
-              </div>
-            }
+              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
+                @if (isLoading$ | async) {
+                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  Grading...
+                } @else { 🎨 Apply Color Grading }
+              </button>
+            </div>
+          }
 
-            @if ((state$ | async)?.outputUrl; as outputUrl) {
-              <a [href]="outputUrl"
-                 [download]="'graded_' + file.name"
-                 class="w-full py-4 bg-accent-green text-black font-bold rounded-xl hover:bg-accent-green/90 transition-all flex items-center justify-center gap-2">
-                <mat-icon>download</mat-icon> Download Result
-              </a>
-            }
-          </div>
+          @if ((state$ | async)?.status === 'error') {
+            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
+          }
         </div>
-      }
 
-      @if ((state$ | async)?.error; as error) {
-        <div class="mt-6 p-4 bg-accent-red/20 border border-accent-red/50 rounded-xl text-accent-red flex items-center gap-3">
-          <mat-icon>error</mat-icon>
-          <span>{{ error }}</span>
+        <div class="space-y-4">
+          @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
+          @if ((state$ | async)?.status === 'processing') {
+            <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Grading..." [size]="120" /></div>
+          }
+          @if ((state$ | async)?.status === 'done') {
+            <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_graded" />
+          }
         </div>
-      }
+      </div>
     </div>
-  `
+  `,
 })
-export class ColorGradingComponent {
+export class ColorGradingComponent implements OnDestroy {
   private store = inject(Store);
-  private service = inject(ColorGradingService);
-  state$ = this.store.select(colorGradingFeature.selectColorGradingState);
+  private ffmpeg = inject(FFmpegService);
+  private bridge = inject(WorkerBridgeService);
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) {
-      this.store.dispatch(colorGradingActions.loadFile({ file }));
-      // Mock meta data for now
-      setTimeout(() => {
-        this.store.dispatch(colorGradingActions.setMeta({
-          meta: { duration: 120, size: file.size, name: file.name }
-        }));
-      }, 500);
+  state$ = this.store.select(selectColorGradingState);
+  isLoading$ = this.store.select(selectColorGradingIsLoading);
+  canProcess$ = this.store.select(selectColorGradingCanProcess);
+
+  brightness = 0; contrast = 1; saturation = 1; gamma = 1;
+
+  lutPresets = [
+    { label: 'Warm', icon: '🌅', brightness: 0.05, contrast: 1.1, saturation: 1.3, gamma: 0.9 },
+    { label: 'Cool', icon: '🧊', brightness: -0.05, contrast: 1.1, saturation: 0.8, gamma: 1.1 },
+    { label: 'Vintage', icon: '📷', brightness: 0.1, contrast: 0.9, saturation: 0.6, gamma: 1.2 },
+    { label: 'Vivid', icon: '🎆', brightness: 0, contrast: 1.3, saturation: 1.8, gamma: 0.95 },
+    { label: 'B&W', icon: '⚫', brightness: 0, contrast: 1.2, saturation: 0, gamma: 1 },
+    { label: 'Cinematic', icon: '🎬', brightness: -0.1, contrast: 1.4, saturation: 0.9, gamma: 1.3 },
+  ];
+
+  async onFileSelected(files: File[]) {
+    const file = files[0];
+    this.store.dispatch(ColorGradingActions.loadFile({ file }));
+    try {
+      const meta = await this.ffmpeg.getMetadata(file);
+      this.store.dispatch(ColorGradingActions.loadMetaSuccess({ meta }));
+    } catch {
+      this.store.dispatch(ColorGradingActions.loadMetaFailure({ errorCode: 'FILE_CORRUPTED', message: 'Could not read video metadata.' }));
     }
   }
 
-  updateBrightness(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.store.dispatch(colorGradingActions.setBrightness({ brightness: parseFloat(input.value) }));
+  onSlider(key: string, e: Event) {
+    const val = +(e.target as HTMLInputElement).value;
+    (this as any)[key] = val;
+    this.store.dispatch(ColorGradingActions.updateConfig({ config: { [key]: val } }));
   }
 
-  updateContrast(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.store.dispatch(colorGradingActions.setContrast({ contrast: parseFloat(input.value) }));
+  applyLut(p: { brightness: number; contrast: number; saturation: number; gamma: number }) {
+    this.brightness = p.brightness; this.contrast = p.contrast; this.saturation = p.saturation; this.gamma = p.gamma;
+    this.store.dispatch(ColorGradingActions.updateConfig({ config: { brightness: p.brightness, contrast: p.contrast, saturation: p.saturation, gamma: p.gamma } }));
   }
 
-  updateSaturation(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.store.dispatch(colorGradingActions.setSaturation({ saturation: parseFloat(input.value) }));
+  resetGrading() {
+    this.brightness = 0; this.contrast = 1; this.saturation = 1; this.gamma = 1;
+    this.store.dispatch(ColorGradingActions.updateConfig({ config: { brightness: 0, contrast: 1, saturation: 1, gamma: 1 } }));
   }
 
-  updateGamma(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.store.dispatch(colorGradingActions.setGamma({ gamma: parseFloat(input.value) }));
-  }
-
-  process() {
+  onProcess() {
+    this.store.dispatch(ColorGradingActions.startProcessing());
     this.state$.subscribe(state => {
-      if (!state.file) return;
-
-      this.store.dispatch(colorGradingActions.startProcessing());
-
-      const worker = new Worker(new URL('./color-grading.worker', import.meta.url));
-      worker.onmessage = ({ data }) => {
-        if (data.type === 'progress') {
-          this.store.dispatch(colorGradingActions.setProgress({ progress: data.value }));
-        } else if (data.type === 'complete') {
-          const url = URL.createObjectURL(data.data);
-          this.store.dispatch(colorGradingActions.completeProcessing({ outputUrl: url }));
-          worker.terminate();
-        } else if (data.type === 'error') {
-          this.store.dispatch(colorGradingActions.setError({ error: data.message }));
-          worker.terminate();
-        }
-      };
-
-      worker.postMessage({
-        config: {
-          inputFile: state.file,
-          brightness: state.brightness,
-          contrast: state.contrast,
-          saturation: state.saturation,
-          gamma: state.gamma
+      if (!state.inputFile) return;
+      this.bridge.process<unknown, Blob>(
+        () => new Worker(new URL('./colorGrading.worker', import.meta.url), { type: 'module' }),
+        { file: state.inputFile, brightness: this.brightness, contrast: this.contrast, saturation: this.saturation, gamma: this.gamma }
+      ).subscribe(msg => {
+        if (msg.type === 'progress') this.store.dispatch(ColorGradingActions.updateProgress({ progress: msg.value ?? 0 }));
+        else if (msg.type === 'complete' && msg.data) {
+          const blob = msg.data as Blob;
+          this.store.dispatch(ColorGradingActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
+        } else if (msg.type === 'error') {
+          this.store.dispatch(ColorGradingActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Grading failed' }));
         }
       });
     }).unsubscribe();
   }
 
-  reset() {
-    this.store.dispatch(colorGradingActions.reset());
-  }
+  ngOnDestroy() { this.store.dispatch(ColorGradingActions.resetState()); }
 }

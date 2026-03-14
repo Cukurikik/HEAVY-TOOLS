@@ -1,165 +1,169 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { subtitleBurnerActions, subtitleBurnerFeature } from './subtitle-burner.store';
-import { SubtitleBurnerService } from './subtitle-burner.service';
+import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
+import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
+import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
+import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
+import { SubtitleBurnerActions, selectSubtitleBurnerState, selectSubtitleBurnerIsLoading, selectSubtitleBurnerCanProcess } from './subtitleBurner.store';
+import { FFmpegService } from '../shared/engine/ffmpeg.service';
+import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
 @Component({
   selector: 'app-subtitle-burner',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="p-8 glass-panel rounded-2xl max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-4 flex items-center gap-2">
-        <mat-icon class="text-accent-cyan">subtitles</mat-icon> Subtitle Burner
-      </h2>
-      <p class="text-text-secondary mb-8">Hardcode subtitles (SRT/ASS) into your video.</p>
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-400">💬 Subtitle Burner</h1>
+        <p class="text-white/50 text-sm">Hardcode SRT/ASS subtitles permanently into the video</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video file here" (filesSelected)="onFileSelected($event)" />
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <!-- Video Upload -->
-        <div (click)="videoInput.click()"
-             class="aspect-video bg-black/40 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-white/20 hover:border-accent-cyan/50 transition-all cursor-pointer group relative overflow-hidden">
-          <input #videoInput type="file" (change)="onVideoSelected($event)" accept="video/*" class="hidden">
-          @if ((state$ | async)?.videoFile === null || (state$ | async)?.videoFile === undefined) {
-          <div class="text-center">
-            <mat-icon class="text-5xl text-text-muted group-hover:text-accent-cyan transition-colors mb-2">movie</mat-icon>
-            <p class="text-sm text-text-muted">Upload Video</p>
-          </div>
-          }
-          @if ((state$ | async)?.videoFile; as file) {
-          <div class="text-center p-4">
-            <mat-icon class="text-4xl text-accent-cyan mb-2">check_circle</mat-icon>
-            <p class="text-sm font-medium truncate max-w-[200px]">{{ file.name }}</p>
-          </div>
-          }
-        </div>
+          @if ((state$ | async)?.videoMeta; as meta) {
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-2 rounded-lg bg-white/5"><p class="text-xs text-white/40">Duration</p><p class="text-sm font-semibold text-yellow-400">{{ meta.duration | number:'1.0-0' }}s</p></div>
+                <div class="p-2 rounded-lg bg-white/5"><p class="text-xs text-white/40">Resolution</p><p class="text-sm font-semibold text-white">{{ meta.width }}x{{ meta.height }}</p></div>
+                <div class="p-2 rounded-lg bg-white/5"><p class="text-xs text-white/40">Codec</p><p class="text-sm font-semibold text-white">{{ meta.codec }}</p></div>
+              </div>
 
-        <!-- Subtitle Upload -->
-        <div (click)="subInput.click()"
-             class="aspect-video bg-black/40 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-white/20 hover:border-accent-cyan/50 transition-all cursor-pointer group relative overflow-hidden">
-          <input #subInput type="file" (change)="onSubtitleSelected($event)" accept=".srt,.vtt,.ass" class="hidden">
-          @if ((state$ | async)?.subtitleFile === null || (state$ | async)?.subtitleFile === undefined) {
-          <div class="text-center">
-            <mat-icon class="text-5xl text-text-muted group-hover:text-accent-cyan transition-colors mb-2">description</mat-icon>
-            <p class="text-sm text-text-muted">Upload Subtitles (.srt, .vtt, .ass)</p>
-          </div>
-          }
-          @if ((state$ | async)?.subtitleFile; as file) {
-          <div class="text-center p-4">
-            <mat-icon class="text-4xl text-accent-cyan mb-2">check_circle</mat-icon>
-            <p class="text-sm font-medium truncate max-w-[200px]">{{ file.name }}</p>
-          </div>
-          }
-        </div>
-      </div>
+              <!-- SRT Upload -->
+              <div class="space-y-2">
+                <p class="text-sm text-white/60">Subtitle File (.srt / .ass)</p>
+                <label class="flex items-center gap-3 p-4 rounded-xl border-2 border-dashed border-white/20 hover:border-yellow-400/50 bg-white/5 cursor-pointer transition-all">
+                  <span class="text-2xl">📄</span>
+                  <div>
+                    <p class="text-sm text-white/80">{{ subtitleFileName || 'Click to select subtitle file' }}</p>
+                    <p class="text-xs text-white/40">Supports .srt, .ass, .ssa</p>
+                  </div>
+                  <input type="file" accept=".srt,.ass,.ssa,.vtt" (change)="onSubtitleFile($event)" class="hidden" />
+                </label>
+              </div>
 
-      @if ((state$ | async)?.videoFile && (state$ | async)?.subtitleFile) {
-      <div class="space-y-6">
-        <div class="flex flex-col gap-4">
-          @if ((state$ | async)?.outputUrl === null || (state$ | async)?.outputUrl === undefined) {
-          <button
-                  (click)="process()"
-                  [disabled]="(state$ | async)?.isProcessing"
-                  class="w-full py-4 bg-accent-cyan text-black font-bold rounded-xl hover:bg-accent-cyan/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
-            @if ((state$ | async)?.isProcessing === false || (state$ | async)?.isProcessing === null || (state$ | async)?.isProcessing === undefined) {
-            <mat-icon>play_arrow</mat-icon>
-            }
-            @if ((state$ | async)?.isProcessing) {
-            <span class="animate-spin rounded-full h-5 w-5 border-2 border-black/20 border-t-black"></span>
-            }
-            {{ (state$ | async)?.isProcessing ? 'Burning Subtitles...' : 'Start Burning' }}
-          </button>
-          }
+              <!-- Font Size -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span class="text-white/60">Font Size</span>
+                  <span class="text-yellow-400 font-mono">{{ fontSize }}px</span>
+                </div>
+                <input type="range" min="12" max="72" [value]="fontSize" (input)="onFontSize($event)"
+                  class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-yellow-400" />
+                <div class="flex justify-between text-xs text-white/30"><span>12px</span><span>42px</span><span>72px</span></div>
+              </div>
 
-          @if ((state$ | async)?.isProcessing) {
-          <div class="space-y-2">
-            <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div class="h-full bg-accent-cyan transition-all duration-300" [style.width.%]="(state$ | async)?.progress"></div>
+              <!-- Position -->
+              <div class="space-y-2">
+                <p class="text-sm text-white/60">Subtitle Position</p>
+                <div class="grid grid-cols-3 gap-2">
+                  @for (pos of positions; track pos.value) {
+                    <button (click)="onPosition(pos.value)"
+                      [class]="position === pos.value
+                        ? 'p-2 rounded-lg border-2 border-yellow-400 bg-yellow-400/10 text-yellow-300 text-sm font-semibold'
+                        : 'p-2 rounded-lg border border-white/10 bg-white/5 text-white/60 text-sm hover:bg-white/10'">
+                      {{ pos.icon }} {{ pos.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Font Color -->
+              <div class="space-y-2">
+                <p class="text-sm text-white/60">Font Color</p>
+                <div class="grid grid-cols-6 gap-2">
+                  @for (color of fontColors; track color) {
+                    <button (click)="onFontColor(color)" [style.background]="color"
+                      [class]="fontColor === color
+                        ? 'w-8 h-8 rounded-full ring-2 ring-yellow-400 ring-offset-2 ring-offset-[#0a0a0f]'
+                        : 'w-8 h-8 rounded-full border border-white/20 hover:scale-110 transition-transform'">
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async) || !subtitleFile" (click)="onProcess()"
+                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-black hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
+                @if (isLoading$ | async) {
+                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Burning...
+                } @else { 💬 Burn Subtitles }
+              </button>
             </div>
-            <p class="text-center text-sm text-text-muted">Progress: {{ (state$ | async)?.progress }}%</p>
-          </div>
           }
-
-          @if ((state$ | async)?.outputUrl) {
-          <a
-             [href]="(state$ | async)?.outputUrl"
-             [download]="'subtitled_' + (state$ | async)?.videoFile?.name"
-             class="w-full py-4 bg-accent-green text-black font-bold rounded-xl hover:bg-accent-green/90 transition-all flex items-center justify-center gap-2">
-            <mat-icon>download</mat-icon> Download Result
-          </a>
+          @if ((state$ | async)?.status === 'error') {
+            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
           }
-
-          <button (click)="reset()" class="w-full py-2 text-text-muted hover:text-text-primary transition-colors text-sm">
-            Reset and Start Over
-          </button>
+        </div>
+        <div class="space-y-4">
+          @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
+          @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Burning..." [size]="120" /></div> }
+          @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_subtitled" /> }
         </div>
       </div>
-      }
-
-      @if ((state$ | async)?.error) {
-      <div class="mt-6 p-4 bg-accent-red/20 border border-accent-red/50 rounded-xl text-accent-red flex items-center gap-3">
-        <mat-icon>error</mat-icon>
-        <span>{{ (state$ | async)?.error }}</span>
-      </div>
-      }
     </div>
-  `
+  `,
 })
-export class SubtitleBurnerComponent {
+export class SubtitleBurnerComponent implements OnDestroy {
   private store = inject(Store);
-  private service = inject(SubtitleBurnerService);
-  state$ = this.store.select(subtitleBurnerFeature.selectSubtitleBurnerState);
+  private ffmpeg = inject(FFmpegService);
+  private bridge = inject(WorkerBridgeService);
+  state$ = this.store.select(selectSubtitleBurnerState);
+  isLoading$ = this.store.select(selectSubtitleBurnerIsLoading);
+  canProcess$ = this.store.select(selectSubtitleBurnerCanProcess);
 
-  onVideoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.store.dispatch(subtitleBurnerActions.loadVideo({ file }));
-      setTimeout(() => {
-        this.store.dispatch(subtitleBurnerActions.setMeta({
-          meta: { duration: 120, size: file.size, name: file.name }
-        }));
-      }, 500);
+  subtitleFile: File | null = null;
+  subtitleFileName = '';
+  fontSize = 24;
+  position = 'bottom';
+  fontColor = '#ffffff';
+
+  positions = [
+    { value: 'top', label: 'Top', icon: '⬆️' },
+    { value: 'center', label: 'Center', icon: '⏺️' },
+    { value: 'bottom', label: 'Bottom', icon: '⬇️' },
+  ];
+  fontColors = ['#ffffff', '#ffff00', '#00ff00', '#00ffff', '#ff6600', '#ff0000'];
+
+  async onFileSelected(files: File[]) {
+    const file = files[0];
+    this.store.dispatch(SubtitleBurnerActions.loadFile({ file }));
+    try {
+      const meta = await this.ffmpeg.getMetadata(file);
+      this.store.dispatch(SubtitleBurnerActions.loadMetaSuccess({ meta }));
+    } catch {
+      this.store.dispatch(SubtitleBurnerActions.loadMetaFailure({ errorCode: 'FILE_CORRUPTED', message: 'Could not read video metadata.' }));
     }
   }
 
-  onSubtitleSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.store.dispatch(subtitleBurnerActions.loadSubtitle({ file }));
-    }
+  onSubtitleFile(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (input.files?.[0]) { this.subtitleFile = input.files[0]; this.subtitleFileName = input.files[0].name; }
   }
+  onFontSize(e: Event) { this.fontSize = +(e.target as HTMLInputElement).value; }
+  onPosition(p: string) { this.position = p; }
+  onFontColor(c: string) { this.fontColor = c; }
 
-  process() {
+  onProcess() {
+    this.store.dispatch(SubtitleBurnerActions.startProcessing());
     this.state$.subscribe(state => {
-      if (!state.videoFile || !state.subtitleFile) return;
-
-      this.store.dispatch(subtitleBurnerActions.startProcessing());
-
-      const worker = new Worker(new URL('./subtitle-burner.worker', import.meta.url));
-      worker.onmessage = ({ data }) => {
-        if (data.type === 'progress') {
-          this.store.dispatch(subtitleBurnerActions.setProgress({ progress: data.value }));
-        } else if (data.type === 'complete') {
-          const url = URL.createObjectURL(data.data);
-          this.store.dispatch(subtitleBurnerActions.completeProcessing({ outputUrl: url }));
-          worker.terminate();
-        } else if (data.type === 'error') {
-          this.store.dispatch(subtitleBurnerActions.setError({ error: data.message }));
-          worker.terminate();
-        }
-      };
-
-      worker.postMessage({
-        config: {
-          videoFile: state.videoFile,
-          subtitleFile: state.subtitleFile
+      if (!state.inputFile || !this.subtitleFile) return;
+      this.bridge.process<unknown, Blob>(
+        () => new Worker(new URL('./subtitleBurner.worker', import.meta.url), { type: 'module' }),
+        { file: state.inputFile, subtitleFile: this.subtitleFile, fontSize: this.fontSize, position: this.position, fontColor: this.fontColor }
+      ).subscribe(msg => {
+        if (msg.type === 'progress') this.store.dispatch(SubtitleBurnerActions.updateProgress({ progress: msg.value ?? 0 }));
+        else if (msg.type === 'complete' && msg.data) {
+          const blob = msg.data as Blob;
+          this.store.dispatch(SubtitleBurnerActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
+        } else if (msg.type === 'error') {
+          this.store.dispatch(SubtitleBurnerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Burning failed' }));
         }
       });
     }).unsubscribe();
   }
 
-  reset() {
-    this.store.dispatch(subtitleBurnerActions.reset());
-  }
+  ngOnDestroy() { this.store.dispatch(SubtitleBurnerActions.resetState()); }
 }

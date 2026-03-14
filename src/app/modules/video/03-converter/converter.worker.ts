@@ -3,48 +3,53 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
 let ffmpeg: FFmpeg | null = null;
-
 async function loadFFmpeg() {
   if (ffmpeg) return;
   ffmpeg = new FFmpeg();
   const base = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
   await ffmpeg.load({
-    coreURL: await toBlobURL(`${base}/ffmpeg-core.js`, 'text/javascript'),
-    wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`, 'application/wasm'),
+    coreURL: await toBlobURL(base + '/ffmpeg-core.js', 'text/javascript'),
+    wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm'),
   });
 }
+
+function progress(v: number) { postMessage({ type: 'progress', value: v }); }
+function done(blob: Blob) { postMessage({ type: 'complete', data: blob }); }
+function fail(msg: string) { postMessage({ type: 'error', errorCode: 'FFMPEG_COMMAND_FAILED', message: msg }); }
 
 addEventListener('message', async (e: MessageEvent) => {
   const { config } = e.data;
   try {
     await loadFFmpeg();
     if (!ffmpeg) throw new Error('FFmpeg not loaded');
+    ffmpeg.on('progress', ({ progress: p }: any) => progress(Math.round(p * 100)));
     
-    ffmpeg.on('progress', ({ progress }: { progress: number }) => {
-      postMessage({ type: 'progress', value: Math.round(progress * 100) });
-    });
+    // Feature specific logic
+const { file, targetFormat = 'mp4', qualityPreset = 'balanced' } = config;
+const inName = 'in.' + (file.name.split('.').pop() || 'mp4');
+const outName = 'out.' + targetFormat;
+ffmpeg.writeFile(inName, await fetchFile(file));
+let args = [];
+const presetMap: Record<string, string> = { fast: 'ultrafast', balanced: 'medium', best: 'slow' };
+const preset = presetMap[qualityPreset] || 'medium';
+if (targetFormat === 'gif') {
+  await ffmpeg.exec(['-i', inName, '-vf', 'fps=10,scale=480:-1:flags=lanczos,palettegen', 'palette.png']);
+  args = ['-i', inName, '-i', 'palette.png', '-filter_complex', 'fps=10,scale=480:-1:flags=lanczos[x];[x][1:v]paletteuse', outName];
+} else if (targetFormat === 'webm') {
+  args = ['-i', inName, '-c:v', 'libvpx-vp9', '-crf', '30', '-b:v', '0', '-c:a', 'libopus', outName];
+} else if (targetFormat === 'mov') {
+  args = ['-i', inName, '-c:v', 'libx264', '-preset', preset, '-c:a', 'aac', '-movflags', '+faststart', outName];
+} else {
+  args = ['-i', inName, '-c:v', 'libx264', '-preset', preset, '-crf', '23', '-c:a', 'aac', '-movflags', '+faststart', outName];
+}
+await ffmpeg.exec(args);
+const data = await ffmpeg.readFile(outName);
+const mimeMap: Record<string, string> = { mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', avi: 'video/x-msvideo', mkv: 'video/x-matroska', gif: 'image/gif' };
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: mimeMap[targetFormat] || 'video/mp4' }));
+ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
+if (targetFormat === 'gif') { try { ffmpeg.deleteFile('palette.png'); } catch {} }
 
-    const ext = config.targetFormat ?? 'mp4';
-    const inputName = `in_${Date.now()}.mp4`;
-    const outputName = `out_${Date.now()}.${ext}`;
-    const inputFile = config.file ?? config.inputFile;
-    
-    if (!inputFile) throw new Error('No input file');
-
-    const inputData = await fetchFile(inputFile);
-    await ffmpeg.writeFile(inputName, inputData);
-
-    // Basic convert logic
-    await ffmpeg.exec(['-i', inputName, '-c:v', 'libx264', '-preset', 'ultrafast', outputName]);
-
-    const data = await ffmpeg.readFile(outputName);
-    const blob = new Blob([data as unknown as BlobPart], { type: `video/${ext}` });
-    
-    await ffmpeg.deleteFile(inputName);
-    await ffmpeg.deleteFile(outputName);
-    
-    postMessage({ type: 'complete', data: blob });
   } catch (err: unknown) {
-    postMessage({ type: 'error', errorCode: 'FFMPEG_COMMAND_FAILED', message: String(err) });
+    fail(String(err));
   }
 });

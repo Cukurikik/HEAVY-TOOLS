@@ -185,5 +185,10 @@ export const VIDEO_ROUTES: Routes = [
     loadComponent: () => import('./30-upscaler/upscaler.component').then(m => m.UpscalerComponent),
     title: 'AI Video Upscaler — Omni-Tool',
     data: { category: 'ai' }
+  },
+  {
+    path: '',
+    redirectTo: 'trimmer',
+    pathMatch: 'full'
   }
 ];

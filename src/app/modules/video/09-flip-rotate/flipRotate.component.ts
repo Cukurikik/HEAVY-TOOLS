@@ -1,202 +1,198 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
-import { flipRotateActions, flipRotateFeature } from './flip-rotate.store';
-import { FlipRotateService } from './flip-rotate.service';
+import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
+import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
+import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
+import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
+import { FlipRotateActions, selectFlipRotateState, selectFlipRotateIsLoading, selectFlipRotateCanProcess } from './flipRotate.store';
+import { FFmpegService } from '../shared/engine/ffmpeg.service';
+import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
 @Component({
   selector: 'app-flip-rotate',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="p-8 glass-panel rounded-2xl max-w-4xl mx-auto">
-      <h2 class="text-3xl font-bold mb-4 flex items-center gap-2">
-        <mat-icon class="text-accent-cyan">flip</mat-icon> Flip & Rotate
-      </h2>
-      <p class="text-text-secondary mb-8">Flip horizontally/vertically or rotate your video.</p>
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-200">
+          🔁 Flip & Rotate
+        </h1>
+        <p class="text-white/50 text-sm">Flip horizontally/vertically and rotate by 90°/180°/270°</p>
+      </header>
 
-      @if ((state$ | async)?.file === null || (state$ | async)?.file === undefined) {
-        <div (click)="fileInput.click()"
-             (keyup.enter)="fileInput.click()"
-             tabindex="0"
-             role="button"
-             class="aspect-video bg-black/40 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-white/20 hover:border-accent-cyan/50 transition-all cursor-pointer group">
-          <mat-icon class="text-6xl text-text-muted group-hover:text-accent-cyan transition-colors mb-4">cloud_upload</mat-icon>
-          <span class="text-text-muted group-hover:text-text-primary transition-colors">Click to upload video</span>
-          <input #fileInput type="file" (change)="onFileSelected($event)" accept="video/*" class="hidden">
-        </div>
-      }
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
 
-      @if ((state$ | async)?.file; as file) {
-        <div class="space-y-6">
-          <!-- File Info -->
-          <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
-                <mat-icon class="text-accent-cyan">movie</mat-icon>
-              </div>
-              <div>
-                <h3 class="font-medium text-text-primary">{{ file.name }}</h3>
-                <p class="text-sm text-text-muted">{{ ((state$ | async)?.meta?.duration || 0) | number:'1.0-0' }}s • {{ (file.size / 1024 / 1024) | number:'1.1-1' }} MB</p>
-              </div>
-            </div>
-            <button (click)="reset()" class="p-2 hover:bg-white/10 rounded-full text-text-muted hover:text-accent-red transition-all">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-
-          <!-- Controls -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="p-6 bg-white/5 rounded-xl border border-white/10 space-y-4">
-              <h4 class="font-medium flex items-center gap-2">
-                <mat-icon class="text-accent-cyan text-sm">flip</mat-icon> Flip Options
-              </h4>
-              <div class="flex gap-4">
-                <button (click)="toggleFlipH()" 
-                        [class.bg-accent-cyan]="(state$ | async)?.flipH"
-                        [class.text-black]="(state$ | async)?.flipH"
-                        class="flex-1 py-3 rounded-lg border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                  <mat-icon>swap_horiz</mat-icon> Horizontal
-                </button>
-                <button (click)="toggleFlipV()" 
-                        [class.bg-accent-cyan]="(state$ | async)?.flipV"
-                        [class.text-black]="(state$ | async)?.flipV"
-                        class="flex-1 py-3 rounded-lg border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                  <mat-icon>swap_vert</mat-icon> Vertical
-                </button>
-              </div>
-            </div>
-
-            <div class="p-6 bg-white/5 rounded-xl border border-white/10 space-y-4">
-              <h4 class="font-medium flex items-center gap-2">
-                <mat-icon class="text-accent-cyan text-sm">rotate_right</mat-icon> Rotation
-              </h4>
-              <div class="grid grid-cols-4 gap-2">
-                @for (rot of [0, 90, 180, 270]; track rot) {
-                  <button (click)="setRotation(rot)"
-                          [class.bg-accent-cyan]="(state$ | async)?.rotation === rot"
-                          [class.text-black]="(state$ | async)?.rotation === rot"
-                          class="py-2 rounded-lg border border-white/10 hover:bg-white/10 transition-all text-sm">
-                    {{ rot }}°
-                  </button>
-                }
-              </div>
-            </div>
-          </div>
-
-          <!-- Action -->
-          <div class="flex flex-col gap-4">
-            @if ((state$ | async)?.outputUrl === null || (state$ | async)?.outputUrl === undefined) {
-              <button (click)="process()"
-                      [disabled]="(state$ | async)?.isProcessing"
-                      class="w-full py-4 bg-accent-cyan text-black font-bold rounded-xl hover:bg-accent-cyan/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
-                @if ((state$ | async)?.isProcessing === false || (state$ | async)?.isProcessing === null || (state$ | async)?.isProcessing === undefined) {
-                  <mat-icon>play_arrow</mat-icon>
-                }
-                @if ((state$ | async)?.isProcessing) {
-                  <span class="animate-spin rounded-full h-5 w-5 border-2 border-black/20 border-t-black"></span>
-                }
-                {{ (state$ | async)?.isProcessing ? 'Processing...' : 'Apply Changes' }}
-              </button>
-            }
-
-            @if ((state$ | async)?.isProcessing) {
-              <div class="space-y-2">
-                <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div class="h-full bg-accent-cyan transition-all duration-300" [style.width.%]="(state$ | async)?.progress"></div>
+          @if ((state$ | async)?.videoMeta; as meta) {
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">Duration</p>
+                  <p class="text-sm font-semibold text-pink-400">{{ meta.duration | number:'1.0-0' }}s</p>
                 </div>
-                <p class="text-center text-sm text-text-muted">Processing: {{ (state$ | async)?.progress }}%</p>
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">Resolution</p>
+                  <p class="text-sm font-semibold text-white">{{ meta.width }}×{{ meta.height }}</p>
+                </div>
+                <div class="p-2 rounded-lg bg-white/5">
+                  <p class="text-xs text-white/40">FPS</p>
+                  <p class="text-sm font-semibold text-white">{{ meta.fps | number:'1.0-0' }}</p>
+                </div>
               </div>
-            }
 
-            @if ((state$ | async)?.outputUrl; as outputUrl) {
-              <a [href]="outputUrl"
-                 [download]="'flipped_' + file.name"
-                 class="w-full py-4 bg-accent-green text-black font-bold rounded-xl hover:bg-accent-green/90 transition-all flex items-center justify-center gap-2">
-                <mat-icon>download</mat-icon> Download Result
-              </a>
-            }
-          </div>
-        </div>
-      }
+              <!-- Rotation Buttons -->
+              <div class="space-y-2">
+                <label class="text-xs text-white/40 uppercase tracking-wider">Rotation</label>
+                <div class="grid grid-cols-4 gap-2">
+                  @for (r of rotations; track r.deg) {
+                    <button (click)="onRotate(r.deg)"
+                      class="py-3 rounded-xl text-center transition-all duration-200 border"
+                      [class.bg-pink-500]="rotation === r.deg"
+                      [class.text-black]="rotation === r.deg"
+                      [class.border-pink-500]="rotation === r.deg"
+                      [class.bg-white/5]="rotation !== r.deg"
+                      [class.text-white/60]="rotation !== r.deg"
+                      [class.border-white/10]="rotation !== r.deg">
+                      <span class="text-xl block">{{ r.icon }}</span>
+                      <span class="text-[10px] block mt-1">{{ r.label }}</span>
+                    </button>
+                  }
+                </div>
+              </div>
 
-      @if ((state$ | async)?.error; as error) {
-        <div class="mt-6 p-4 bg-accent-red/20 border border-accent-red/50 rounded-xl text-accent-red flex items-center gap-3">
-          <mat-icon>error</mat-icon>
-          <span>{{ error }}</span>
+              <!-- Flip Buttons -->
+              <div class="space-y-2">
+                <label class="text-xs text-white/40 uppercase tracking-wider">Flip</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button (click)="toggleFlipH()"
+                    class="py-3 rounded-xl text-center transition-all duration-200 border"
+                    [class.bg-pink-500/20]="flipH"
+                    [class.text-pink-300]="flipH"
+                    [class.border-pink-500/40]="flipH"
+                    [class.bg-white/5]="!flipH"
+                    [class.text-white/60]="!flipH"
+                    [class.border-white/10]="!flipH">
+                    ↔️ Flip Horizontal
+                  </button>
+                  <button (click)="toggleFlipV()"
+                    class="py-3 rounded-xl text-center transition-all duration-200 border"
+                    [class.bg-pink-500/20]="flipV"
+                    [class.text-pink-300]="flipV"
+                    [class.border-pink-500/40]="flipV"
+                    [class.bg-white/5]="!flipV"
+                    [class.text-white/60]="!flipV"
+                    [class.border-white/10]="!flipV">
+                    ↕️ Flip Vertical
+                  </button>
+                </div>
+              </div>
+
+              <!-- Active Transforms Summary -->
+              <div class="p-3 rounded-xl bg-white/5 text-xs text-white/50">
+                Transforms: {{ rotation === 0 ? 'No rotation' : rotation + '°' }}
+                {{ flipH ? '• Flip H' : '' }} {{ flipV ? '• Flip V' : '' }}
+              </div>
+
+              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+                class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:shadow-[0_0_30px_rgba(236,72,153,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
+                @if (isLoading$ | async) {
+                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  Transforming...
+                } @else { 🔁 Apply Transform }
+              </button>
+            </div>
+          }
+
+          @if ((state$ | async)?.status === 'error') {
+            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
+          }
         </div>
-      }
+
+        <div class="space-y-4">
+          @if ((state$ | async)?.inputFile) {
+            <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
+          }
+          @if ((state$ | async)?.status === 'processing') {
+            <div class="flex justify-center p-8">
+              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Transforming..." [size]="120" />
+            </div>
+          }
+          @if ((state$ | async)?.status === 'done') {
+            <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_flipped" />
+          }
+        </div>
+      </div>
     </div>
-  `
+  `,
 })
-export class FlipRotateComponent {
+export class FlipRotateComponent implements OnDestroy {
   private store = inject(Store);
-  private service = inject(FlipRotateService);
-  state$ = this.store.select(flipRotateFeature.selectFlipRotateState);
+  private ffmpeg = inject(FFmpegService);
+  private bridge = inject(WorkerBridgeService);
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) {
-      this.store.dispatch(flipRotateActions.loadFile({ file }));
-      // Mock meta data for now
-      setTimeout(() => {
-        this.store.dispatch(flipRotateActions.setMeta({
-          meta: { duration: 120, size: file.size, name: file.name }
-        }));
-      }, 500);
+  state$ = this.store.select(selectFlipRotateState);
+  isLoading$ = this.store.select(selectFlipRotateIsLoading);
+  canProcess$ = this.store.select(selectFlipRotateCanProcess);
+
+  rotation = 0;
+  flipH = false;
+  flipV = false;
+
+  rotations = [
+    { deg: 0, label: 'None', icon: '⏹️' },
+    { deg: 90, label: '90° CW', icon: '↩️' },
+    { deg: 180, label: '180°', icon: '🔃' },
+    { deg: 270, label: '90° CCW', icon: '↪️' },
+  ];
+
+  async onFileSelected(files: File[]) {
+    const file = files[0];
+    this.store.dispatch(FlipRotateActions.loadFile({ file }));
+    try {
+      const meta = await this.ffmpeg.getMetadata(file);
+      this.store.dispatch(FlipRotateActions.loadMetaSuccess({ meta }));
+    } catch {
+      this.store.dispatch(FlipRotateActions.loadMetaFailure({ errorCode: 'FILE_CORRUPTED', message: 'Could not read video metadata.' }));
     }
   }
 
+  onRotate(deg: number) {
+    this.rotation = deg;
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { rotation: deg } as any }));
+  }
+
   toggleFlipH() {
-    this.state$.subscribe(state => {
-      this.store.dispatch(flipRotateActions.setFlipH({ flipH: !state.flipH }));
-    }).unsubscribe();
+    this.flipH = !this.flipH;
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipH: this.flipH } as any }));
   }
 
   toggleFlipV() {
-    this.state$.subscribe(state => {
-      this.store.dispatch(flipRotateActions.setFlipV({ flipV: !state.flipV }));
-    }).unsubscribe();
+    this.flipV = !this.flipV;
+    this.store.dispatch(FlipRotateActions.updateConfig({ config: { flipV: this.flipV } as any }));
   }
 
-  setRotation(rotation: number) {
-    this.store.dispatch(flipRotateActions.setRotation({ rotation: rotation as 0 | 90 | 180 | 270 }));
-  }
-
-  process() {
+  onProcess() {
+    this.store.dispatch(FlipRotateActions.startProcessing());
     this.state$.subscribe(state => {
-      if (!state.file) return;
-
-      this.store.dispatch(flipRotateActions.startProcessing());
-
-      const worker = new Worker(new URL('./flip-rotate.worker', import.meta.url));
-      worker.onmessage = ({ data }) => {
-        if (data.type === 'progress') {
-          this.store.dispatch(flipRotateActions.setProgress({ progress: data.value }));
-        } else if (data.type === 'complete') {
-          const url = URL.createObjectURL(data.data);
-          this.store.dispatch(flipRotateActions.completeProcessing({ outputUrl: url }));
-          worker.terminate();
-        } else if (data.type === 'error') {
-          this.store.dispatch(flipRotateActions.setError({ error: data.message }));
-          worker.terminate();
-        }
-      };
-
-      worker.postMessage({
-        config: {
-          inputFile: state.file,
-          flipH: state.flipH,
-          flipV: state.flipV,
-          rotation: state.rotation
+      if (!state.inputFile) return;
+      this.bridge.process<unknown, Blob>(
+        () => new Worker(new URL('./flipRotate.worker', import.meta.url), { type: 'module' }),
+        { file: state.inputFile, flipH: this.flipH, flipV: this.flipV, rotation: this.rotation }
+      ).subscribe(msg => {
+        if (msg.type === 'progress') this.store.dispatch(FlipRotateActions.updateProgress({ progress: msg.value ?? 0 }));
+        else if (msg.type === 'complete' && msg.data) {
+          const blob = msg.data as Blob;
+          this.store.dispatch(FlipRotateActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
+        } else if (msg.type === 'error') {
+          this.store.dispatch(FlipRotateActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Transform failed' }));
         }
       });
     }).unsubscribe();
   }
 
-  reset() {
-    this.store.dispatch(flipRotateActions.reset());
-  }
+  ngOnDestroy() { this.store.dispatch(FlipRotateActions.resetState()); }
 }
