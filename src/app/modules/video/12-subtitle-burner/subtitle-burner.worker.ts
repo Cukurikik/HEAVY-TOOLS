@@ -45,7 +45,7 @@ addEventListener('message', async (e: MessageEvent) => {
     ]);
 
     const data = await ffmpeg.readFile(outputName);
-    const blob = new Blob([data as Uint8Array], { type: 'video/mp4' });
+    const blob = new Blob([data as unknown as BlobPart], { type: 'video/mp4' });
     
     await ffmpeg.deleteFile(videoName);
     await ffmpeg.deleteFile(subName);

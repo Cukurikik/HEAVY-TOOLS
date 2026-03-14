@@ -105,8 +105,8 @@ import { take, Subject, takeUntil } from 'rxjs';
             <p class="text-sm font-medium text-text-secondary uppercase tracking-widest">Output Format</p>
             <div class="flex gap-4">
               @for (fmt of ['mp3', 'wav', 'aac', 'm4a']; track fmt) {
-                <button (click)="onFormatChange(fmt)" 
-                        (keyup.enter)="onFormatChange(fmt)"
+                <button (click)="onFormatChange($any(fmt))" 
+                        (keyup.enter)="onFormatChange($any(fmt))"
                         tabindex="0"
                         [class.bg-accent-cyan]="(state$ | async)?.format === fmt"
                         [class.text-black]="(state$ | async)?.format === fmt"

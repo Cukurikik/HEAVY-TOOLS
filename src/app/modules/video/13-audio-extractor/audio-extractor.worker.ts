@@ -43,7 +43,7 @@ addEventListener('message', async (e: MessageEvent) => {
 
     const data = await ffmpeg.readFile(outputName);
     const mimeType = config.format === 'mp3' ? 'audio/mpeg' : (config.format === 'wav' ? 'audio/wav' : 'audio/aac');
-    const blob = new Blob([data as Uint8Array], { type: mimeType });
+    const blob = new Blob([data as unknown as BlobPart], { type: mimeType });
     
     await ffmpeg.deleteFile(inputName);
     await ffmpeg.deleteFile(outputName);

@@ -113,8 +113,8 @@ import { take, Subject, takeUntil } from 'rxjs';
               <p class="text-sm font-medium text-text-secondary uppercase tracking-widest">Position</p>
               <div class="grid grid-cols-3 gap-2">
                 @for (pos of ['top-left', 'top-right', 'center', 'bottom-left', 'bottom-right']; track pos) {
-                  <button (click)="onPositionChange(pos)" 
-                          (keyup.enter)="onPositionChange(pos)"
+                  <button (click)="onPositionChange($any(pos))" 
+                          (keyup.enter)="onPositionChange($any(pos))"
                           tabindex="0"
                           [class.bg-accent-cyan]="(state$ | async)?.position === pos"
                           [class.text-black]="(state$ | async)?.position === pos"

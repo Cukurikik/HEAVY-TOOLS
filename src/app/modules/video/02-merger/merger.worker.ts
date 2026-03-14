@@ -38,7 +38,7 @@ addEventListener('message', async (e: MessageEvent) => {
     await ffmpeg.exec(['-i', inputName, '-c:v', 'libx264', '-preset', 'ultrafast', outputName]);
 
     const data = await ffmpeg.readFile(outputName);
-    const blob = new Blob([data as Uint8Array], { type: `video/${ext}` });
+    const blob = new Blob([data as unknown as BlobPart], { type: `video/${ext}` });
     
     await ffmpeg.deleteFile(inputName);
     await ffmpeg.deleteFile(outputName);
