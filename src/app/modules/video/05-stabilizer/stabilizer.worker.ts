@@ -34,7 +34,7 @@ await ffmpeg.exec(['-i', inName, '-vf', 'vidstabdetect=shakiness=' + shakiness +
 progress(50);
 await ffmpeg.exec(['-i', inName, '-vf', 'vidstabtransform=smoothing=' + smoothing + ':input=transforms.trf:interpol=black', '-c:a', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 try { ffmpeg.deleteFile('transforms.trf'); } catch {}
 

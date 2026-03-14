@@ -22,16 +22,16 @@ addEventListener('message', async (e: MessageEvent) => {
   try {
     await loadFFmpeg();
     if (!ffmpeg) throw new Error('FFmpeg not loaded');
-    ffmpeg.on('progress', ({ progress: p }: any) => progress(Math.round(p * 100)));
+    ffmpeg.on('progress', ({ progress: p }) => progress(Math.round(p * 100)));
     
     // Feature specific logic
 const { file } = config;
 const inName = 'in.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
 let output = '';
-ffmpeg.on('log', ({ message }: any) => { output += message + '\n'; });
-try { await ffmpeg.exec(['-i', inName, '-f', 'null', '/dev/null']); } catch {}
-const jsonBlob = new Blob([JSON.stringify({ log: output }) as unknown as BlobPart], { type: 'application/json' });
+ffmpeg.on('log', ({ message }) => { output += message + '\n'; });
+try { await ffmpeg.exec(['-i', inName, '-f', 'null', '/dev/null']); } catch { /* ffprobe always throws */ }
+const jsonBlob = new Blob([JSON.stringify({ log: output })], { type: 'application/json' });
 done(jsonBlob);
 ffmpeg.deleteFile(inName);
 

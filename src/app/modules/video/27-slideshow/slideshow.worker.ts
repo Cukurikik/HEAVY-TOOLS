@@ -38,7 +38,7 @@ listContent += `file 'img${images.length-1}.jpg'\n`;
 ffmpeg.writeFile('list.txt', listContent);
 await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-vf', 'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,format=yuv420p', '-c:v', 'libx264', '-preset', 'ultrafast', '-r', '30', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 for (let i = 0; i < images.length; i++) ffmpeg.deleteFile(`img${i}.jpg`);
 ffmpeg.deleteFile('list.txt'); ffmpeg.deleteFile(outName);
 

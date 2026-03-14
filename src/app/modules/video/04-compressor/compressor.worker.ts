@@ -31,7 +31,7 @@ const outName = 'out.' + outputFormat;
 ffmpeg.writeFile(inName, await fetchFile(file));
 await ffmpeg.exec(['-i', inName, '-c:v', 'libx264', '-crf', String(crfValue), '-preset', 'medium', '-c:a', 'aac', '-b:a', '128k', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/' + outputFormat }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/' + outputFormat }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

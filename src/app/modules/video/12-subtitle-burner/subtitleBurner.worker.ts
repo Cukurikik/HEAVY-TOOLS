@@ -34,7 +34,7 @@ ffmpeg.writeFile(srtName, srtContent);
 const vf = `subtitles=${srtName}:force_style='FontSize=${fontSize},PrimaryColour=${fontColor}'`;
 await ffmpeg.exec(['-i', inName, '-vf', vf, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(srtName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

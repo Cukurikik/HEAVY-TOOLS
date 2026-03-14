@@ -38,7 +38,7 @@ if (year) args.push('-metadata', `year=${year}`);
 args.push('-c', 'copy', outName);
 await ffmpeg.exec(args);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/' + originalExt }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/' + originalExt }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

@@ -32,7 +32,7 @@ ffmpeg.writeFile(inName, await fetchFile(file));
 const filter = `scale=iw*${scale}:ih*${scale}:flags=lanczos`;
 await ffmpeg.exec(['-i', inName, '-vf', filter, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

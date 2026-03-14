@@ -45,7 +45,7 @@ if (targetFormat === 'gif') {
 await ffmpeg.exec(args);
 const data = await ffmpeg.readFile(outName);
 const mimeMap: Record<string, string> = { mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', avi: 'video/x-msvideo', mkv: 'video/x-matroska', gif: 'image/gif' };
-done(new Blob([data as unknown as BlobPart], { type: mimeMap[targetFormat] || 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: mimeMap[targetFormat] || 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 if (targetFormat === 'gif') { try { ffmpeg.deleteFile('palette.png'); } catch {} }
 

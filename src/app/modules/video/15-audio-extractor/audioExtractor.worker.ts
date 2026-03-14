@@ -36,7 +36,7 @@ else args = ['-i', inName, '-vn', '-c:a', 'copy', '-map', 'a', outName];
 await ffmpeg.exec(args);
 const data = await ffmpeg.readFile(outName);
 const mimeMap: Record<string, string> = { mp3: 'audio/mpeg', wav: 'audio/wav', aac: 'audio/aac' };
-done(new Blob([data as unknown as BlobPart], { type: mimeMap[outputFormat] || 'audio/mpeg' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: mimeMap[outputFormat] || 'audio/mpeg' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

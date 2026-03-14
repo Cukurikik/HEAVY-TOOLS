@@ -22,6 +22,7 @@ export const VideoErrorMessages: Record<VideoErrorCode, string> = {
   WEBGPU_NOT_AVAILABLE: 'WebGPU is not available. AI Upscaler requires a modern browser.',
   OPFS_NOT_AVAILABLE: 'File system API not available. Try Chrome or Edge.',
   MEDIA_RECORDER_FAILED: 'Screen capture permission was denied.',
+  PERMISSION_DENIED: 'Permission was denied by the user or browser.',
   UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.',
 };
 

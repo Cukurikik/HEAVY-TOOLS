@@ -35,7 +35,7 @@ let args = reverseAudio
   : ['-i', inName, '-vf', vf, '-an', '-c:v', 'libx264', '-preset', 'ultrafast', outName];
 await ffmpeg.exec(args);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

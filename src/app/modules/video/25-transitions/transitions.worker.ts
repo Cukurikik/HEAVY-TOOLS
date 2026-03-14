@@ -33,7 +33,7 @@ const outName = 'transition.mp4';
 // Apply transition effect with specified type and duration
 await ffmpeg.exec(['-i', inName, '-vf', `fade=t=in:d=${duration}:alpha=0,fade=t=out:st=0:d=${duration}`, '-metadata', `transition_type=${transition}`, '-c:a', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

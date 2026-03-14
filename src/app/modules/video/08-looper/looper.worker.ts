@@ -33,7 +33,7 @@ for (let i = 0; i < loopCount; i++) listContent += 'file ' + inName + '\n';
 ffmpeg.writeFile('list.txt', listContent);
 await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', 'looped.mp4']);
 const data = await ffmpeg.readFile('looped.mp4');
-done(new Blob([data as unknown as BlobPart], { type: 'video/mp4' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile('list.txt'); ffmpeg.deleteFile('looped.mp4');
 
   } catch (err: unknown) {

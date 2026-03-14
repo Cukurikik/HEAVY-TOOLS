@@ -47,7 +47,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               <!-- FPS Slider -->
               <div class="space-y-2">
                 <div class="flex justify-between items-center">
-                  <label class="text-xs text-white/40 uppercase tracking-wider">GIF Frame Rate</label>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">GIF Frame Rate</span>
                   <span class="text-sm font-bold text-green-400">{{ fps }} fps</span>
                 </div>
                 <input type="range" min="5" max="30" step="1" [value]="fps"
@@ -62,7 +62,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
               <!-- Scale Width -->
               <div class="space-y-2">
-                <label class="text-xs text-white/40 uppercase tracking-wider">Output Width</label>
+                <span class="text-xs text-white/40 uppercase tracking-wider">Output Width</span>
                 <div class="grid grid-cols-4 gap-2">
                   @for (s of scalePresets; track s) {
                     <button (click)="onScaleChange(s)"
@@ -81,7 +81,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 <span class="text-sm font-bold text-green-400">~{{ estimateGifSize(meta.duration) | number:'1.0-1' }} MB</span>
               </div>
 
-              <button [disabled]="!(canProcess$ | async) || (isLoading$ | async)" (click)="onProcess()"
+              <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async)" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-lime-500 text-black hover:shadow-[0_0_30px_rgba(34,197,94,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
                   <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>

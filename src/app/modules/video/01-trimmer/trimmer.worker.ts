@@ -31,7 +31,7 @@ const outName = 'out.' + outputFormat;
 ffmpeg.writeFile(inName, await fetchFile(file));
 await ffmpeg.exec(['-ss', String(startTime), '-i', inName, '-t', String(endTime - startTime), '-c', 'copy', '-avoid_negative_ts', 'make_zero', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/' + outputFormat }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/' + outputFormat }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
 
   } catch (err: unknown) {

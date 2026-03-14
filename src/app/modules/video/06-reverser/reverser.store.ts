@@ -5,6 +5,8 @@ export interface ReverserState {
   inputFile: File | null;
   videoMeta: VideoMeta | null;
   reverseAudio: boolean;
+  audioMode: string;
+  speed: number;
   durationWarning: boolean;
   status: 'idle' | 'loading' | 'processing' | 'done' | 'error';
   progress: number;
@@ -17,6 +19,8 @@ export interface ReverserState {
 const init: ReverserState = {
   inputFile: null, videoMeta: null,
   reverseAudio: false,
+  audioMode: 'reverse',
+  speed: 1,
   durationWarning: false,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
   errorCode: null, errorMessage: null, retryable: false

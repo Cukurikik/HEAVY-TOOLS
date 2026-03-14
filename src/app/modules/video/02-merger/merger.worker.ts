@@ -36,7 +36,7 @@ ffmpeg.writeFile('list.txt', listContent);
 const outName = 'merged.' + outputFormat;
 await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'video/' + outputFormat }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/' + outputFormat }));
 for (let i = 0; i < clips.length; i++) ffmpeg.deleteFile('clip' + i + '.mp4');
 ffmpeg.deleteFile('list.txt'); ffmpeg.deleteFile(outName);
 

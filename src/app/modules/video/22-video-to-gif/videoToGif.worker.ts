@@ -32,7 +32,7 @@ ffmpeg.writeFile(inName, await fetchFile(file));
 await ffmpeg.exec(['-i', inName, '-vf', `fps=${fps},scale=${scale}:-1:flags=lanczos,palettegen`, 'palette.png']);
 await ffmpeg.exec(['-i', inName, '-i', 'palette.png', '-filter_complex', `fps=${fps},scale=${scale}:-1:flags=lanczos[x];[x][1:v]paletteuse`, outName]);
 const data = await ffmpeg.readFile(outName);
-done(new Blob([data as unknown as BlobPart], { type: 'image/gif' }));
+done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'image/gif' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName); ffmpeg.deleteFile('palette.png');
 
   } catch (err: unknown) {

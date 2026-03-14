@@ -38,13 +38,13 @@ export class FFmpegService {
 
   async getMetadata(file: File): Promise<VideoMeta> {
     await this.load();
-    const ff = this.ffmpeg as any;
+    const ff = this.ffmpeg as { writeFile: (name: string, data: Uint8Array) => Promise<void>; on: (event: string, cb: (info: Record<string, unknown>) => void) => void; exec: (args: string[]) => Promise<void>; deleteFile: (name: string) => void; readFile: (name: string) => Promise<Uint8Array> };
     const { fetchFile } = await import('@ffmpeg/util');
     const inputName = `meta_${Date.now()}.mp4`;
     try {
       ff.writeFile(inputName, await fetchFile(file));
       let output = '';
-      ff.on('log', ({ message }: any) => { output += message + '\n'; });
+      ff.on('log', ({ message }: Record<string, unknown>) => { output += String(message ?? '') + '\n'; });
       try { await ff.exec(['-i', inputName, '-f', 'null', '/dev/null']); } catch { /* ffprobe always errors */ }
       return this._parseMetaFromLog(output, file);
     } finally {
@@ -71,14 +71,14 @@ export class FFmpegService {
     const aspectRatio = (width && height) ? `${width/g}:${height/g}` : '16:9';
     return {
       filename: file.name, fileSizeMB: file.size/1_048_576, duration, width, height, fps,
-      codec, audioCodec, audioBitrate: 128, videoBitrate, hasAudio: !!audioCodec, aspectRatio
+      codec, audioCodec, audioBitrate: 128, videoBitrate, bitrate: videoBitrate, sampleRate: 44100, hasAudio: !!audioCodec, aspectRatio
     };
   }
 
   async runCommand(args: string[], onProgress?: (p: number) => void): Promise<Uint8Array> {
     await this.load();
-    const ff = this.ffmpeg as any;
-    if (onProgress) ff.on('progress', ({ progress }: any) => { onProgress(Math.min(Math.round(progress*100), 99)); });
+    const ff = this.ffmpeg as { on: (event: string, cb: (info: Record<string, unknown>) => void) => void; exec: (args: string[]) => Promise<void>; readFile: (name: string) => Promise<Uint8Array>; deleteFile: (name: string) => void };
+    if (onProgress) ff.on('progress', ({ progress }: Record<string, unknown>) => { onProgress(Math.min(Math.round(Number(progress)*100), 99)); });
     await ff.exec(args);
     const outputName = args[args.length - 1];
     try { return await ff.readFile(outputName) as Uint8Array; } catch { return new Uint8Array(0); }
@@ -86,7 +86,7 @@ export class FFmpegService {
 
   deleteFile(name: string): void {
     if (!this.ffmpeg) return;
-    try { (this.ffmpeg as any).deleteFile(name); } catch { /**/ }
+    try { (this.ffmpeg as { deleteFile: (name: string) => void }).deleteFile(name); } catch { /**/ }
   }
 
   isReady() { return this.isLoaded.asReadonly(); }

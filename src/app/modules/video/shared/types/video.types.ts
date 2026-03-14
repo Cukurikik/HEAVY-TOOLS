@@ -8,13 +8,14 @@ export type VideoErrorCode =
   | 'WORKER_INIT_FAILED' | 'WORKER_CRASHED' | 'WORKER_TRANSFER_FAILED'
   | 'INVALID_TIME_RANGE' | 'INVALID_DIMENSIONS' | 'INVALID_SPEED' | 'INVALID_CRF'
   | 'NO_AUDIO_STREAM' | 'SAB_NOT_SUPPORTED' | 'WEBGPU_NOT_AVAILABLE' | 'OPFS_NOT_AVAILABLE'
-  | 'MEDIA_RECORDER_FAILED' | 'UNKNOWN_ERROR';
+  | 'MEDIA_RECORDER_FAILED' | 'PERMISSION_DENIED' | 'UNKNOWN_ERROR';
 
 export interface VideoMeta {
   filename: string; fileSizeMB: number; duration: number;
   width: number; height: number; fps: number;
   codec: string; audioCodec: string | null;
   audioBitrate: number; videoBitrate: number;
+  bitrate: number; sampleRate: number | null;
   hasAudio: boolean; aspectRatio: string;
 }
 

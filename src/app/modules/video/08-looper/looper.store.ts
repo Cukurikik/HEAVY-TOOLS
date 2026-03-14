@@ -9,6 +9,7 @@ export interface LooperState {
   targetDuration: number;
   crossfade: boolean;
   crossfadeDuration: number;
+  transitionMode: string;
   outputDuration: number;
   status: 'idle' | 'loading' | 'processing' | 'done' | 'error';
   progress: number;
@@ -25,6 +26,7 @@ const init: LooperState = {
   targetDuration: 60,
   crossfade: false,
   crossfadeDuration: 0.5,
+  transitionMode: 'cut',
   outputDuration: 0,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
   errorCode: null, errorMessage: null, retryable: false

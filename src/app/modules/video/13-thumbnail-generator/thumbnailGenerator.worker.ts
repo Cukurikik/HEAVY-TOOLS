@@ -32,13 +32,13 @@ if (mode === 'grid') {
   const outName = 'grid.png';
   await ffmpeg.exec(['-i', inName, '-vf', `fps=1/${interval},scale=240:-1,tile=4x4`, '-frames:v', '1', outName]);
   const data = await ffmpeg.readFile(outName);
-  done(new Blob([data as unknown as BlobPart], { type: 'image/png' }));
+  done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'image/png' }));
   ffmpeg.deleteFile(outName);
 } else {
   const outName = 'thumb.png';
   await ffmpeg.exec(['-ss', String(interval), '-i', inName, '-vframes', '1', '-q:v', '2', outName]);
   const data = await ffmpeg.readFile(outName);
-  done(new Blob([data as unknown as BlobPart], { type: 'image/png' }));
+  done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'image/png' }));
   ffmpeg.deleteFile(outName);
 }
 ffmpeg.deleteFile(inName);
