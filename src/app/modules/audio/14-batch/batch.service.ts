@@ -23,7 +23,7 @@ export class AudioBatchService {
     return { meta, waveformData };
   }
 
-  async processAudio(file: File, config: Record<string, unknown>): Promise<Blob> {
+  async processAudio(file: File, ): Promise<Blob> {
     const buffer = await this.audioCtx.decodeFile(file);
     const wavData = this.renderer.encodeToWav(buffer);
     return new Blob([new Uint8Array(wavData as Uint8Array)], { type: 'audio/wav' });

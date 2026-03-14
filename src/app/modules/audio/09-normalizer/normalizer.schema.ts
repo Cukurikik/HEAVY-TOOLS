@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const NormalizerInputSchema = z.object({
   inputFile: AudioFileSchema,
-  mode:z.enum(['peak','rms','lufs']),targetLevel:z.number(),outputFormat:ExportFormatSchema,
-});
+  mode:z.enum(['peak','rms','lufs']),targetLevel:z.number(),outputFormat: ExportFormatSchema });
 
 export type NormalizerInput = z.infer<typeof NormalizerInputSchema>;

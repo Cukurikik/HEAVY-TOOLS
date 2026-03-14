@@ -80,8 +80,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class HtmlConverterComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectHtmlConverterState);

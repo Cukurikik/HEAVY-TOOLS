@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, DestroyRef,} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -8,7 +8,6 @@ import { AudioExportPanelComponent } from '../shared/components/export-panel/exp
 import { AudioProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { WaveformDisplayComponent } from '../shared/components/waveform-display/waveform-display.component';
 import { recorderFeature, recorderActions } from './recorder.store';
-import type { ExportFormat } from '../shared/types/audio.types';
 
 @Component({
   selector: 'app-01-recorder',

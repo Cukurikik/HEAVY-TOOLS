@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const PitchShifterInputSchema = z.object({
   inputFile: AudioFileSchema,
-  semitones:z.number().min(-12).max(12),cents:z.number().min(-100).max(100),outputFormat:ExportFormatSchema,
-});
+  semitones:z.number().min(-12).max(12),cents:z.number().min(-100).max(100),outputFormat: ExportFormatSchema });
 
 export type PitchShifterInput = z.infer<typeof PitchShifterInputSchema>;

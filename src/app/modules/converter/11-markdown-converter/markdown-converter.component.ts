@@ -80,8 +80,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class MarkdownConverterComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectMarkdownConverterState);

@@ -16,5 +16,4 @@ export const AudioErrorMessages: Record<AudioErrorCode, string> = {
   MIC_PERMISSION_DENIED: 'Microphone access was denied.',
   NO_AUDIO_STREAM: 'No audio stream found in file.',
   INVALID_PARAMS: 'Invalid processing parameters.',
-  UNKNOWN_ERROR: 'An unexpected error occurred.',
-};
+  UNKNOWN_ERROR: 'An unexpected error occurred.' };

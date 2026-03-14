@@ -37,8 +37,7 @@ export const AudioReplacerActions = {
   processingSuccess: createAction('[AudioReplacer] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[AudioReplacer] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[AudioReplacer] Download'),
-  resetState: createAction('[AudioReplacer] Reset'),
-};
+  resetState: createAction('[AudioReplacer] Reset') };
 export const audioReplacerFeature = createFeature({
   name: 'audioReplacer',
   reducer: createReducer(init,

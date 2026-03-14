@@ -29,8 +29,7 @@ const initialState: DocumentConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const DocumentConverterActions = createActionGroup({
   source: 'Document Converter',
@@ -44,32 +43,25 @@ export const DocumentConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const documentConverterFeature = createFeature({
   name: 'documentConverter',
   reducer: createReducer(
     initialState,
     on(DocumentConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(DocumentConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(DocumentConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(DocumentConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(DocumentConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(DocumentConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(DocumentConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(DocumentConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectDocumentConverterState: selectDocumentConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectDocumentConverterProgress,
   selectOutputBlob: selectDocumentConverterOutputBlob,
   selectOutputSizeMB: selectDocumentConverterOutputSizeMB,
-  selectErrorMessage: selectDocumentConverterErrorMessage,
-} = documentConverterFeature;
+  selectErrorMessage: selectDocumentConverterErrorMessage } = documentConverterFeature;

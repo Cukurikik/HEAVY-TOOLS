@@ -37,8 +37,7 @@ export const BlurActions = {
   processingSuccess: createAction('[Blur] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Blur] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Blur] Download'),
-  resetState: createAction('[Blur] Reset'),
-};
+  resetState: createAction('[Blur] Reset') };
 export const blurFeature = createFeature({
   name: 'blur',
   reducer: createReducer(init,

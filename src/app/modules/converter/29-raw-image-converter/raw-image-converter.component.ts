@@ -78,8 +78,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class RawImageConverterComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectRawImageConverterState);

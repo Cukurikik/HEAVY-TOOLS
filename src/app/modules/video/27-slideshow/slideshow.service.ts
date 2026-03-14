@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class SlideshowService {
   // -loop 1 -i img.jpg -t 3 -vf scale=1920:1080 clip.mp4
-  buildArgs(inputName: string, outputName: string, config: Record<string, unknown>): string[] {
+  buildArgs(inputName: string, outputName: string, ): string[] {
     return ['-i', inputName, outputName];
   }
   formatTime(s: number): string {

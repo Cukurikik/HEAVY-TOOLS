@@ -29,8 +29,7 @@ const initialState: SpreadsheetConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const SpreadsheetConverterActions = createActionGroup({
   source: 'Spreadsheet Converter',
@@ -44,32 +43,25 @@ export const SpreadsheetConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const spreadsheetConverterFeature = createFeature({
   name: 'spreadsheetConverter',
   reducer: createReducer(
     initialState,
     on(SpreadsheetConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(SpreadsheetConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(SpreadsheetConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(SpreadsheetConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(SpreadsheetConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(SpreadsheetConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(SpreadsheetConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(SpreadsheetConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectSpreadsheetConverterState: selectSpreadsheetConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectSpreadsheetConverterProgress,
   selectOutputBlob: selectSpreadsheetConverterOutputBlob,
   selectOutputSizeMB: selectSpreadsheetConverterOutputSizeMB,
-  selectErrorMessage: selectSpreadsheetConverterErrorMessage,
-} = spreadsheetConverterFeature;
+  selectErrorMessage: selectSpreadsheetConverterErrorMessage } = spreadsheetConverterFeature;

@@ -4,6 +4,5 @@ export const VideoConverterSchema = z.object({
   outputFormat: z.enum(['mp4', 'mkv', 'mov', 'avi', 'webm', 'flv', 'wmv', 'gif']),
   crf: z.number().int().min(0).max(51),
   encodingSpeed: z.enum(['ultrafast', 'fast', 'medium', 'slow', 'veryslow']),
-  resolution: z.string(),
-});
+  resolution: z.string() });
 export type VideoConverterConfig = z.infer<typeof VideoConverterSchema>;

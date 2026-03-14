@@ -9,8 +9,7 @@ async function loadFFmpeg() {
   const base = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
   await ffmpeg.load({
     coreURL: await toBlobURL(base + '/ffmpeg-core.js', 'text/javascript'),
-    wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm'),
-  });
+    wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm') });
 }
 
 function progress(v: number) { postMessage({ type: 'progress', value: v }); }
@@ -22,7 +21,7 @@ addEventListener('message', async (e: MessageEvent) => {
   try {
     await loadFFmpeg();
     if (!ffmpeg) throw new Error('FFmpeg not loaded');
-    ffmpeg.on('progress', ({ progress: p }: any) => progress(Math.round(p * 100)));
+    ffmpeg.on('progress', ({ progress: p }: { progress: number }) => progress(Math.round(p * 100)));
     
     // Feature specific logic
 const { file, text = '', position = 'bottom-right', opacity = 0.5, imageFile } = config;
@@ -46,7 +45,7 @@ await ffmpeg.exec(args);
 const data = await ffmpeg.readFile(outName);
 done(new Blob([new Uint8Array(data as Uint8Array)], { type: 'video/mp4' }));
 ffmpeg.deleteFile(inName); ffmpeg.deleteFile(outName);
-if (imageFile) try { ffmpeg.deleteFile('wm.png'); } catch {}
+if (imageFile) try { ffmpeg.deleteFile('wm.png'); } catch { /* ignore */ }
 
   } catch (err: unknown) {
     fail(String(err));

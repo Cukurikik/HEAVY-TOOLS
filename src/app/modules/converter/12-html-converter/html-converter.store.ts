@@ -29,8 +29,7 @@ const initialState: HtmlConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const HtmlConverterActions = createActionGroup({
   source: 'HTML Converter',
@@ -44,32 +43,25 @@ export const HtmlConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const htmlConverterFeature = createFeature({
   name: 'htmlConverter',
   reducer: createReducer(
     initialState,
     on(HtmlConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(HtmlConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(HtmlConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(HtmlConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(HtmlConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(HtmlConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(HtmlConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(HtmlConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectHtmlConverterState: selectHtmlConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectHtmlConverterProgress,
   selectOutputBlob: selectHtmlConverterOutputBlob,
   selectOutputSizeMB: selectHtmlConverterOutputSizeMB,
-  selectErrorMessage: selectHtmlConverterErrorMessage,
-} = htmlConverterFeature;
+  selectErrorMessage: selectHtmlConverterErrorMessage } = htmlConverterFeature;

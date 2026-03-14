@@ -59,8 +59,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class MetadataEditorComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectMetadataEditorState); isLoading$ = this.store.select(selectMetadataEditorIsLoading); canProcess$ = this.store.select(selectMetadataEditorCanProcess);

@@ -13,7 +13,6 @@ export const ImageConverterSchema = z.object({
   quality: z.number().int().min(1).max(100),
   colorSpace: z.enum(['srgb', 'grayscale', 'cmyk']),
   preserveExif: z.boolean(),
-  lossless: z.boolean(),
-});
+  lossless: z.boolean() });
 
 export type ImageConverterConfig = z.infer<typeof ImageConverterSchema>;

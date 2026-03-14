@@ -16,7 +16,7 @@ export interface KaraokeState {
   method:string;
   outputTarget:string;
   strength:number;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -31,8 +31,7 @@ const initialState: KaraokeState = {
   inputFile: null, audioMeta: null, waveformData: null,
   method:'midSide'as string,outputTarget:'karaoke'as string,strength:80,outputFormat:'wav'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const karaokeActions = createActionGroup({
@@ -46,8 +45,7 @@ export const karaokeActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -63,8 +61,7 @@ export const karaokeFeature = createFeature({
     on(karaokeActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(karaokeActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(karaokeActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

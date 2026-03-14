@@ -35,8 +35,7 @@ export const SplitterActions = {
   processingSuccess: createAction('[Splitter] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Splitter] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Splitter] Download'),
-  resetState: createAction('[Splitter] Reset'),
-};
+  resetState: createAction('[Splitter] Reset') };
 export const splitterFeature = createFeature({
   name: 'splitter',
   reducer: createReducer(init,

@@ -33,8 +33,7 @@ const initialState: ImageConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const ImageConverterActions = createActionGroup({
   source: 'Image Converter',
@@ -50,35 +49,28 @@ export const ImageConverterActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const imageConverterFeature = createFeature({
   name: 'imageConverter',
   reducer: createReducer(
     initialState,
     on(ImageConverterActions.loadFiles, (state, { files }) => ({
-      ...state, inputFiles: files, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFiles: files, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(ImageConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(ImageConverterActions.setQuality, (state, { quality }) => ({ ...state, quality })),
     on(ImageConverterActions.setColorSpace, (state, { colorSpace }) => ({ ...state, colorSpace })),
     on(ImageConverterActions.togglePreserveExif, (state) => ({ ...state, preserveExif: !state.preserveExif })),
     on(ImageConverterActions.toggleLossless, (state) => ({ ...state, lossless: !state.lossless })),
     on(ImageConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(ImageConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(ImageConverterActions.processingSuccess, (state, { outputBlob, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(ImageConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(ImageConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectImageConverterState,
@@ -91,5 +83,4 @@ export const {
   selectOutputSizeMB,
   selectErrorCode,
   selectErrorMessage,
-  selectRetryable,
-} = imageConverterFeature;
+  selectRetryable } = imageConverterFeature;

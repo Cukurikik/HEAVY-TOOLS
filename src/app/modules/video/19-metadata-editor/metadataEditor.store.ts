@@ -35,8 +35,7 @@ export const MetadataEditorActions = {
   processingSuccess: createAction('[MetadataEditor] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[MetadataEditor] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[MetadataEditor] Download'),
-  resetState: createAction('[MetadataEditor] Reset'),
-};
+  resetState: createAction('[MetadataEditor] Reset') };
 export const metadataEditorFeature = createFeature({
   name: 'metadataEditor',
   reducer: createReducer(init,

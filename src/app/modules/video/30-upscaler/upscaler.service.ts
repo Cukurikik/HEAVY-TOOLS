@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class UpscalerService {
   // ONNX Real-ESRGAN frame-by-frame inference
-  buildArgs(inputName: string, outputName: string, config: Record<string, unknown>): string[] {
+  buildArgs(inputName: string, outputName: string, ): string[] {
     return ['-i', inputName, outputName];
   }
   formatTime(s: number): string {

@@ -33,8 +33,7 @@ export const InterpolatorActions = {
   processingSuccess: createAction('[Interpolator] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Interpolator] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Interpolator] Download'),
-  resetState: createAction('[Interpolator] Reset'),
-};
+  resetState: createAction('[Interpolator] Reset') };
 export const interpolatorFeature = createFeature({
   name: 'interpolator',
   reducer: createReducer(init,

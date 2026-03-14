@@ -41,8 +41,7 @@ export const SlideshowActions = {
   processingSuccess: createAction('[Slideshow] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Slideshow] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Slideshow] Download'),
-  resetState: createAction('[Slideshow] Reset'),
-};
+  resetState: createAction('[Slideshow] Reset') };
 export const slideshowFeature = createFeature({
   name: 'slideshow',
   reducer: createReducer(init,

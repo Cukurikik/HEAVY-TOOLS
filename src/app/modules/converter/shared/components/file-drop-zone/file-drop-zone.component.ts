@@ -40,8 +40,7 @@ import { CommonModule } from '@angular/common';
         <p class="text-white/30 text-xs">Max {{ maxSizeMB }} MB per file</p>
       </div>
     </div>
-  `,
-})
+  ` })
 export class ConverterFileDropZoneComponent {
   @Input() accept = '*/*';
   @Input() multiple = false;

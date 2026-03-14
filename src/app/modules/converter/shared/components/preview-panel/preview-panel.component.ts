@@ -34,8 +34,7 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class ConverterPreviewPanelComponent {
   @Input() beforeUrl: string | null = null;
   @Input() afterUrl: string | null = null;

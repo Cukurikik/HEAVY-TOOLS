@@ -29,8 +29,7 @@ const initialState: FontConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const FontConverterActions = createActionGroup({
   source: 'Font Converter',
@@ -44,32 +43,25 @@ export const FontConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const fontConverterFeature = createFeature({
   name: 'fontConverter',
   reducer: createReducer(
     initialState,
     on(FontConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(FontConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(FontConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(FontConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(FontConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(FontConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(FontConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(FontConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectFontConverterState: selectFontConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectFontConverterProgress,
   selectOutputBlob: selectFontConverterOutputBlob,
   selectOutputSizeMB: selectFontConverterOutputSizeMB,
-  selectErrorMessage: selectFontConverterErrorMessage,
-} = fontConverterFeature;
+  selectErrorMessage: selectFontConverterErrorMessage } = fontConverterFeature;

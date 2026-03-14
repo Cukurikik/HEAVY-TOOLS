@@ -5,8 +5,7 @@ export const PdfFileSchema = z.custom<File>(v => v instanceof File && v.type ===
 
 export const PageRangeSchema = z.object({
   from: z.number().int().min(1),
-  to: z.number().int().min(1),
-}).refine(d => d.to >= d.from, 'End page must be >= start page');
+  to: z.number().int().min(1) }).refine(d => d.to >= d.from, 'End page must be >= start page');
 
 export const PasswordSchema = z.string().min(1).max(128);
 

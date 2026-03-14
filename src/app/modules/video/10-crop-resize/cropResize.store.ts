@@ -39,8 +39,7 @@ export const CropResizeActions = {
   processingSuccess: createAction('[CropResize] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[CropResize] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[CropResize] Download'),
-  resetState: createAction('[CropResize] Reset'),
-};
+  resetState: createAction('[CropResize] Reset') };
 export const cropResizeFeature = createFeature({
   name: 'cropResize',
   reducer: createReducer(init,

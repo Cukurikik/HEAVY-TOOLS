@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const AudioConverterInputSchema = z.object({
   inputFile: AudioFileSchema,
-  targetFormat:ExportFormatSchema,bitrate:z.number(),sampleRate:z.number(),outputFormat:ExportFormatSchema,
-});
+  targetFormat: ExportFormatSchema,bitrate:z.number(),sampleRate:z.number(),outputFormat: ExportFormatSchema });
 
 export type AudioConverterInput = z.infer<typeof AudioConverterInputSchema>;

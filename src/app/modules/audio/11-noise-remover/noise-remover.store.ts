@@ -15,7 +15,7 @@ export interface NoiseRemoverState {
   waveformData: WaveformData | null;
   algorithm:string;
   strength:number;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -30,8 +30,7 @@ const initialState: NoiseRemoverState = {
   inputFile: null, audioMeta: null, waveformData: null,
   algorithm:'spectral'as string,strength:0.5,outputFormat:'wav'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const noiseRemoverActions = createActionGroup({
@@ -45,8 +44,7 @@ export const noiseRemoverActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -62,8 +60,7 @@ export const noiseRemoverFeature = createFeature({
     on(noiseRemoverActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(noiseRemoverActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(noiseRemoverActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

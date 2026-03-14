@@ -21,8 +21,7 @@ export const CONVERTER_ERROR_MESSAGES: Record<ConverterErrorCode, string> = {
   OUTPUT_TOO_LARGE: 'The output file would be too large to process.',
   COLOR_PARSE_ERROR: 'Could not parse the provided color value.',
   ENCODING_ERROR: 'Text encoding/decoding failed.',
-  UNKNOWN_ERROR: 'An unknown error occurred. Please try again.',
-};
+  UNKNOWN_ERROR: 'An unknown error occurred. Please try again.' };
 
 /** Get human-readable error message for a given error code */
 export function getConverterErrorMessage(code: ConverterErrorCode): string {

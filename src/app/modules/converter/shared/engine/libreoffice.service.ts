@@ -17,8 +17,10 @@ export class ConverterLibreOfficeService {
 
   /** Convert using LibreOffice engine (actual work in worker) */
   async convert(
-    _buffer: ArrayBuffer,
-    _targetFormat: string
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    file: File, 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    targetFormat: string
   ): Promise<Uint8Array> {
     // Stub — actual conversion happens in worker
     return new Uint8Array(0);

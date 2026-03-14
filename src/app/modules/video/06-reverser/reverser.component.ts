@@ -116,8 +116,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class ReverserComponent implements OnDestroy {
   private store = inject(Store);
   private ffmpeg = inject(FFmpegService);

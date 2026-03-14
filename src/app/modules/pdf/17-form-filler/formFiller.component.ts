@@ -12,7 +12,7 @@ import {
 import { FormFillerActions, selectFormFillerPdfState, selectFormFillerIsLoading, selectFormFillerCanProcess } from './formFiller.store';
 
 @Component({
-  selector: 'app-pdf-formFiller',
+  selector: 'app-pdf-for-iller',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

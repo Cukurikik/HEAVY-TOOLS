@@ -45,8 +45,7 @@ export interface FormatOption {
         }
       </div>
     </div>
-  `,
-})
+  ` })
 export class ConverterFormatSelectorComponent {
   @Input() formats: FormatOption[] = [];
   @Input() selected = '';

@@ -16,7 +16,7 @@ export interface StemSplitterState {
   model:string;
   modelLoaded:boolean;
   webGpuAvailable:boolean;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -31,8 +31,7 @@ const initialState: StemSplitterState = {
   inputFile: null, audioMeta: null, waveformData: null,
   model:'demucs-v4'as string,modelLoaded:false,webGpuAvailable:false,outputFormat:'wav'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const stemSplitterActions = createActionGroup({
@@ -46,8 +45,7 @@ export const stemSplitterActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -63,8 +61,7 @@ export const stemSplitterFeature = createFeature({
     on(stemSplitterActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(stemSplitterActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(stemSplitterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

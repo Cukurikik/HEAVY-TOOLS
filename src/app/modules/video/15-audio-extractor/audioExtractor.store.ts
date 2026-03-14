@@ -33,8 +33,7 @@ export const AudioExtractorActions = {
   processingSuccess: createAction('[AudioExtractor] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[AudioExtractor] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[AudioExtractor] Download'),
-  resetState: createAction('[AudioExtractor] Reset'),
-};
+  resetState: createAction('[AudioExtractor] Reset') };
 export const audioExtractorFeature = createFeature({
   name: 'audioExtractor',
   reducer: createReducer(init,

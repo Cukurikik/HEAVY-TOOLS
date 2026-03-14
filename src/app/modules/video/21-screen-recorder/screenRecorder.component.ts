@@ -83,8 +83,7 @@ import { ScreenRecorderActions, selectScreenRecorderState, selectScreenRecorderI
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class ScreenRecorderComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectScreenRecorderState);

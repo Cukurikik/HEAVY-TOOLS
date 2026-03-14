@@ -29,8 +29,7 @@ const initialState: SubtitleConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const SubtitleConverterActions = createActionGroup({
   source: 'Subtitle Converter',
@@ -44,32 +43,25 @@ export const SubtitleConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const subtitleConverterFeature = createFeature({
   name: 'subtitleConverter',
   reducer: createReducer(
     initialState,
     on(SubtitleConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(SubtitleConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(SubtitleConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(SubtitleConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(SubtitleConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(SubtitleConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(SubtitleConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(SubtitleConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectSubtitleConverterState: selectSubtitleConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectSubtitleConverterProgress,
   selectOutputBlob: selectSubtitleConverterOutputBlob,
   selectOutputSizeMB: selectSubtitleConverterOutputSizeMB,
-  selectErrorMessage: selectSubtitleConverterErrorMessage,
-} = subtitleConverterFeature;
+  selectErrorMessage: selectSubtitleConverterErrorMessage } = subtitleConverterFeature;

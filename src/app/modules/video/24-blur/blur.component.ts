@@ -75,8 +75,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class BlurComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectBlurState); isLoading$ = this.store.select(selectBlurIsLoading); canProcess$ = this.store.select(selectBlurCanProcess);

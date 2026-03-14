@@ -85,8 +85,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class SlideshowComponent implements OnDestroy {
   private store = inject(Store); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectSlideshowState); isLoading$ = this.store.select(selectSlideshowIsLoading); canProcess$ = this.store.select(selectSlideshowCanProcess);

@@ -39,8 +39,7 @@ export const DenoiserActions = {
   processingSuccess: createAction('[Denoiser] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Denoiser] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Denoiser] Download'),
-  resetState: createAction('[Denoiser] Reset'),
-};
+  resetState: createAction('[Denoiser] Reset') };
 export const denoiserFeature = createFeature({
   name: 'denoiser',
   reducer: createReducer(init,

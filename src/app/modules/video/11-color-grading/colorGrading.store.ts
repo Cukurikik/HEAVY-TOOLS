@@ -41,8 +41,7 @@ export const ColorGradingActions = {
   processingSuccess: createAction('[ColorGrading] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[ColorGrading] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[ColorGrading] Download'),
-  resetState: createAction('[ColorGrading] Reset'),
-};
+  resetState: createAction('[ColorGrading] Reset') };
 export const colorGradingFeature = createFeature({
   name: 'colorGrading',
   reducer: createReducer(init,

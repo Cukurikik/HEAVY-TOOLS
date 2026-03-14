@@ -86,8 +86,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class CurrencyConverterComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectCurrencyConverterState);

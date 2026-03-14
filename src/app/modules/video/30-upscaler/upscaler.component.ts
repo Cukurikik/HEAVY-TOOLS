@@ -84,8 +84,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class UpscalerComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectUpscalerState); isLoading$ = this.store.select(selectUpscalerIsLoading); canProcess$ = this.store.select(selectUpscalerCanProcess);

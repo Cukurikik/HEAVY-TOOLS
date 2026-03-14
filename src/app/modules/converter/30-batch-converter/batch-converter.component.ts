@@ -76,8 +76,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class BatchConverterComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectBatchConverterState);

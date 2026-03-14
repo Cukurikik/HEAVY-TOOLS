@@ -17,7 +17,7 @@ export interface VoiceChangerState {
   pitch:number;
   robotMode:boolean;
   echoDelay:number;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -32,8 +32,7 @@ const initialState: VoiceChangerState = {
   inputFile: null, audioMeta: null, waveformData: null,
   activePreset:'chipmunk',pitch:0,robotMode:false,echoDelay:200,outputFormat:'wav'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const voiceChangerActions = createActionGroup({
@@ -47,8 +46,7 @@ export const voiceChangerActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -64,8 +62,7 @@ export const voiceChangerFeature = createFeature({
     on(voiceChangerActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(voiceChangerActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(voiceChangerActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

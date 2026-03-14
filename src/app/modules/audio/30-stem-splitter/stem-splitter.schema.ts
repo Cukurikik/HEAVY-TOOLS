@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const StemSplitterInputSchema = z.object({
   inputFile: AudioFileSchema,
-  model:z.enum(['demucs-v4','htdemucs','spleeter-2stem']),outputFormat:ExportFormatSchema,
-});
+  model:z.enum(['demucs-v4','htdemucs','spleeter-2stem']),outputFormat: ExportFormatSchema });
 
 export type StemSplitterInput = z.infer<typeof StemSplitterInputSchema>;

@@ -37,8 +37,7 @@ export const CompressorActions = {
   processingSuccess: createAction('[Compressor] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Compressor] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Compressor] Download'),
-  resetState: createAction('[Compressor] Reset'),
-};
+  resetState: createAction('[Compressor] Reset') };
 export const compressorFeature = createFeature({
   name: 'compressor',
   reducer: createReducer(init,

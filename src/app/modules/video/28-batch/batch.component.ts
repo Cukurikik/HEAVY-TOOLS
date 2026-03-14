@@ -84,8 +84,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class BatchComponent implements OnDestroy {
   private store = inject(Store); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectBatchState); isLoading$ = this.store.select(selectBatchIsLoading); canProcess$ = this.store.select(selectBatchCanProcess);

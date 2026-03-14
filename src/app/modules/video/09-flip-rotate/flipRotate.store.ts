@@ -33,8 +33,7 @@ export const FlipRotateActions = {
   processingSuccess: createAction('[FlipRotate] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[FlipRotate] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[FlipRotate] Download'),
-  resetState: createAction('[FlipRotate] Reset'),
-};
+  resetState: createAction('[FlipRotate] Reset') };
 export const flipRotateFeature = createFeature({
   name: 'flipRotate',
   reducer: createReducer(init,

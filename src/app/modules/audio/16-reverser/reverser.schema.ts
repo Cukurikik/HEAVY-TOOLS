@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const AudioReverserInputSchema = z.object({
   inputFile: AudioFileSchema,
-  mode:z.enum(['full','region']),outputFormat:ExportFormatSchema,
-});
+  mode:z.enum(['full','region']),outputFormat: ExportFormatSchema });
 
 export type AudioReverserInput = z.infer<typeof AudioReverserInputSchema>;

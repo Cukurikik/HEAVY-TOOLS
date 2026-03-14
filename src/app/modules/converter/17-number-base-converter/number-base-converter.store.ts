@@ -29,8 +29,7 @@ const initialState: NumberBaseConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const NumberBaseConverterActions = createActionGroup({
   source: 'Number Base Converter',
@@ -44,32 +43,25 @@ export const NumberBaseConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const numberBaseConverterFeature = createFeature({
   name: 'numberBaseConverter',
   reducer: createReducer(
     initialState,
     on(NumberBaseConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(NumberBaseConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(NumberBaseConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(NumberBaseConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(NumberBaseConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(NumberBaseConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(NumberBaseConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(NumberBaseConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectNumberBaseConverterState: selectNumberBaseConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectNumberBaseConverterProgress,
   selectOutputBlob: selectNumberBaseConverterOutputBlob,
   selectOutputSizeMB: selectNumberBaseConverterOutputSizeMB,
-  selectErrorMessage: selectNumberBaseConverterErrorMessage,
-} = numberBaseConverterFeature;
+  selectErrorMessage: selectNumberBaseConverterErrorMessage } = numberBaseConverterFeature;

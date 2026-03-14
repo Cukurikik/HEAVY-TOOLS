@@ -12,7 +12,7 @@ import {
 import { CropResizeActions, selectCropResizePdfState, selectCropResizeIsLoading, selectCropResizeCanProcess } from './cropResize.store';
 
 @Component({
-  selector: 'app-pdf-cropResize',
+  selector: 'app-pdf-cro-esize',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

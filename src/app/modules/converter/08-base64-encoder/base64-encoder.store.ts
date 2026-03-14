@@ -29,8 +29,7 @@ const initialState: Base64EncoderState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const Base64EncoderActions = createActionGroup({
   source: 'Base64 Encoder / Decoder',
@@ -44,32 +43,25 @@ export const Base64EncoderActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const base64EncoderFeature = createFeature({
   name: 'base64Encoder',
   reducer: createReducer(
     initialState,
     on(Base64EncoderActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(Base64EncoderActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(Base64EncoderActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(Base64EncoderActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(Base64EncoderActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(Base64EncoderActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(Base64EncoderActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(Base64EncoderActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectBase64EncoderState: selectBase64EncoderState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectBase64EncoderProgress,
   selectOutputBlob: selectBase64EncoderOutputBlob,
   selectOutputSizeMB: selectBase64EncoderOutputSizeMB,
-  selectErrorMessage: selectBase64EncoderErrorMessage,
-} = base64EncoderFeature;
+  selectErrorMessage: selectBase64EncoderErrorMessage } = base64EncoderFeature;

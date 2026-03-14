@@ -76,8 +76,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class InterpolatorComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectInterpolatorState); isLoading$ = this.store.select(selectInterpolatorIsLoading); canProcess$ = this.store.select(selectInterpolatorCanProcess);

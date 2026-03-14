@@ -45,8 +45,7 @@ export const WatermarkActions = {
   processingSuccess: createAction('[Watermark] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Watermark] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Watermark] Download'),
-  resetState: createAction('[Watermark] Reset'),
-};
+  resetState: createAction('[Watermark] Reset') };
 export const watermarkFeature = createFeature({
   name: 'watermark',
   reducer: createReducer(init,

@@ -14,7 +14,7 @@ export interface StereoWidenerState {
   audioMeta: AudioMeta | null;
   waveformData: WaveformData | null;
   width:number;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -29,8 +29,7 @@ const initialState: StereoWidenerState = {
   inputFile: null, audioMeta: null, waveformData: null,
   width:100,outputFormat:'wav'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const stereoWidenerActions = createActionGroup({
@@ -44,8 +43,7 @@ export const stereoWidenerActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -61,8 +59,7 @@ export const stereoWidenerFeature = createFeature({
     on(stereoWidenerActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(stereoWidenerActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(stereoWidenerActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

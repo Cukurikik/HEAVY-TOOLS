@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { switchMap, map, catchError, exhaustMap, tap, withLatestFrom } from 'rxjs/operators';
 import { from, of } from 'rxjs';
-import type { AudioMeta, WaveformData, AudioErrorCode, ProcessingStatus, ExportFormat } from '../shared/types/audio.types';
+import type { AudioMeta, WaveformData, AudioErrorCode, ProcessingStatus } from '../shared/types/audio.types';
 import { AudioAnalyserService } from './analyser.service';
 import { AudioWorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
@@ -29,8 +29,7 @@ const initialState: AudioAnalyserState = {
   inputFile: null, audioMeta: null, waveformData: null,
   activeTab:'waveform'as string,integratedLUFS:null as number|null,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const audioAnalyserActions = createActionGroup({
@@ -44,8 +43,7 @@ export const audioAnalyserActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -61,8 +59,7 @@ export const audioAnalyserFeature = createFeature({
     on(audioAnalyserActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(audioAnalyserActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(audioAnalyserActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

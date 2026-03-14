@@ -29,8 +29,7 @@ const initialState: EncodingConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const EncodingConverterActions = createActionGroup({
   source: 'Encoding Converter',
@@ -44,32 +43,25 @@ export const EncodingConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const encodingConverterFeature = createFeature({
   name: 'encodingConverter',
   reducer: createReducer(
     initialState,
     on(EncodingConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(EncodingConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(EncodingConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(EncodingConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(EncodingConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(EncodingConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(EncodingConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(EncodingConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectEncodingConverterState: selectEncodingConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectEncodingConverterProgress,
   selectOutputBlob: selectEncodingConverterOutputBlob,
   selectOutputSizeMB: selectEncodingConverterOutputSizeMB,
-  selectErrorMessage: selectEncodingConverterErrorMessage,
-} = encodingConverterFeature;
+  selectErrorMessage: selectEncodingConverterErrorMessage } = encodingConverterFeature;

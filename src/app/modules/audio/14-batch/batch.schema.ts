@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const AudioBatchInputSchema = z.object({
   inputFile: AudioFileSchema,
-  operation:z.enum(['convert','normalize','compress','trim-silence','metadata']),outputFormat:ExportFormatSchema,
-});
+  operation:z.enum(['convert','normalize','compress','trim-silence','metadata']),outputFormat: ExportFormatSchema });
 
 export type AudioBatchInput = z.infer<typeof AudioBatchInputSchema>;

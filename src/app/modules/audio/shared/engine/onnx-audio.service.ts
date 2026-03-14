@@ -5,7 +5,11 @@ export class OnnxAudioService {
   readonly modelLoaded = signal(false);
   readonly downloadProgress = signal(0);
 
-  async loadModel(modelUrl: string, _cacheKey: string): Promise<unknown> {
+  async loadModel(
+    modelUrl: string, 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    modelName: string
+  ): Promise<unknown> {
     this.downloadProgress.set(0);
     try {
       const ort = await import('onnxruntime-web');

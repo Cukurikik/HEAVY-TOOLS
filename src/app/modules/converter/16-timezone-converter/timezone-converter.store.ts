@@ -29,8 +29,7 @@ const initialState: TimezoneConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const TimezoneConverterActions = createActionGroup({
   source: 'Timezone Converter',
@@ -44,32 +43,25 @@ export const TimezoneConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const timezoneConverterFeature = createFeature({
   name: 'timezoneConverter',
   reducer: createReducer(
     initialState,
     on(TimezoneConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(TimezoneConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(TimezoneConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(TimezoneConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(TimezoneConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(TimezoneConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(TimezoneConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(TimezoneConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectTimezoneConverterState: selectTimezoneConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectTimezoneConverterProgress,
   selectOutputBlob: selectTimezoneConverterOutputBlob,
   selectOutputSizeMB: selectTimezoneConverterOutputSizeMB,
-  selectErrorMessage: selectTimezoneConverterErrorMessage,
-} = timezoneConverterFeature;
+  selectErrorMessage: selectTimezoneConverterErrorMessage } = timezoneConverterFeature;

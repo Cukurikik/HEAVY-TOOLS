@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const KaraokeInputSchema = z.object({
   inputFile: AudioFileSchema,
-  method:z.enum(['midSide','ai']),outputTarget:z.enum(['karaoke','vocals','instrumental']),outputFormat:ExportFormatSchema,
-});
+  method:z.enum(['midSide','ai']),outputTarget:z.enum(['karaoke','vocals','instrumental']),outputFormat: ExportFormatSchema });
 
 export type KaraokeInput = z.infer<typeof KaraokeInputSchema>;

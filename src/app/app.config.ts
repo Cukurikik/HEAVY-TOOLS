@@ -18,13 +18,10 @@ import {stabilizerFeature} from './modules/video/05-stabilizer/stabilizer.store'
 import {reverserFeature} from './modules/video/06-reverser/reverser.store';
 import {speedControllerFeature} from './modules/video/07-speed-controller/speed-controller.store';
 import {looperFeature} from './modules/video/08-looper/looper.store';
-import {watermarkFeature} from './modules/video/09-watermark/watermark.store';
-import {subtitleFeature} from './modules/video/10-subtitle/subtitle.store';
-import {muterFeature} from './modules/video/11-muter/muter.store';
-import {volumeBoosterFeature} from './modules/video/12-volume-booster/volume-booster.store';
-import {audioExtractorFeature} from './modules/video/13-audio-extractor/audio-extractor.store';
-import {audioRemoverFeature} from './modules/video/14-audio-remover/audio-remover.store';
-import {audioReplacerFeature} from './modules/video/15-audio-replacer/audio-replacer.store';
+import {watermarkFeature} from './modules/video/14-watermark/watermark.store';
+import {subtitleBurnerFeature} from './modules/video/12-subtitle-burner/subtitle-burner.store';
+import {audioExtractorFeature} from './modules/video/15-audio-extractor/audioExtractor.store';
+import {audioReplacerFeature} from './modules/video/16-audio-replacer/audioReplacer.store';
 import {flipRotateFeature} from './modules/video/09-flip-rotate/flip-rotate.store';
 import {cropResizeFeature} from './modules/video/10-crop-resize/crop-resize.store';
 import {colorGradingFeature} from './modules/video/11-color-grading/color-grading.store';
@@ -45,11 +42,8 @@ export const appConfig: ApplicationConfig = {
       [speedControllerFeature.name]: speedControllerFeature.reducer,
       [looperFeature.name]: looperFeature.reducer,
       [watermarkFeature.name]: watermarkFeature.reducer,
-      [subtitleFeature.name]: subtitleFeature.reducer,
-      [muterFeature.name]: muterFeature.reducer,
-      [volumeBoosterFeature.name]: volumeBoosterFeature.reducer,
+      [subtitleBurnerFeature.name]: subtitleBurnerFeature.reducer,
       [audioExtractorFeature.name]: audioExtractorFeature.reducer,
-      [audioRemoverFeature.name]: audioRemoverFeature.reducer,
       [audioReplacerFeature.name]: audioReplacerFeature.reducer,
       [flipRotateFeature.name]: flipRotateFeature.reducer,
       [cropResizeFeature.name]: cropResizeFeature.reducer,

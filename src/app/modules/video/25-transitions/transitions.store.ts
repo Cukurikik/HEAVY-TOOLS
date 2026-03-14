@@ -35,8 +35,7 @@ export const TransitionsActions = {
   processingSuccess: createAction('[Transitions] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Transitions] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Transitions] Download'),
-  resetState: createAction('[Transitions] Reset'),
-};
+  resetState: createAction('[Transitions] Reset') };
 export const transitionsFeature = createFeature({
   name: 'transitions',
   reducer: createReducer(init,

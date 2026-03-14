@@ -41,8 +41,7 @@ export const PipActions = {
   processingSuccess: createAction('[Pip] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Pip] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Pip] Download'),
-  resetState: createAction('[Pip] Reset'),
-};
+  resetState: createAction('[Pip] Reset') };
 export const pipFeature = createFeature({
   name: 'pip',
   reducer: createReducer(init,

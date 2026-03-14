@@ -41,8 +41,7 @@ export const LooperActions = {
   processingSuccess: createAction('[Looper] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Looper] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Looper] Download'),
-  resetState: createAction('[Looper] Reset'),
-};
+  resetState: createAction('[Looper] Reset') };
 export const looperFeature = createFeature({
   name: 'looper',
   reducer: createReducer(init,

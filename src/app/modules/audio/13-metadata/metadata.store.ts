@@ -19,7 +19,7 @@ export interface AudioMetadataState {
   year:string;
   genre:string;
   stripAll:boolean;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -34,8 +34,7 @@ const initialState: AudioMetadataState = {
   inputFile: null, audioMeta: null, waveformData: null,
   title:'',artist:'',album:'',year:'',genre:'',stripAll:false,outputFormat:'mp3'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const audioMetadataActions = createActionGroup({
@@ -49,8 +48,7 @@ export const audioMetadataActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -66,8 +64,7 @@ export const audioMetadataFeature = createFeature({
     on(audioMetadataActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(audioMetadataActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(audioMetadataActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

@@ -39,8 +39,7 @@ export const VideoToGifActions = {
   processingSuccess: createAction('[VideoToGif] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[VideoToGif] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[VideoToGif] Download'),
-  resetState: createAction('[VideoToGif] Reset'),
-};
+  resetState: createAction('[VideoToGif] Reset') };
 export const videoToGifFeature = createFeature({
   name: 'videoToGif',
   reducer: createReducer(init,

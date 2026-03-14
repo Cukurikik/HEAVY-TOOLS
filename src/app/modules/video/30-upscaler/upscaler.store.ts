@@ -43,8 +43,7 @@ export const UpscalerActions = {
   processingSuccess: createAction('[Upscaler] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Upscaler] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Upscaler] Download'),
-  resetState: createAction('[Upscaler] Reset'),
-};
+  resetState: createAction('[Upscaler] Reset') };
 export const upscalerFeature = createFeature({
   name: 'upscaler',
   reducer: createReducer(init,

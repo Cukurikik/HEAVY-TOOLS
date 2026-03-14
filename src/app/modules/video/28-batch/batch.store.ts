@@ -41,8 +41,7 @@ export const BatchActions = {
   processingSuccess: createAction('[Batch] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Batch] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Batch] Download'),
-  resetState: createAction('[Batch] Reset'),
-};
+  resetState: createAction('[Batch] Reset') };
 export const batchFeature = createFeature({
   name: 'batch',
   reducer: createReducer(init,

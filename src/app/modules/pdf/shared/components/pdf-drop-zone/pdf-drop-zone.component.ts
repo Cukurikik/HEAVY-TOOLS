@@ -49,7 +49,7 @@ export class PdfDropZoneComponent {
     }
   }
 
-  onFileSelected(e: any) {
+  onFileSelected(e: Event) {
     if (e.target.files?.length) {
       this.handleFiles(Array.from(e.target.files));
     }

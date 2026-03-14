@@ -29,8 +29,7 @@ const initialState: AudioConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const AudioConverterActions = createActionGroup({
   source: 'Audio Format Converter',
@@ -44,32 +43,25 @@ export const AudioConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const audioConverterFeature = createFeature({
   name: 'audioConverter',
   reducer: createReducer(
     initialState,
     on(AudioConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(AudioConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(AudioConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(AudioConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(AudioConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(AudioConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(AudioConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(AudioConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectAudioConverterState: selectAudioConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectAudioConverterProgress,
   selectOutputBlob: selectAudioConverterOutputBlob,
   selectOutputSizeMB: selectAudioConverterOutputSizeMB,
-  selectErrorMessage: selectAudioConverterErrorMessage,
-} = audioConverterFeature;
+  selectErrorMessage: selectAudioConverterErrorMessage } = audioConverterFeature;

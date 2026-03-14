@@ -29,8 +29,7 @@ export const AnalyserActions = {
   processingSuccess: createAction('[Analyser] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Analyser] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Analyser] Download'),
-  resetState: createAction('[Analyser] Reset'),
-};
+  resetState: createAction('[Analyser] Reset') };
 export const analyserFeature = createFeature({
   name: 'analyser',
   reducer: createReducer(init,

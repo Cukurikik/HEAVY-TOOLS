@@ -3,8 +3,8 @@
 // ============================================================
 /// <reference lib="webworker" />
 
-addEventListener('message', async (event: MessageEvent) => {
-  const { file, outputFormat, quality } = event.data;
+addEventListener('message', async (_event: MessageEvent) => {
+  const { file, outputFormat, quality } = _event.data;
   try {
     postMessage({ type: 'progress', value: 10 });
 
@@ -22,8 +22,7 @@ addEventListener('message', async (event: MessageEvent) => {
 
     const mimeMap: Record<string, string> = {
       jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp',
-      avif: 'image/avif', bmp: 'image/bmp', tiff: 'image/tiff', gif: 'image/gif',
-    };
+      avif: 'image/avif', bmp: 'image/bmp', tiff: 'image/tiff', gif: 'image/gif' };
     const mime = mimeMap[outputFormat] || 'image/png';
     const blob = await canvas.convertToBlob({ type: mime, quality: quality / 100 });
 

@@ -3,8 +3,8 @@
 // ============================================================
 /// <reference lib="webworker" />
 
-addEventListener('message', async (event: MessageEvent) => {
-  const config = event.data;
+addEventListener('message', async (_event: MessageEvent) => {
+  const config = _event.data;
   try {
     postMessage({ type: 'progress', value: 10 });
 

@@ -33,8 +33,7 @@ export const MergerActions = {
   processingSuccess: createAction('[Merger] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Merger] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Merger] Download'),
-  resetState: createAction('[Merger] Reset'),
-};
+  resetState: createAction('[Merger] Reset') };
 export const mergerFeature = createFeature({
   name: 'merger',
   reducer: createReducer(init,

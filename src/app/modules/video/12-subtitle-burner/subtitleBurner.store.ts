@@ -45,8 +45,7 @@ export const SubtitleBurnerActions = {
   processingSuccess: createAction('[SubtitleBurner] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[SubtitleBurner] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[SubtitleBurner] Download'),
-  resetState: createAction('[SubtitleBurner] Reset'),
-};
+  resetState: createAction('[SubtitleBurner] Reset') };
 export const subtitleBurnerFeature = createFeature({
   name: 'subtitleBurner',
   reducer: createReducer(init,

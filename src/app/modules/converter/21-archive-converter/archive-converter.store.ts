@@ -29,8 +29,7 @@ const initialState: ArchiveConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const ArchiveConverterActions = createActionGroup({
   source: 'Archive Converter',
@@ -44,32 +43,25 @@ export const ArchiveConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const archiveConverterFeature = createFeature({
   name: 'archiveConverter',
   reducer: createReducer(
     initialState,
     on(ArchiveConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(ArchiveConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(ArchiveConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(ArchiveConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(ArchiveConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(ArchiveConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(ArchiveConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(ArchiveConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectArchiveConverterState: selectArchiveConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectArchiveConverterProgress,
   selectOutputBlob: selectArchiveConverterOutputBlob,
   selectOutputSizeMB: selectArchiveConverterOutputSizeMB,
-  selectErrorMessage: selectArchiveConverterErrorMessage,
-} = archiveConverterFeature;
+  selectErrorMessage: selectArchiveConverterErrorMessage } = archiveConverterFeature;

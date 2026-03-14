@@ -23,8 +23,7 @@ export class ConverterSharpService {
         resolve({
           width: img.naturalWidth,
           height: img.naturalHeight,
-          format: file.type.split('/')[1] || 'unknown',
-        });
+          format: file.type.split('/')[1] || 'unknown' });
         URL.revokeObjectURL(url);
       };
       img.onerror = () => {

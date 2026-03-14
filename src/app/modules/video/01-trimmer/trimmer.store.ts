@@ -23,8 +23,7 @@ export const TrimmerActions = {
   processingSuccess: createAction('[Trimmer] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Trimmer] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Trimmer] Download'),
-  resetState: createAction('[Trimmer] Reset'),
-};
+  resetState: createAction('[Trimmer] Reset') };
 export const trimmerFeature = createFeature({
   name: 'trimmer',
   reducer: createReducer(init,

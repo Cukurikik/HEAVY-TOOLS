@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class VideoToGifService {
   // -vf fps=10,scale=480:-1,palettegen palette.png
-  buildArgs(inputName: string, outputName: string, config: Record<string, unknown>): string[] {
+  buildArgs(inputName: string, outputName: string, ): string[] {
     return ['-i', inputName, outputName];
   }
   formatTime(s: number): string {

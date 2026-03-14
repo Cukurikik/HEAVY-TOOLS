@@ -29,8 +29,7 @@ const initialState: EbookConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const EbookConverterActions = createActionGroup({
   source: 'Ebook Converter',
@@ -44,32 +43,25 @@ export const EbookConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const ebookConverterFeature = createFeature({
   name: 'ebookConverter',
   reducer: createReducer(
     initialState,
     on(EbookConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(EbookConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(EbookConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(EbookConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(EbookConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(EbookConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(EbookConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(EbookConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectEbookConverterState: selectEbookConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectEbookConverterProgress,
   selectOutputBlob: selectEbookConverterOutputBlob,
   selectOutputSizeMB: selectEbookConverterOutputSizeMB,
-  selectErrorMessage: selectEbookConverterErrorMessage,
-} = ebookConverterFeature;
+  selectErrorMessage: selectEbookConverterErrorMessage } = ebookConverterFeature;

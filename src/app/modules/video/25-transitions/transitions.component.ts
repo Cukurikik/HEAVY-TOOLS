@@ -63,8 +63,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class TransitionsComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectTransitionsState); isLoading$ = this.store.select(selectTransitionsIsLoading); canProcess$ = this.store.select(selectTransitionsCanProcess);

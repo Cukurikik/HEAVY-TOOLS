@@ -37,8 +37,7 @@ export const CompareActions = {
   processingSuccess: createAction('[Compare] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Compare] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Compare] Download'),
-  resetState: createAction('[Compare] Reset'),
-};
+  resetState: createAction('[Compare] Reset') };
 export const compareFeature = createFeature({
   name: 'compare',
   reducer: createReducer(init,

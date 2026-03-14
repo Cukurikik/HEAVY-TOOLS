@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const ChannelMixerInputSchema = z.object({
   inputFile: AudioFileSchema,
-  operation:z.enum(['toMono','toStereo','swapLR','extractL','extractR','midSideEncode','midSideDecode']),outputFormat:ExportFormatSchema,
-});
+  operation:z.enum(['toMono','toStereo','swapLR','extractL','extractR','midSideEncode','midSideDecode']),outputFormat: ExportFormatSchema });
 
 export type ChannelMixerInput = z.infer<typeof ChannelMixerInputSchema>;

@@ -29,8 +29,7 @@ const initialState: QrGeneratorState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const QrGeneratorActions = createActionGroup({
   source: 'QR Code Generator',
@@ -44,32 +43,25 @@ export const QrGeneratorActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const qrGeneratorFeature = createFeature({
   name: 'qrGenerator',
   reducer: createReducer(
     initialState,
     on(QrGeneratorActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(QrGeneratorActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(QrGeneratorActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(QrGeneratorActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(QrGeneratorActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(QrGeneratorActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(QrGeneratorActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(QrGeneratorActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectQrGeneratorState: selectQrGeneratorState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectQrGeneratorProgress,
   selectOutputBlob: selectQrGeneratorOutputBlob,
   selectOutputSizeMB: selectQrGeneratorOutputSizeMB,
-  selectErrorMessage: selectQrGeneratorErrorMessage,
-} = qrGeneratorFeature;
+  selectErrorMessage: selectQrGeneratorErrorMessage } = qrGeneratorFeature;

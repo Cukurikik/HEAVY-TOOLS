@@ -43,8 +43,7 @@ export const ThumbnailGeneratorActions = {
   processingSuccess: createAction('[ThumbnailGenerator] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[ThumbnailGenerator] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[ThumbnailGenerator] Download'),
-  resetState: createAction('[ThumbnailGenerator] Reset'),
-};
+  resetState: createAction('[ThumbnailGenerator] Reset') };
 export const thumbnailGeneratorFeature = createFeature({
   name: 'thumbnailGenerator',
   reducer: createReducer(init,

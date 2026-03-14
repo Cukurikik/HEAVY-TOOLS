@@ -29,8 +29,7 @@ const initialState: CadConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const CadConverterActions = createActionGroup({
   source: 'CAD Converter',
@@ -44,32 +43,25 @@ export const CadConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const cadConverterFeature = createFeature({
   name: 'cadConverter',
   reducer: createReducer(
     initialState,
     on(CadConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(CadConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(CadConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(CadConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(CadConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(CadConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(CadConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(CadConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectCadConverterState: selectCadConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectCadConverterProgress,
   selectOutputBlob: selectCadConverterOutputBlob,
   selectOutputSizeMB: selectCadConverterOutputSizeMB,
-  selectErrorMessage: selectCadConverterErrorMessage,
-} = cadConverterFeature;
+  selectErrorMessage: selectCadConverterErrorMessage } = cadConverterFeature;

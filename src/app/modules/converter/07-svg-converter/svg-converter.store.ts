@@ -29,8 +29,7 @@ const initialState: SvgConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const SvgConverterActions = createActionGroup({
   source: 'SVG Converter',
@@ -44,32 +43,25 @@ export const SvgConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const svgConverterFeature = createFeature({
   name: 'svgConverter',
   reducer: createReducer(
     initialState,
     on(SvgConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(SvgConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(SvgConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(SvgConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(SvgConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(SvgConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(SvgConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(SvgConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectSvgConverterState: selectSvgConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectSvgConverterProgress,
   selectOutputBlob: selectSvgConverterOutputBlob,
   selectOutputSizeMB: selectSvgConverterOutputSizeMB,
-  selectErrorMessage: selectSvgConverterErrorMessage,
-} = svgConverterFeature;
+  selectErrorMessage: selectSvgConverterErrorMessage } = svgConverterFeature;

@@ -21,8 +21,7 @@ export const PdfErrorMessages: Record<PdfErrorCode, string> = {
   SIGNATURE_FAILED: 'Failed to digitally sign document. Check credentials.',
   WORKER_CRASHED: 'The background worker crashed due to an Out-of-Memory (OOM) error.',
   WORKER_TIMEOUT: 'The background worker took too long to respond.',
-  UNKNOWN_ERROR: 'An unknown error occurred during processing.',
-};
+  UNKNOWN_ERROR: 'An unknown error occurred during processing.' };
 
 export const PdfErrorRetryable: Record<PdfErrorCode, boolean> = {
   GHOSTSCRIPT_LOAD_FAILED: true,
@@ -45,8 +44,7 @@ export const PdfErrorRetryable: Record<PdfErrorCode, boolean> = {
   RENDER_FAILED: false,
   FORM_FIELD_NOT_FOUND: false,
   SIGNATURE_FAILED: false,
-  UNKNOWN_ERROR: true,
-};
+  UNKNOWN_ERROR: true };
 
 export function getPdfError(code: PdfErrorCode): { message: string, retryable: boolean } {
   return {

@@ -31,8 +31,7 @@ import { CommonModule } from '@angular/common';
         📥 Download {{ filename }}
       </button>
     </div>
-  `,
-})
+  ` })
 export class ConverterExportPanelComponent {
   @Input() outputBlob: Blob | null = null;
   @Input() outputSizeMB: number | null = null;

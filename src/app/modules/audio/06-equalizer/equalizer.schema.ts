@@ -3,7 +3,6 @@ import { AudioFileSchema, ExportFormatSchema } from '../shared/schemas/audio.sch
 
 export const EqualizerInputSchema = z.object({
   inputFile: AudioFileSchema,
-  mode:z.enum(['graphic','parametric']),outputFormat:ExportFormatSchema,
-});
+  mode:z.enum(['graphic','parametric']),outputFormat: ExportFormatSchema });
 
 export type EqualizerInput = z.infer<typeof EqualizerInputSchema>;

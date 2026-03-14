@@ -17,7 +17,7 @@ export interface AudioVisualizerState {
   colorTheme:string;
   resolution:string;
   fps:number;
-  outputFormat:ExportFormat;
+  outputFormat: ExportFormat;
   
   status: ProcessingStatus;
   progress: number;
@@ -32,8 +32,7 @@ const initialState: AudioVisualizerState = {
   inputFile: null, audioMeta: null, waveformData: null,
   style:'bars'as string,colorTheme:'cyan',resolution:'1080p'as string,fps:30,outputFormat:'mp4'as ExportFormat,
   status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null,
-  errorCode: null, errorMessage: null, retryable: false,
-};
+  errorCode: null, errorMessage: null, retryable: false };
 
 // ── Actions ──
 export const audioVisualizerActions = createActionGroup({
@@ -47,8 +46,7 @@ export const audioVisualizerActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: AudioErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  }
+    'Reset State': emptyProps() }
 });
 
 // ── Feature (Reducer + Selectors) ──
@@ -64,8 +62,7 @@ export const audioVisualizerFeature = createFeature({
     on(audioVisualizerActions.processingSuccess, (s, { outputBlob, outputSizeMB }) => ({ ...s, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(audioVisualizerActions.processingFailure, (s, { errorCode, message, retryable }) => ({ ...s, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(audioVisualizerActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 // ── Effects ──
 @Injectable()

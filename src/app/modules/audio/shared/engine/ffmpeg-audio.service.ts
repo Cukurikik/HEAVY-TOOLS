@@ -16,8 +16,7 @@ export class FFmpegAudioService {
     const base = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
     await this.ffmpeg.load({
       coreURL: await toBlobURL(base + '/ffmpeg-core.js', 'text/javascript'),
-      wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm'),
-    });
+      wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm') });
     this.loaded = true;
     this.loading.set(false);
     return this.ffmpeg;

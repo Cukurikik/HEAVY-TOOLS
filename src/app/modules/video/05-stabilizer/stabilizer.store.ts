@@ -35,8 +35,7 @@ export const StabilizerActions = {
   processingSuccess: createAction('[Stabilizer] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Stabilizer] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Stabilizer] Download'),
-  resetState: createAction('[Stabilizer] Reset'),
-};
+  resetState: createAction('[Stabilizer] Reset') };
 export const stabilizerFeature = createFeature({
   name: 'stabilizer',
   reducer: createReducer(init,

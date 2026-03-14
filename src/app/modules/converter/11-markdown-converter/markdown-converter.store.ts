@@ -29,8 +29,7 @@ const initialState: MarkdownConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const MarkdownConverterActions = createActionGroup({
   source: 'Markdown Converter',
@@ -44,32 +43,25 @@ export const MarkdownConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const markdownConverterFeature = createFeature({
   name: 'markdownConverter',
   reducer: createReducer(
     initialState,
     on(MarkdownConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(MarkdownConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(MarkdownConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(MarkdownConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(MarkdownConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(MarkdownConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(MarkdownConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(MarkdownConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectMarkdownConverterState: selectMarkdownConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectMarkdownConverterProgress,
   selectOutputBlob: selectMarkdownConverterOutputBlob,
   selectOutputSizeMB: selectMarkdownConverterOutputSizeMB,
-  selectErrorMessage: selectMarkdownConverterErrorMessage,
-} = markdownConverterFeature;
+  selectErrorMessage: selectMarkdownConverterErrorMessage } = markdownConverterFeature;

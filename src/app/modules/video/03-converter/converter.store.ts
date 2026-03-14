@@ -35,8 +35,7 @@ export const ConverterActions = {
   processingSuccess: createAction('[Converter] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Converter] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Converter] Download'),
-  resetState: createAction('[Converter] Reset'),
-};
+  resetState: createAction('[Converter] Reset') };
 export const converterFeature = createFeature({
   name: 'converter',
   reducer: createReducer(init,

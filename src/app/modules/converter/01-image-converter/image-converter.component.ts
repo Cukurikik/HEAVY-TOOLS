@@ -102,8 +102,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
         </div>
       </div>
     </div>
-  `,
-})
+  ` })
 export class ImageConverterComponent implements OnDestroy {
   store = inject(Store);
   state$ = this.store.select(selectImageConverterState);

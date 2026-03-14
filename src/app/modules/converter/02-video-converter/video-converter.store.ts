@@ -18,8 +18,7 @@ export interface VideoConverterState {
 
 const initialState: VideoConverterState = {
   inputFile: null, outputFormat: 'mp4', crf: 23, encodingSpeed: 'medium', resolution: 'original',
-  status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null, errorCode: null, errorMessage: null, retryable: false,
-};
+  status: 'idle', progress: 0, outputBlob: null, outputSizeMB: null, errorCode: null, errorMessage: null, retryable: false };
 
 export const VideoConverterActions = createActionGroup({
   source: 'Video Converter',
@@ -34,9 +33,7 @@ export const VideoConverterActions = createActionGroup({
     'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const videoConverterFeature = createFeature({
   name: 'videoConverter',
@@ -52,7 +49,6 @@ export const videoConverterFeature = createFeature({
     on(VideoConverterActions.processingSuccess, (state, { outputBlob, outputSizeMB }) => ({ ...state, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
     on(VideoConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({ ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(VideoConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const { selectVideoConverterState, selectInputFile: selectVideoInputFile, selectOutputFormat: selectVideoOutputFormat, selectStatus: selectVideoStatus, selectProgress: selectVideoProgress, selectOutputBlob: selectVideoOutputBlob, selectOutputSizeMB: selectVideoOutputSizeMB, selectErrorMessage: selectVideoErrorMessage } = videoConverterFeature;

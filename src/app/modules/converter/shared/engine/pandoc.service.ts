@@ -20,7 +20,7 @@ export class ConverterPandocService {
     input: string,
     from: string,
     to: string,
-    _options: string[] = []
+    
   ): Promise<string | Uint8Array> {
     // Stub — actual conversion happens in worker
     return `Converted from ${from} to ${to}: ${input.substring(0, 100)}`;

@@ -40,8 +40,7 @@ import { CommonModule } from '@angular/common';
         }
       </div>
     </div>
-  `,
-})
+  ` })
 export class ConverterProgressRingComponent {
   @Input() progress = 0;
   @Input() label = '';

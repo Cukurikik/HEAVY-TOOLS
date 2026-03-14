@@ -29,8 +29,7 @@ const initialState: ImageResizerState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const ImageResizerActions = createActionGroup({
   source: 'Image Resizer',
@@ -44,32 +43,25 @@ export const ImageResizerActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const imageResizerFeature = createFeature({
   name: 'imageResizer',
   reducer: createReducer(
     initialState,
     on(ImageResizerActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(ImageResizerActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(ImageResizerActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(ImageResizerActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(ImageResizerActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(ImageResizerActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(ImageResizerActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(ImageResizerActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectImageResizerState: selectImageResizerState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectImageResizerProgress,
   selectOutputBlob: selectImageResizerOutputBlob,
   selectOutputSizeMB: selectImageResizerOutputSizeMB,
-  selectErrorMessage: selectImageResizerErrorMessage,
-} = imageResizerFeature;
+  selectErrorMessage: selectImageResizerErrorMessage } = imageResizerFeature;

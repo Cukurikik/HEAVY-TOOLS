@@ -26,8 +26,7 @@ export class ConverterWorkerBridgeService {
         subscriber.next({
           type: 'error',
           errorCode: 'WORKER_CRASHED',
-          message: 'Failed to create Web Worker: ' + String(err),
-        });
+          message: 'Failed to create Web Worker: ' + String(err) });
         subscriber.complete();
         return;
       }
@@ -44,8 +43,7 @@ export class ConverterWorkerBridgeService {
         subscriber.next({
           type: 'error',
           errorCode: 'WORKER_CRASHED',
-          message: error.message || 'Worker encountered an unexpected error',
-        });
+          message: error.message || 'Worker encountered an unexpected error' });
         subscriber.complete();
       };
 

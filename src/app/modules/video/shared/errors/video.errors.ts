@@ -23,8 +23,7 @@ export const VideoErrorMessages: Record<VideoErrorCode, string> = {
   OPFS_NOT_AVAILABLE: 'File system API not available. Try Chrome or Edge.',
   MEDIA_RECORDER_FAILED: 'Screen capture permission was denied.',
   PERMISSION_DENIED: 'Permission was denied by the user or browser.',
-  UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.',
-};
+  UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.' };
 
 const RETRYABLE_CODES = new Set<VideoErrorCode>(['FFMPEG_TIMEOUT','FFMPEG_OOM','WORKER_CRASHED','FILE_READ_ERROR','WORKER_TRANSFER_FAILED']);
 

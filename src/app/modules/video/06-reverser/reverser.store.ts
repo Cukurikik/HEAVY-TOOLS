@@ -35,8 +35,7 @@ export const ReverserActions = {
   processingSuccess: createAction('[Reverser] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[Reverser] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[Reverser] Download'),
-  resetState: createAction('[Reverser] Reset'),
-};
+  resetState: createAction('[Reverser] Reset') };
 export const reverserFeature = createFeature({
   name: 'reverser',
   reducer: createReducer(init,

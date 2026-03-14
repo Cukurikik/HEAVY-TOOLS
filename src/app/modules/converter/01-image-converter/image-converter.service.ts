@@ -26,8 +26,7 @@ export class ImageConverterService {
           lastModified: file.lastModified,
           width: img.naturalWidth,
           height: img.naturalHeight,
-          format: this.detectInputFormat(file),
-        });
+          format: this.detectInputFormat(file) });
         URL.revokeObjectURL(url);
       };
       img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Cannot read image')); };

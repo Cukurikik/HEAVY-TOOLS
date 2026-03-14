@@ -29,8 +29,7 @@ const initialState: GifConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const GifConverterActions = createActionGroup({
   source: 'GIF Converter',
@@ -44,32 +43,25 @@ export const GifConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const gifConverterFeature = createFeature({
   name: 'gifConverter',
   reducer: createReducer(
     initialState,
     on(GifConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(GifConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(GifConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(GifConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(GifConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(GifConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(GifConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(GifConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectGifConverterState: selectGifConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectGifConverterProgress,
   selectOutputBlob: selectGifConverterOutputBlob,
   selectOutputSizeMB: selectGifConverterOutputSizeMB,
-  selectErrorMessage: selectGifConverterErrorMessage,
-} = gifConverterFeature;
+  selectErrorMessage: selectGifConverterErrorMessage } = gifConverterFeature;

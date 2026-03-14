@@ -37,8 +37,7 @@ export const ScreenRecorderActions = {
   processingSuccess: createAction('[ScreenRecorder] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[ScreenRecorder] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[ScreenRecorder] Download'),
-  resetState: createAction('[ScreenRecorder] Reset'),
-};
+  resetState: createAction('[ScreenRecorder] Reset') };
 export const screenRecorderFeature = createFeature({
   name: 'screenRecorder',
   reducer: createReducer(init,

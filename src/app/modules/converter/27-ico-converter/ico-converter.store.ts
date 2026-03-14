@@ -29,8 +29,7 @@ const initialState: IcoConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const IcoConverterActions = createActionGroup({
   source: 'ICO / Favicon Converter',
@@ -44,32 +43,25 @@ export const IcoConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const icoConverterFeature = createFeature({
   name: 'icoConverter',
   reducer: createReducer(
     initialState,
     on(IcoConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(IcoConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(IcoConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(IcoConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(IcoConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(IcoConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(IcoConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(IcoConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectIcoConverterState: selectIcoConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectIcoConverterProgress,
   selectOutputBlob: selectIcoConverterOutputBlob,
   selectOutputSizeMB: selectIcoConverterOutputSizeMB,
-  selectErrorMessage: selectIcoConverterErrorMessage,
-} = icoConverterFeature;
+  selectErrorMessage: selectIcoConverterErrorMessage } = icoConverterFeature;

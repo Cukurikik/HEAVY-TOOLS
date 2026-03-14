@@ -35,8 +35,7 @@ export const SpeedControllerActions = {
   processingSuccess: createAction('[SpeedController] Success', props<{ outputBlob: Blob; outputSizeMB: number }>()),
   processingFailure: createAction('[SpeedController] Failure', props<{ errorCode: VideoErrorCode; message: string }>()),
   downloadOutput: createAction('[SpeedController] Download'),
-  resetState: createAction('[SpeedController] Reset'),
-};
+  resetState: createAction('[SpeedController] Reset') };
 export const speedControllerFeature = createFeature({
   name: 'speedController',
   reducer: createReducer(init,

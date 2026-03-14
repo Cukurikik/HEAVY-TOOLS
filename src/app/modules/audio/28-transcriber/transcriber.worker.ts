@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 addEventListener('message', (event: MessageEvent) => {
   try {
     self.postMessage({type:'progress',value:50});self.postMessage({type:'complete',data:JSON.stringify([{start:0,end:1,text:'Transcription placeholder'}])});

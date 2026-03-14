@@ -29,8 +29,7 @@ const initialState: CurrencyConverterState = {
   outputSizeMB: null,
   errorCode: null,
   errorMessage: null,
-  retryable: false,
-};
+  retryable: false };
 
 export const CurrencyConverterActions = createActionGroup({
   source: 'Currency Converter',
@@ -44,32 +43,25 @@ export const CurrencyConverterActions = createActionGroup({
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
-    'Reset State': emptyProps(),
-  },
-});
+    'Reset State': emptyProps() } });
 
 export const currencyConverterFeature = createFeature({
   name: 'currencyConverter',
   reducer: createReducer(
     initialState,
     on(CurrencyConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null,
-    })),
+      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(CurrencyConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(CurrencyConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(CurrencyConverterActions.startProcessing, (state) => ({
-      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null,
-    })),
+      ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(CurrencyConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(CurrencyConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB,
-    })),
+      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
     on(CurrencyConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
-      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable,
-    })),
+      ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(CurrencyConverterActions.resetState, () => initialState),
-  ),
-});
+  ) });
 
 export const {
   selectCurrencyConverterState: selectCurrencyConverterState,
@@ -79,5 +71,4 @@ export const {
   selectProgress: selectCurrencyConverterProgress,
   selectOutputBlob: selectCurrencyConverterOutputBlob,
   selectOutputSizeMB: selectCurrencyConverterOutputSizeMB,
-  selectErrorMessage: selectCurrencyConverterErrorMessage,
-} = currencyConverterFeature;
+  selectErrorMessage: selectCurrencyConverterErrorMessage } = currencyConverterFeature;
