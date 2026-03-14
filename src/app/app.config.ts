@@ -11,8 +11,11 @@ import {routes} from './app.routes';
 import {reducers} from './store/app.state';
 import {AppEffects} from './store/app.effects';
 
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(withFetch()),
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
