@@ -26,7 +26,12 @@ export const routes: Routes = [
         ]
       },
       { path: 'image',     loadComponent: () => import('./modules/image-matrix/image-matrix.component').then(m => m.ImageMatrixComponent) },
-      { path: 'converter', loadComponent: () => import('./modules/converter/converter.component').then(m => m.ConverterComponent) },
+      {
+        path: 'converter',
+        children: [
+          { path: '', loadChildren: () => import('./modules/converter/converter.routes').then(m => m.CONVERTER_ROUTES) }
+        ]
+      },
       { path: 'settings',  loadComponent: () => import('./modules/settings/settings.component').then(m => m.SettingsComponent) },
     ]
   },

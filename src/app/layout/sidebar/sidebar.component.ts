@@ -138,13 +138,56 @@ export const PDF_CHILDREN: NavChild[] = [
   { label: 'OCR',             emoji: '🔍',  route: '/pdf/ocr',             category: 'ai' },
 ];
 
+/** 30 Converter sub-links matching converter.routes.ts paths */
+export const CONVERTER_CHILDREN: NavChild[] = [
+  // Image
+  { label: 'Image Converter',    emoji: '🖼️', route: '/converter/image-converter',      category: 'basic' },
+  { label: 'Image Resizer',      emoji: '📐',  route: '/converter/image-resizer',        category: 'basic' },
+  { label: 'Image Compressor',   emoji: '🗜️', route: '/converter/image-compressor',     category: 'basic' },
+  { label: 'SVG Converter',      emoji: '🔷',  route: '/converter/svg-converter',        category: 'basic' },
+  { label: 'ICO / Favicon',      emoji: '🔖',  route: '/converter/ico-converter',        category: 'basic' },
+  { label: 'GIF Converter',      emoji: '🎞️', route: '/converter/gif-converter',        category: 'basic' },
+  { label: 'RAW Converter',      emoji: '📷',  route: '/converter/raw-image-converter',  category: 'basic' },
+
+  // Media
+  { label: 'Video Converter',    emoji: '🎬',  route: '/converter/video-converter',      category: 'advanced' },
+  { label: 'Audio Converter',    emoji: '🎵',  route: '/converter/audio-converter',      category: 'advanced' },
+  { label: 'Subtitle Converter', emoji: '💬',  route: '/converter/subtitle-converter',   category: 'advanced' },
+
+  // Document
+  { label: 'Document Converter', emoji: '📄',  route: '/converter/document-converter',   category: 'advanced' },
+  { label: 'Spreadsheet',        emoji: '📑',  route: '/converter/spreadsheet-converter',category: 'advanced' },
+  { label: 'Font Converter',     emoji: '🔤',  route: '/converter/font-converter',       category: 'advanced' },
+  { label: 'Ebook Converter',    emoji: '📚',  route: '/converter/ebook-converter',      category: 'advanced' },
+  { label: 'CAD Converter',      emoji: '📐',  route: '/converter/cad-converter',        category: 'advanced' },
+
+  // Text & Data
+  { label: 'JSON Converter',     emoji: '📋',  route: '/converter/json-converter',       category: 'pro' },
+  { label: 'CSV Converter',      emoji: '📊',  route: '/converter/csv-converter',        category: 'pro' },
+  { label: 'Markdown',           emoji: '📝',  route: '/converter/markdown-converter',   category: 'pro' },
+  { label: 'HTML Converter',     emoji: '🌐',  route: '/converter/html-converter',       category: 'pro' },
+  { label: 'Base64 Encoder',     emoji: '🔐',  route: '/converter/base64-encoder',       category: 'pro' },
+  { label: 'Encoding',           emoji: '🔡',  route: '/converter/encoding-converter',   category: 'pro' },
+  { label: 'Archive',            emoji: '📦',  route: '/converter/archive-converter',    category: 'pro' },
+
+  // Utility
+  { label: 'Color Converter',    emoji: '🎨',  route: '/converter/color-converter',      category: 'ai' },
+  { label: 'Unit Converter',     emoji: '📏',  route: '/converter/unit-converter',       category: 'ai' },
+  { label: 'Currency',           emoji: '💱',  route: '/converter/currency-converter',   category: 'ai' },
+  { label: 'Timezone',           emoji: '🕐',  route: '/converter/timezone-converter',   category: 'ai' },
+  { label: 'Number Base',        emoji: '🔢',  route: '/converter/number-base-converter',category: 'ai' },
+  { label: 'QR Generator',       emoji: '📱',  route: '/converter/qr-generator',         category: 'ai' },
+  { label: 'Barcode Generator',  emoji: '📊',  route: '/converter/barcode-generator',    category: 'ai' },
+  { label: 'Batch Converter',    emoji: '⚙️',  route: '/converter/batch-converter',      category: 'ai' },
+];
+
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
   { label: 'Video Engine', icon: 'movie',        route: '/video',     badge: '30', children: VIDEO_CHILDREN },
   { label: 'Audio Studio', icon: 'music_note',   route: '/audio',     badge: '30', children: AUDIO_CHILDREN },
   { label: 'PDF Tools',    icon: 'picture_as_pdf', route: '/pdf',     badge: '30', children: PDF_CHILDREN },
   { label: 'Image Matrix', icon: 'image',        route: '/image',     badge: '10+' },
-  { label: 'Converter',    icon: 'sync',         route: '/converter', badge: 'NEW' },
+  { label: 'Converter',    icon: 'sync',         route: '/converter', badge: '30', children: CONVERTER_CHILDREN },
   { label: 'Settings',     icon: 'settings',     route: '/settings',  badge: null },
 ];
 
