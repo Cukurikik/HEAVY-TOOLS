@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model File {
+  id           String   @id @default(uuid())
+  filename     String   @unique
+  originalName String
+  size         Int
+  mimeType     String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  
+  // Relations
+  jobs         Job[]
+}
+
+enum JobStatus {
+  PENDING
+  LOCKED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+enum JobType {
+  VIDEO_CONVERT
+  AUDIO_CONVERT
+  IMAGE_PROCESS
+  PDF_PROCESS
+}
+
+model Job {
+  id          String    @id @default(uuid())
+  fileId      String
+  file        File      @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  type        JobType
+  status      JobStatus @default(PENDING)
+  payload     Json      // Parameters for FFmpeg/Sharp/Pandoc
+  
+  workerId    String?   // The ID of the worker that locked this job
+  lockedAt    DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  
+  error       String?
+  retryCount  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model DeadLetterQueue {
+  id          String   @id @default(uuid())
+  jobId       String   @unique
+  fileId      String
+  type        JobType
+  payload     Json
+  lastError   String
+  failedAt    DateTime @default(now())
+}
+
+model NodeRegistry {
+  id          String   @id
+  type        String   // "WORKER" | "STORAGE" | "API"
+  address     String   // IP or URL
+  lastSeen    DateTime @default(now())
+  isActive    Boolean  @default(true)
+}

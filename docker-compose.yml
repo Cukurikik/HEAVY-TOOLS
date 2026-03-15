@@ -9,13 +9,43 @@ services:
     container_name: ghost_backend
     environment:
       - PORT=3000
+      - DATABASE_URL=postgresql://omni:omnipassword@ghost-postgres:5432/omnidb?schema=public
     volumes:
       - ./ghost-server/uploads:/usr/src/app/uploads
-      - ./ghost-server/ghost.db:/usr/src/app/ghost.db
+      - ./ghost-server/prisma:/usr/src/app/prisma
+    depends_on:
+      - ghost-postgres
     restart: always
-    # Intentionally omitted `ports` so it is NOT directly exposed to the internet
     
-  # 2. The Edge CDN (NGINX)
+  # 2. The Omni Relational Core (PostgreSQL)
+  ghost-postgres:
+    image: postgres:15-alpine
+    container_name: ghost_postgres
+    environment:
+      POSTGRES_USER: omni
+      POSTGRES_PASSWORD: omnipassword
+      POSTGRES_DB: omnidb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: always
+
+  # 3. Omni Media Worker (Isolated FFmpeg Node)
+  omni-worker:
+    build:
+      context: ./omni-worker
+      dockerfile: Dockerfile
+    container_name: omni_worker
+    environment:
+      - GHOST_SERVER_URL=http://ghost-backend:3000
+    volumes:
+      - ./ghost-server/uploads:/usr/src/app/uploads
+    depends_on:
+      - ghost-backend
+    restart: always
+
+  # 4. The Edge CDN (NGINX)
   edge-cdn:
     image: nginx:alpine
     container_name: edge_cdn
@@ -30,3 +60,4 @@ services:
 
 volumes:
   nginx-cache:
+  postgres-data:

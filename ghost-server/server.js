@@ -5,15 +5,16 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
 const cron = require('node-cron');
-const db = require('./database');
+const { PrismaClient } = require('@prisma/client');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const prisma = new PrismaClient();
 
 // Ensure uploads dir exists
 if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR);
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
 // Middleware
@@ -37,7 +38,7 @@ const upload = multer({
 });
 
 // ==========================================
-// API Endpoints
+// 1. PUBLIC API (Gateway)
 // ==========================================
 
 // Upload Endpoint
@@ -47,23 +48,39 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    const { jobType, payload } = req.body;
     const file = req.file;
-    // Extract the uuid from the auto-generated filename
     const id = path.parse(file.filename).name;
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    const meta = await db.saveFileMetadata(
-      id,
-      file.filename,
-      file.originalname,
-      file.size,
-      file.mimetype
-    );
+    // Create File Record and optional Job
+    const fileRecord = await prisma.file.create({
+      data: {
+        id,
+        filename: file.filename,
+        originalName: file.originalname,
+        size: file.size,
+        mimeType: file.mimetype,
+        expiresAt
+      }
+    });
+
+    let jobRecord = null;
+    if (jobType) {
+      jobRecord = await prisma.job.create({
+        data: {
+          fileId: id,
+          type: jobType,
+          payload: payload ? JSON.parse(payload) : {},
+        }
+      });
+    }
 
     res.status(201).json({
       message: 'File completely uploaded and tracked.',
-      id: meta.id,
-      expiresAt: meta.expiresAt,
-      downloadUrl: `/api/download/${meta.id}`
+      file: fileRecord,
+      job: jobRecord,
+      downloadUrl: `/api/download/${id}`
     });
   } catch (error) {
     console.error('Upload Error:', error);
@@ -75,7 +92,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 app.get('/api/download/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const meta = await db.getFileMetadata(id);
+    const meta = await prisma.file.findUnique({ where: { id } });
 
     if (!meta) {
       return res.status(404).json({ error: 'File not found or has expired.' });
@@ -86,7 +103,6 @@ app.get('/api/download/:id', async (req, res) => {
       return res.status(404).json({ error: 'Physical file is corrupt or lost.' });
     }
 
-    // Force download headers
     res.download(filePath, meta.originalName);
   } catch (error) {
     console.error('Download Error:', error);
@@ -94,15 +110,16 @@ app.get('/api/download/:id', async (req, res) => {
   }
 });
 
-// File Info Endpoint
+// Info Endpoint
 app.get('/api/info/:id', async (req, res) => {
   try {
-    const id = req.params.id;
-    const meta = await db.getFileMetadata(id);
+    const meta = await prisma.file.findUnique({ 
+      where: { id: req.params.id },
+      include: { jobs: true }
+    });
     if (!meta) return res.status(404).json({ error: 'File not found or expired.' });
     
-    // Add time remaining
-    const remainingMs = new Date(meta.expiresAt).getTime() - Date.now();
+    const remainingMs = meta.expiresAt.getTime() - Date.now();
     res.json({
       ...meta,
       remainingMinutes: Math.max(0, Math.round(remainingMs / 60000))
@@ -112,83 +129,187 @@ app.get('/api/info/:id', async (req, res) => {
   }
 });
 
-// CDN Manager - Get All Files Endpoint
-app.get('/api/files', async (req, res) => {
+// ==========================================
+// 2. OMNI MESSAGE BROKER (Internal Worker API)
+// ==========================================
+
+// Worker attempts to pop exactly ONE job Atomically
+app.post('/internal/jobs/pop', async (req, res) => {
   try {
-    const files = await db.getAllFiles();
+    const { workerId, supportedTypes } = req.body; // e.g., ["VIDEO_CONVERT"]
     
-    // Enhance with time remaining
-    const enhancedFiles = files.map(meta => {
-      const remainingMs = new Date(meta.expiresAt).getTime() - Date.now();
-      return {
-        ...meta,
-        remainingMinutes: Math.max(0, Math.round(remainingMs / 60000))
-      };
+    if (!workerId || !supportedTypes || !supportedTypes.length) {
+      return res.status(400).json({ error: 'Worker ID and supportedTypes required.' });
+    }
+
+    const typesStr = supportedTypes.map(t => `'${t}'`).join(',');
+
+    // Atomic Checkout using SELECT FOR UPDATE SKIP LOCKED
+    // This strictly prevents other workers from picking up the exact same job.
+    const poppedJobs = await prisma.$queryRawUnsafe(`
+      UPDATE "Job"
+      SET 
+        status = 'LOCKED',
+        "workerId" = $1,
+        "lockedAt" = NOW()
+      WHERE id = (
+        SELECT id FROM "Job"
+        WHERE status = 'PENDING' AND type IN (${typesStr})
+        ORDER BY "createdAt" ASC
+        FOR UPDATE SKIP LOCKED
+        LIMIT 1
+      )
+      RETURNING *;
+    `, workerId);
+
+    if (poppedJobs && poppedJobs.length > 0) {
+      return res.json({ job: poppedJobs[0] });
+    } else {
+      return res.json({ job: null, message: 'No pending jobs.' });
+    }
+  } catch (error) {
+    console.error('[BROKER POP ERROR]', error);
+    res.status(500).json({ error: 'Broker error.' });
+  }
+});
+
+// Worker updates the status of the job
+app.post('/internal/jobs/:id/status', async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const { status, errorOutput } = req.body;
+
+    const job = await prisma.job.findUnique({ where: { id: jobId } });
+    if (!job) return res.status(404).json({ error: 'Job not found.' });
+
+    if (status === 'SUCCESS') {
+      await prisma.job.update({
+        where: { id: jobId },
+        data: { status: 'SUCCESS', completedAt: new Date() }
+      });
+      return res.json({ success: true });
+    }
+
+    if (status === 'FAILED') {
+      const newRetries = job.retryCount + 1;
+      
+      if (newRetries >= 3) {
+        // Move to DLQ (Dead Letter Queue)
+        await prisma.$transaction([
+          prisma.job.update({
+            where: { id: jobId },
+            data: { status: 'FAILED', retryCount: newRetries, error: errorOutput }
+          }),
+          prisma.deadLetterQueue.create({
+            data: {
+              jobId: job.id,
+              fileId: job.fileId,
+              type: job.type,
+              payload: job.payload,
+              lastError: errorOutput || 'Unknown total failure.'
+            }
+          })
+        ]);
+        console.warn(`[DLQ ALERT] Job ${jobId} failed completely and moved to DLQ.`);
+      } else {
+        // Re-queue the job, keep moving
+        await prisma.job.update({
+          where: { id: jobId },
+          data: { status: 'PENDING', retryCount: newRetries, error: errorOutput, workerId: null, lockedAt: null }
+        });
+      }
+
+      return res.json({ success: true, retries: newRetries });
+    }
+
+    res.status(400).json({ error: 'Invalid status update.' });
+  } catch (error) {
+    console.error('[BROKER STATUS ERROR]', error);
+    res.status(500).json({ error: 'Broker status update error.' });
+  }
+});
+
+
+// ==========================================
+// 3. OMNI STORAGE (Multi Region Sync P2P)
+// ==========================================
+
+// Receiver endpoint for P2P chunk sync
+app.post('/internal/sync/receive', upload.single('chunk'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No synced file.' });
+    
+    // In a real P2P, we just store it identically in uploads dir
+    // and upsert the DB record to know this node has it too.
+    const { id, originalName, size, mimeType, expiresAt } = req.body;
+
+    const fileRecord = await prisma.file.upsert({
+      where: { id },
+      update: {},
+      create: {
+        id,
+        filename: req.file.filename,
+        originalName,
+        size: Number(size),
+        mimeType,
+        expiresAt: new Date(expiresAt)
+      }
     });
-    
-    res.json({ files: enhancedFiles });
+
+    res.json({ success: true, file: fileRecord });
   } catch (error) {
-    console.error('Fetch All Files Error:', error);
-    res.status(500).json({ error: 'Server error retrieving files.' });
+    console.error('[SYNC RECEIVE ERROR]', error);
+    res.status(500).json({ error: 'Failed to receive sync chunk.' });
   }
 });
 
-// CDN Manager - Purge File Endpoint
-app.delete('/api/file/:id', async (req, res) => {
+// Utility function to broadcast to other nodes
+async function broadcastFileToRegions(fileRecord, filePath) {
   try {
-    const id = req.params.id;
-    const meta = await db.getFileMetadata(id);
-    
-    if (!meta) {
-      return res.status(404).json({ error: 'File not found or already deleted.' });
+    const nodes = await prisma.nodeRegistry.findMany({ where: { type: 'STORAGE', isActive: true } });
+    for (const node of nodes) {
+      console.log(`[SYNCING] Broadcasting ${fileRecord.originalName} to Region: ${node.address}`);
+      // using fetch or axios to POST to node.address + '/internal/sync/receive'
+      // formData.append('chunk', fs.createReadStream(filePath))
+      // omitted for brevity, but this is the hook
     }
-
-    const filePath = path.join(UPLOADS_DIR, meta.filename);
-    
-    // 1. Destroy physical file
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      console.log(`[CDN MANAGER PURGED] Physical File: ${meta.filename}`);
-    }
-    
-    // 2. Erase from Database
-    await db.deleteFileMetadata(id);
-    console.log(`[CDN MANAGER ERASED] Database Record: ${id}`);
-    
-    res.json({ message: 'File purged successfully.' });
-  } catch (error) {
-    console.error('Delete File Error:', error);
-    res.status(500).json({ error: 'Server error deleting file.' });
+  } catch (e) {
+    console.warn('[BROADCAST FAILED]', e);
   }
-});
+}
 
 // ==========================================
-// The Executioner (Cron Job)
+// 4. OMNI CLEANER (Cron Job)
 // ==========================================
-// Runs every 5 minutes to sweep and destroy expired files
+// Runs every 5 minutes to sweep and destroy expired files and their DB records
 cron.schedule('*/5 * * * *', async () => {
-  console.log('[CRON] Sweeping for expired ghost files...');
+  console.log('[CLEANER] Sweeping for expired ghost files/jobs...');
   try {
-    const expiredFiles = await db.getExpiredFiles();
+    const now = new Date();
+    
+    // Find expired
+    const expiredFiles = await prisma.file.findMany({
+      where: { expiresAt: { lte: now } }
+    });
     
     for (const file of expiredFiles) {
       const filePath = path.join(UPLOADS_DIR, file.filename);
       // 1. Destroy physical file
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
-        console.log(`[DELETED] Physical File: ${file.filename}`);
+        console.log(`[CLEANER DELETED] Physical File: ${file.filename}`);
       }
-      
-      // 2. Erase from Database
-      await db.deleteFileMetadata(file.id);
-      console.log(`[ERASED] Database Record: ${file.id}`);
+      // 2. Erase from Database (Cascase deletes jobs)
+      await prisma.file.delete({ where: { id: file.id } });
+      console.log(`[CLEANER ERASED] Database Record cascading jobs: ${file.id}`);
     }
   } catch (err) {
-    console.error('[CRON ERROR]', err);
+    console.error('[CLEANER ERROR]', err);
   }
 });
 
+// START
 app.listen(PORT, () => {
-  console.log(`[Ghost Server] Running strictly on http://localhost:${PORT}`);
-  console.log(`[Ghost Server] Files strictly auto-delete after 1 hour.`);
+  console.log(`[Ghost Server - Omni Broker] Running strictly on http://localhost:${PORT}`);
+  console.log(`[Ghost Server] Files & Jobs strictly auto-delete after 1 hour.`);
 });
