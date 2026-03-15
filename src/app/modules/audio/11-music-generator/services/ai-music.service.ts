@@ -11,18 +11,16 @@ export interface AiMusicState {
 export interface AiMusicConfig {
   prompt: string;
   duration: number;
-  modelType: 'musicgen' | 'ace-step' | 'audioldm';
+  modelType: 'facebook/musicgen-small' | 'cvssp/audioldm-s-full-v2';
+  hfToken?: string;
 }
 
 /**
- * AI MUSIC SERVICE (FastAPI + WebSocket Integration)
- * Matches the Enterprise Python Architecture, connects to ws://localhost:8000
+ * AI MUSIC SERVICE (Serverless Cloud Inference)
+ * Connects directly to Hugging Face Cloud APIs - NO LOCALHOST REQUIRED.
  */
 @Injectable({ providedIn: 'root' })
 export class AiMusicService implements OnDestroy {
-  
-  private ws: WebSocket | null = null;
-  private readonly WS_URL = 'ws://localhost:8000/api/ai-music/ws';
   
   // Expose state via Signals for the UI
   readonly state = signal<AiMusicState>({
@@ -33,68 +31,77 @@ export class AiMusicService implements OnDestroy {
     error: null
   });
 
-  generate(config: AiMusicConfig) {
+  private abortController: AbortController | null = null;
+
+  async generate(config: AiMusicConfig) {
     if (this.state().isGenerating) return;
+
+    this.abortController = new AbortController();
 
     // Reset State
     this.state.set({
       isGenerating: true,
-      progress: 0,
-      message: 'Connecting to Omni AI Engine Server...',
+      progress: 10,
+      message: 'Contacting Hugging Face Cloud GPUs...',
       resultUrl: null,
       error: null
     });
 
-    const clientId = crypto.randomUUID();
-    
     try {
-      this.ws = new WebSocket(`${this.WS_URL}/${clientId}`);
+      const url = `https://api-inference.huggingface.co/models/${config.modelType}`;
       
-      this.ws.onopen = () => {
-        this.state.update(s => ({ ...s, message: 'Connected to GPU Server. Sending Prompt...' }));
-        this.ws?.send(JSON.stringify(config));
-      };
-      
-      this.ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          
-          this.state.update(s => ({
-            ...s,
-            progress: data.progress ?? s.progress,
-            message: data.message ?? s.message,
-            resultUrl: data.result_url ?? s.resultUrl,
-            error: data.status === 'error' ? data.message : null
-          }));
-          
-          if (data.status === 'completed' || data.status === 'error') {
-            this.state.update(s => ({ ...s, isGenerating: false }));
-            this.cleanupWebSocket();
-          }
-          
-        } catch (e) {
-          console.error('Failed to parse WS message', e);
-        }
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
       };
 
-      this.ws.onerror = (error) => {
-        console.error('WebSocket Error:', error);
-        this.state.set({
-          isGenerating: false,
-          progress: 0,
-          message: '',
-          resultUrl: null,
-          error: 'Failed to connect to AI Server. Is the Python Backend running on port 8000?'
-        });
-        this.cleanupWebSocket();
-      };
+      if (config.hfToken) {
+        headers['Authorization'] = `Bearer ${config.hfToken}`;
+      }
+
+      this.state.update(s => ({ ...s, progress: 40, message: 'GPU Processing... (This can take 15-30 seconds)' }));
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ inputs: config.prompt }),
+        signal: this.abortController.signal
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || `HTTP Error ${response.status}: ${response.statusText}`);
+      }
+
+      this.state.update(s => ({ ...s, progress: 90, message: 'Downloading Audio Blob...' }));
+
+      const blob = await response.blob();
       
-      this.ws.onclose = () => {
-        this.state.update(s => ({ ...s, isGenerating: false }));
-      };
-      
+      // Validation: sometimes HF returns JSON containing "estimated_time" if model is waking up
+      if (blob.type === 'application/json') {
+         const text = await blob.text();
+         const json = JSON.parse(text);
+         if (json.estimated_time) {
+           throw new Error(`Model is waking up. Try again in ${Math.round(json.estimated_time)} seconds.`);
+         }
+         throw new Error('Received unexpected JSON response instead of audio.');
+      }
+
+      const resultUrl = URL.createObjectURL(blob);
+
+      this.state.set({
+        isGenerating: false,
+        progress: 100,
+        message: 'Generation Success!',
+        resultUrl: resultUrl,
+        error: null
+      });
+
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown connection error occurred.';
+      if (err instanceof DOMException && err.name === 'AbortError') {
+         // User cancelled
+         return;
+      }
+      const errorMessage = err instanceof Error ? err.message : 'Unknown generation error occurred.';
       this.state.set({
         isGenerating: false,
         progress: 0,
@@ -106,7 +113,12 @@ export class AiMusicService implements OnDestroy {
   }
 
   cancel() {
-    this.cleanupWebSocket();
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+    const currentUrl = this.state().resultUrl;
+    if (currentUrl) URL.revokeObjectURL(currentUrl);
+
     this.state.update(s => ({
       ...s,
       isGenerating: false,
@@ -114,14 +126,8 @@ export class AiMusicService implements OnDestroy {
     }));
   }
 
-  private cleanupWebSocket() {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-  }
-
   ngOnDestroy() {
-    this.cleanupWebSocket();
+    this.cancel();
   }
 }
+
