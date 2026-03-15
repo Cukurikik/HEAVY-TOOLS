@@ -48,7 +48,9 @@ export class AiMusicService implements OnDestroy {
     });
 
     try {
-      const url = `https://api-inference.huggingface.co/models/${config.modelType}`;
+      // Using a standard cors proxy to bypass browser restrictions for huggingface
+      const baseUrl = `https://api-inference.huggingface.co/models/${config.modelType}`;
+      const url = `https://corsproxy.io/?${encodeURIComponent(baseUrl)}`;
       
       const headers: Record<string, string> = {
         'Content-Type': 'application/json'
