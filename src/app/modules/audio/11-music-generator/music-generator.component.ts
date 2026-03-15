@@ -7,7 +7,6 @@ import {
   MusicTheoryService,
   GENRE_CONFIGS,
   NOTE_NAMES,
-  INSTRUMENT_OPTIONS,
   NoteEvent,
   CompositionRequest,
 } from './services/music-theory.service';
@@ -143,19 +142,6 @@ type GenerationMode = 'auto' | 'manual' | 'text' | 'upload';
                        class="w-full accent-accent-purple" />
               </div>
 
-              <!-- Instrument -->
-              <div class="space-y-1">
-                <label for="manual-inst" class="text-xs font-semibold text-text-secondary">Lead Instrument</label>
-                <select id="manual-inst"
-                        [ngModel]="manualConfig().instrument"
-                        (ngModelChange)="updateManualConfig('instrument', $event)"
-                        class="w-full bg-black/40 border border-white/10 rounded-xl p-2.5 text-white text-sm focus:border-accent-cyan outline-none">
-                  @for (i of instrumentOptions; track i.value) {
-                    <option [value]="i.value">{{ i.label }}</option>
-                  }
-                </select>
-              </div>
-
               <!-- Bars -->
               <div class="space-y-1">
                 <label for="manual-bars" class="text-xs font-semibold text-text-secondary">Bars: {{ manualConfig().numBars }}</label>
@@ -206,7 +192,6 @@ type GenerationMode = 'auto' | 'manual' | 'text' | 'upload';
                 <span class="px-2 py-1 bg-accent-purple/10 rounded-full text-accent-purple border border-accent-purple/20">Genre: {{ parsedPreview()!.genre }}</span>
                 <span class="px-2 py-1 bg-accent-cyan/10 rounded-full text-accent-cyan border border-accent-cyan/20">Key: {{ parsedPreview()!.key }}</span>
                 <span class="px-2 py-1 bg-yellow-500/10 rounded-full text-yellow-400 border border-yellow-500/20">BPM: {{ parsedPreview()!.bpm }}</span>
-                <span class="px-2 py-1 bg-green-500/10 rounded-full text-green-400 border border-green-500/20">Instrument: {{ parsedPreview()!.instrument }}</span>
               </div>
             }
           </div>
@@ -260,10 +245,6 @@ type GenerationMode = 'auto' | 'manual' | 'text' | 'upload';
                 <div class="bg-black/30 rounded-xl p-3">
                   <div class="text-lg font-bold text-green-400">{{ audioAnalysis()!.suggestedGenre }}</div>
                   <div class="text-xs text-text-secondary">Genre</div>
-                </div>
-                <div class="bg-black/30 rounded-xl p-3">
-                  <div class="text-lg font-bold text-pink-400">{{ audioAnalysis()!.suggestedInstrument }}</div>
-                  <div class="text-xs text-text-secondary">Instrument</div>
                 </div>
               </div>
             }
@@ -462,7 +443,6 @@ export class MusicGeneratorComponent {
     ...config
   }));
   readonly noteNames = [...NOTE_NAMES];
-  readonly instrumentOptions = INSTRUMENT_OPTIONS;
 
   private lastNoteEvents: NoteEvent[] = [];
 
@@ -547,6 +527,11 @@ export class MusicGeneratorComponent {
         }
         case 'manual': {
           config = { ...this.manualConfig() };
+          // Let AI autonomously pick instrument for manual mode
+          const gc = GENRE_CONFIGS[config.genre];
+          if (gc && gc.instruments && gc.instruments.length > 0) {
+            config.instrument = gc.instruments[Math.floor(Math.random() * gc.instruments.length)];
+          }
           this.progressMsg.set('Composing with your settings...');
           await this.yieldToUI();
           const comp = this.theoryService.compose(config);
