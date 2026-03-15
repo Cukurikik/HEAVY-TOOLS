@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Omni Enterprise Cloud Deployment Script
-# Run this on your VPS once pointing to your domain.
+# Omni Enterprise On-Premise Deployment Script
+# Run this langsung di mesin / hardware milik Anda sendiri (Local-First).
 
 echo "========================================="
 echo "  Deploying Omni Hybrid Architecture"
-echo "  Target: Production Server"
+echo "  Target: On-Premise / Local Server"
 echo "========================================="
 
 # 1. Update from GitHub
