@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, signal, inject } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -28,8 +27,7 @@ import { CommonModule } from '@angular/common';
 export class AudioPlayerComponent implements OnChanges, OnDestroy {
   @Input() audioBlob: Blob | null = null;
   @Input() loop = false;
-  private sanitizer = inject(DomSanitizer);
-  blobUrl = signal<SafeUrl | null>(null);
+  blobUrl = signal('');
   isPlaying = signal(false);
   currentTime = signal(0);
   totalTime = signal(0);
@@ -39,7 +37,7 @@ export class AudioPlayerComponent implements OnChanges, OnDestroy {
     if (this.prevUrl) URL.revokeObjectURL(this.prevUrl);
     if (this.audioBlob) {
       this.prevUrl = URL.createObjectURL(this.audioBlob);
-      this.blobUrl.set(this.sanitizer.bypassSecurityTrustUrl(this.prevUrl));
+      this.blobUrl.set(this.prevUrl);
     }
   }
 

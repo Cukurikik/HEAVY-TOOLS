@@ -7,14 +7,6 @@ import { AnalyserActions, selectAnalyserState, selectAnalyserIsLoading, selectAn
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
-export interface FFprobeData {
-  duration?: string;
-  totalBitrate?: string;
-  video?: { codec?: string; pixelFormat?: string; resolution?: string; bitrate?: string; fps?: string; };
-  audio?: { codec?: string; sampleRate?: string; channels?: string; bitrate?: string; };
-  rawLog?: string;
-}
-
 @Component({
   selector: 'app-analyser',
   standalone: true,
@@ -63,51 +55,9 @@ export interface FFprobeData {
               </button>
 
               @if (deepAnalysis) {
-                <div class="space-y-4 animate-fade-in mt-6">
-                  <h2 class="text-xl font-bold border-b border-white/10 pb-2 flex items-center gap-2">🚀 Advanced FFprobe Extraction</h2>
-                  
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @if(deepAnalysis.video) {
-                      <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30">
-                        <h3 class="text-white/90 font-bold mb-3">🎬 Video Stream Context</h3>
-                        <ul class="space-y-2 text-sm">
-                          <li class="flex justify-between"><span class="text-white/50">Codec:</span> <span class="text-cyan-400 font-mono">{{ deepAnalysis.video.codec || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Resolution:</span> <span class="text-cyan-400 font-mono">{{ deepAnalysis.video.resolution || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Frame Rate:</span> <span class="text-cyan-400 font-mono">{{ deepAnalysis.video.fps || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Pixel Format:</span> <span class="text-cyan-400 font-mono">{{ deepAnalysis.video.pixelFormat || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Bitrate:</span> <span class="text-cyan-400 font-mono">{{ deepAnalysis.video.bitrate || 'Unknown' }}</span></li>
-                        </ul>
-                      </div>
-                    }
-
-                    @if(deepAnalysis.audio) {
-                      <div class="p-4 rounded-xl bg-green-500/10 border border-green-500/30">
-                        <h3 class="text-white/90 font-bold mb-3">🔊 Audio Stream Context</h3>
-                        <ul class="space-y-2 text-sm">
-                          <li class="flex justify-between"><span class="text-white/50">Codec:</span> <span class="text-green-400 font-mono">{{ deepAnalysis.audio.codec || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Sample Rate:</span> <span class="text-green-400 font-mono">{{ deepAnalysis.audio.sampleRate || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Channels:</span> <span class="text-green-400 font-mono">{{ deepAnalysis.audio.channels || 'Unknown' }}</span></li>
-                          <li class="flex justify-between"><span class="text-white/50">Bitrate:</span> <span class="text-green-400 font-mono">{{ deepAnalysis.audio.bitrate || 'Unknown' }}</span></li>
-                        </ul>
-                      </div>
-                    }
-                  </div>
-
-                  <div class="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
-                     <h3 class="text-white/90 font-bold mb-3">📦 Container Format</h3>
-                     <ul class="space-y-2 text-sm">
-                        <li class="flex justify-between"><span class="text-white/50">Total Duration:</span> <span class="text-purple-400 font-mono">{{ deepAnalysis.duration || 'Unknown' }}</span></li>
-                        <li class="flex justify-between"><span class="text-white/50">Total Bitrate:</span> <span class="text-purple-400 font-mono">{{ deepAnalysis.totalBitrate || 'Unknown' }}</span></li>
-                     </ul>
-                  </div>
-
-                  <details class="p-4 rounded-2xl bg-white/5 border border-white/10 group">
-                    <summary class="text-sm font-semibold text-white/50 cursor-pointer list-none flex justify-between">
-                      📋 Verbatim Raw Terminal Log (Advanced)
-                      <span class="transform group-open:rotate-180 transition-transform">▼</span>
-                    </summary>
-                    <pre class="text-xs text-white/40 font-mono overflow-x-auto max-h-60 overflow-y-auto whitespace-pre-wrap mt-4 p-2 bg-black/50 rounded-lg">{{ deepAnalysis.rawLog }}</pre>
-                  </details>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10">
+                  <h3 class="text-sm font-semibold text-white/80 mb-2">📋 Raw FFprobe Output</h3>
+                  <pre class="text-xs text-white/60 font-mono overflow-x-auto max-h-60 overflow-y-auto whitespace-pre-wrap">{{ deepAnalysis }}</pre>
                 </div>
               }
             </div>
@@ -123,7 +73,7 @@ export interface FFprobeData {
 export class AnalyserComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
   state$ = this.store.select(selectAnalyserState); isLoading$ = this.store.select(selectAnalyserIsLoading); canProcess$ = this.store.select(selectAnalyserCanProcess);
-  fileSize = 0; deepAnalysis: FFprobeData | null = null;
+  fileSize = 0; deepAnalysis = '';
 
   async onFileSelected(files: File[]) {
     const file = files[0]; this.fileSize = file.size / 1_048_576;
@@ -144,7 +94,7 @@ export class AnalyserComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) {
           // Deep analysis returns JSON string as Blob
           const reader = new FileReader();
-          reader.onload = () => { this.deepAnalysis = JSON.parse(reader.result as string) as FFprobeData; };
+          reader.onload = () => { this.deepAnalysis = reader.result as string; };
           reader.readAsText(msg.data as Blob);
           this.store.dispatch(AnalyserActions.processingSuccess({ outputBlob: msg.data as Blob, outputSizeMB: 0 }));
         }

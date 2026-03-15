@@ -5,7 +5,7 @@ import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-
 import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
 import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
-import { CropResizeActions, selectCropResizeState, selectCropResizeIsLoading, selectCropResizeCanProcess } from './cropResize.store';
+import { CropResizeActions, selectCropResizeState, selectCropResizeIsLoading, selectCropResizeCanProcess, CropResizeState } from './cropResize.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
@@ -134,7 +134,7 @@ export class CropResizeComponent implements OnDestroy {
 
   targetWidth = 1920;
   targetHeight = 1080;
-  padMode: 'stretch' | 'pad' | 'crop-to-fit' = 'pad';
+  padMode = 'pad';
 
   resPresets = [
     { label: '4K', w: 3840, h: 2160 },
@@ -144,9 +144,9 @@ export class CropResizeComponent implements OnDestroy {
   ];
 
   padModes = [
-    { value: 'pad' as const, label: 'Letterbox', icon: '⬛' },
-    { value: 'crop-to-fit' as const, label: 'Crop Fill', icon: '✂️' },
-    { value: 'stretch' as const, label: 'Stretch', icon: '↔️' },
+    { value: 'pad', label: 'Letterbox', icon: '⬛' },
+    { value: 'crop-to-fit', label: 'Crop Fill', icon: '✂️' },
+    { value: 'stretch', label: 'Stretch', icon: '↔️' },
   ];
 
   async onFileSelected(files: File[]) {
@@ -163,10 +163,10 @@ export class CropResizeComponent implements OnDestroy {
   onResPreset(w: number, h: number) { this.targetWidth = w; this.targetHeight = h; this.syncConfig(); }
   onCustomWidth(w: number) { this.targetWidth = w % 2 === 0 ? w : w - 1; this.syncConfig(); }
   onCustomHeight(h: number) { this.targetHeight = h % 2 === 0 ? h : h - 1; this.syncConfig(); }
-  onPadMode(mode: 'stretch' | 'pad' | 'crop-to-fit') { this.padMode = mode; this.syncConfig(); }
+  onPadMode(mode: string) { this.padMode = mode; this.syncConfig(); }
 
   private syncConfig() {
-    this.store.dispatch(CropResizeActions.updateConfig({ config: { targetWidth: this.targetWidth, targetHeight: this.targetHeight, padMode: this.padMode } }));
+    this.store.dispatch(CropResizeActions.updateConfig({ config: { targetWidth: this.targetWidth, targetHeight: this.targetHeight, padMode: this.padMode as CropResizeState['padMode'] } }));
   }
 
   onProcess() {

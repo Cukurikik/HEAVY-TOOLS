@@ -5,8 +5,7 @@
     "packageManager": "npm",
     "schematicCollections": [
       "angular-eslint"
-    ],
-    "analytics": false
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -20,9 +19,6 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "allowedCommonJsDependencies": [
-              "pako"
-            ],
             "define": {
               "GEMINI_API_KEY": "'YOUR_GEMINI_API_KEY'"
             },
@@ -37,7 +33,6 @@
             "styles": [
               "src/styles.css"
             ],
-            "webWorkerTsConfig": "tsconfig.worker.json",
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -49,13 +44,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "5MB",
-                  "maximumError": "10MB"
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "20kB",
-                  "maximumError": "40kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
                 }
               ],
               "outputHashing": "all"
@@ -70,13 +65,6 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
-          "options": {
-            "headers": {
-              "Cross-Origin-Opener-Policy": "same-origin",
-              "Cross-Origin-Embedder-Policy": "require-corp",
-              "Cross-Origin-Resource-Policy": "cross-origin"
-            }
-          },
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"

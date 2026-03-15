@@ -5,7 +5,7 @@ import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-
 import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
 import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
-import { ConverterActions, selectConverterState, selectConverterIsLoading, selectConverterCanProcess } from './converter.store';
+import { ConverterActions, selectConverterState, selectConverterIsLoading, selectConverterCanProcess, ConverterState } from './converter.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
@@ -155,12 +155,12 @@ export class ConverterComponent implements OnDestroy {
     }
   }
 
-  onFormatChange(format: 'mp4' | 'webm' | 'mov' | 'avi' | 'mkv' | 'gif') {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format } }));
+  onFormatChange(format: string) {
+    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as ConverterState['targetFormat'] } }));
   }
 
-  onPresetChange(preset: 'fast' | 'balanced' | 'best') {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset } }));
+  onPresetChange(preset: string) {
+    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as ConverterState['qualityPreset'] } }));
   }
 
   onProcess() {

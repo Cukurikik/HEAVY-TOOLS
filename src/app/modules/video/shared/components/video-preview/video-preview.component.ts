@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input,
-  OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, signal, inject
+  OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, signal
 } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import type { VideoMeta } from '../../types/video.types';
 
@@ -41,9 +40,7 @@ export class VideoPreviewComponent implements OnChanges, OnDestroy {
 
   @ViewChild('videoEl') videoEl!: ElementRef<HTMLVideoElement>;
 
-  private sanitizer = inject(DomSanitizer);
-
-  objectUrl = signal<SafeUrl | null>(null);
+  objectUrl = signal<string | null>(null);
   isLoading = signal(false);
   private _prevUrl: string | null = null;
 
@@ -52,11 +49,10 @@ export class VideoPreviewComponent implements OnChanges, OnDestroy {
       if (this._prevUrl) URL.revokeObjectURL(this._prevUrl);
       const url = URL.createObjectURL(this.file);
       this._prevUrl = url;
-      this.objectUrl.set(this.sanitizer.bypassSecurityTrustUrl(url));
+      this.objectUrl.set(url);
       this.isLoading.set(true);
     }
   }
-
 
   ngOnDestroy() {
     if (this._prevUrl) URL.revokeObjectURL(this._prevUrl);

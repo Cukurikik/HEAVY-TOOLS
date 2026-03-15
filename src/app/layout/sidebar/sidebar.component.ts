@@ -19,7 +19,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Audio Studio', icon: 'music_note',  route: '/audio',     badge: '20+' },
   { label: 'Image Matrix', icon: 'image',       route: '/image',     badge: '10+' },
   { label: 'Converter',    icon: 'sync',        route: '/converter', badge: 'NEW' },
-  { label: 'Plugins',      icon: 'extension',   route: '/plugins',   badge: null },
   { label: 'Settings',     icon: 'settings',    route: '/settings',  badge: null },
 ];
 

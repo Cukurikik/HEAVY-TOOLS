@@ -18,38 +18,18 @@ export class FFmpegService {
   private async _doLoad(): Promise<void> {
     try {
       this.isLoading.set(true);
-
-      // SharedArrayBuffer guard — required for FFmpeg WASM
-      if (typeof SharedArrayBuffer === 'undefined') {
-        throw new Error(
-          'SharedArrayBuffer is NOT available. ' +
-          'Ensure COOP/COEP headers are set: Cross-Origin-Opener-Policy: same-origin, ' +
-          'Cross-Origin-Embedder-Policy: require-corp'
-        );
-      }
-
       const { FFmpeg } = await import('@ffmpeg/ffmpeg');
       const { toBlobURL } = await import('@ffmpeg/util');
       const ff = new FFmpeg();
       const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm';
-
-      // 15-second Timeout Watchdog (Phase 18 stability requirement)
-      const loadWithTimeout = Promise.race([
-        ff.load({
-          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-        }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('FFmpeg WASM load timed out after 15s')), 15000)
-        ),
-      ]);
-
-      await loadWithTimeout;
+      await ff.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm') });
       this.ffmpeg = ff;
       this.isLoaded.set(true);
-    } catch (err) {
+    } catch {
       this.loadPromise = null;
-      throw err instanceof Error ? err : new Error('FFMPEG_LOAD_FAILED');
+      throw new Error('FFMPEG_LOAD_FAILED');
     } finally {
       this.isLoading.set(false);
     }
