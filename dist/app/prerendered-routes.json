@@ -15,6 +15,7 @@
     "/audio/merger": {},
     "/audio/metadata": {},
     "/audio/mixer": {},
+    "/audio/music-generator": {},
     "/audio/noise-remover": {},
     "/audio/normalizer": {},
     "/audio/pitch-shifter": {},

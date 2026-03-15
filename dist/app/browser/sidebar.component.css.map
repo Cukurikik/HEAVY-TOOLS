@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["sidebar.component.ts"],
-  "sourcesContent": ["\n    .scrollbar-thin::-webkit-scrollbar { width: 4px; }\n    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }\n    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }\n    .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }\n    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }\n  "],
-  "mappings": ";AACI,CAAA,cAAA;AAAqC,SAAA;AAAY;AACjD,CADA,cACA;AAA2C,cAAA;AAAyB;AACpE,CAFA,cAEA;AAA2C,cAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AAAoC,iBAAA;AAAoB;AACnG,CAHA,cAGA,yBAAA;AAAiD,cAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AAAoC;AACrF,WAAA;AAAoB;AAAO,aAAA;AAAY,eAAA,WAAA;AAA6B;AAAE;AAAK,aAAA;AAAY,eAAA,WAAA;AAA0B;AAAE;",
-  "names": []
-}
