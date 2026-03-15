@@ -16,29 +16,86 @@ export interface MusicGenerationConfig {
 @Injectable({ providedIn: 'root' })
 export class ProceduralMusicService {
 
-  // Public domain / free sample URLs (using highly reliable CDNs)
-  private readonly SAMPLE_URLS = {
+  // Base Drum Samples (Public Domain)
+  private readonly DRUM_URLS = {
     kick: 'https://cdn.freesound.org/previews/171/171104_2394245-lq.mp3',
     snare: 'https://cdn.freesound.org/previews/387/387186_7255551-lq.mp3',
-    hihat: 'https://cdn.freesound.org/previews/421/421944_6010041-lq.mp3',
-    pianoChordC: 'https://cdn.freesound.org/previews/448/448600_9159316-lq.mp3',
-    bassC: 'https://cdn.freesound.org/previews/413/413000_3342323-lq.mp3'
+    hihat: 'https://cdn.freesound.org/previews/421/421944_6010041-lq.mp3'
   };
 
+  // General MIDI Instrument Banks (Hosted on GitHub Pages - 128+ Instruments available)
+  // Each instrument has C1-C7 samples, we just fetch C4 and pitch shift it.
+  private readonly GM_URL_BASE = 'https://gleitz.github.io/midi-js-soundfonts/FatBoy';
+
+  private readonly BANK_BASS = [
+    'acoustic_bass', 'electric_bass_finger', 'electric_bass_pick', 'fretless_bass', 
+    'slap_bass_1', 'slap_bass_2', 'synth_bass_1', 'synth_bass_2', 'tuba'
+  ];
+
+  private readonly BANK_PAD = [
+    'pad_1_new_age', 'pad_2_warm', 'pad_3_polysynth', 'pad_4_choir', 
+    'pad_5_bowed', 'pad_6_metallic', 'pad_7_halo', 'pad_8_sweep',
+    'string_ensemble_1', 'synth_strings_1', 'choir_aahs', 'orchestral_harp', 'vibraphone'
+  ];
+
+  private readonly BANK_LEAD = [
+    'acoustic_grand_piano', 'electric_piano_1', 'honky_tonk_piano', 'clavi',
+    'lead_1_square', 'lead_2_sawtooth', 'lead_3_calliope', 'lead_6_voice',
+    'marimba', 'acoustic_guitar_nylon', 'electric_guitar_jazz', 'electric_guitar_muted',
+    'flute', 'ocarina', 'synth_brass_1', 'trumpet', 'alto_sax', 'recorder'
+  ];
+
+  // The active samples loaded for current song
+  private activeSamples: Record<string, string> = { ...this.DRUM_URLS };
   private audioBuffers = new Map<string, AudioBuffer>();
-  private audioContext = new AudioContext(); // temporary context just for decoding
+  private audioContext = new AudioContext();
+
+  /**
+   * Randomly selects instruments from the Massive 700+ sample bank based on genre
+   */
+  private selectInstrumentsForSong(genre: string) {
+    this.activeSamples = { ...this.DRUM_URLS }; // Reset to drums
+    
+    // Pick random instruments from the GM Bank array
+    const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+    
+    let lead = pick(this.BANK_LEAD);
+    let pad = pick(this.BANK_PAD);
+    let bass = pick(this.BANK_BASS);
+
+    // Genre specific forcing
+    if (genre === 'lofi') {
+      lead = pick(['acoustic_grand_piano', 'electric_piano_1', 'electric_piano_2', 'vibraphone']);
+      bass = pick(['acoustic_bass', 'electric_bass_finger', 'fretless_bass']);
+      pad = pick(['pad_2_warm', 'string_ensemble_1', 'choir_aahs']);
+    } else if (genre === 'synthwave') {
+      lead = pick(['lead_1_square', 'lead_2_sawtooth', 'synth_brass_1']);
+      bass = pick(['synth_bass_1', 'synth_bass_2']);
+      pad = pick(['pad_3_polysynth', 'pad_8_sweep']);
+    }
+
+    // Assign URLs dynamically (Fetching the C4 note mp3)
+    this.activeSamples['lead'] = `${this.GM_URL_BASE}/${lead}-mp3/C4.mp3`;
+    this.activeSamples['pad'] = `${this.GM_URL_BASE}/${pad}-mp3/C4.mp3`;
+    this.activeSamples['bass'] = `${this.GM_URL_BASE}/${bass}-mp3/C4.mp3`;
+  }
 
   /**
    * Pre-load all samples from the internet before generation
    */
   async preloadSamples(onProgress?: (msg: string) => void): Promise<void> {
-    if (this.audioBuffers.size === Object.keys(this.SAMPLE_URLS).length) {
-      return; // Already loaded
+    const entries = Object.entries(this.activeSamples);
+    
+    // Clear old buffers that are not needed
+    const newKeys = Object.keys(this.activeSamples);
+    for (const key of this.audioBuffers.keys()) {
+      if (!newKeys.includes(key)) this.audioBuffers.delete(key);
     }
 
-    const entries = Object.entries(this.SAMPLE_URLS);
     for (const [name, url] of entries) {
-      if (onProgress) onProgress(`Downloading ${name} sample...`);
+      if (this.audioBuffers.has(name)) continue; // Already cached
+      
+      if (onProgress) onProgress(`Downloading ${name} instrument sample...`);
       
       try {
         const response = await fetch(url);
@@ -57,6 +114,9 @@ export class ProceduralMusicService {
    */
   async generateMusic(config: MusicGenerationConfig, onProgress?: (p: number, msg?: string) => void): Promise<AudioBuffer> {
     
+    // 0. Randomly define instrumentation for this session
+    this.selectInstrumentsForSong(config.genre);
+
     // 1. Preload samples first
     await this.preloadSamples((msg) => {
       if (onProgress) onProgress(10, msg);
@@ -223,8 +283,8 @@ export class ProceduralMusicService {
         const time = startTime + (i * stepDuration);
         
         // If sample is available, use it. Otherwise draw synthetic bass.
-        if (this.audioBuffers.has('bassC') && config.genre === 'lofi') {
-           this.playSample(ctx, masterOut, 'bassC', time, 0.8, pitchRatio);
+        if (this.audioBuffers.has('bass') && config.genre !== '8bit') {
+           this.playSample(ctx, masterOut, 'bass', time, 0.8, pitchRatio);
         } else {
            this.syntheticBass(ctx, masterOut, time, stepDuration, pitchRatio * 65.41, config.genre);
         }
@@ -287,12 +347,10 @@ export class ProceduralMusicService {
         const octaveShift = Math.floor(degree / 7);
         const pitchRatio = scaleRatios[scaleIndex] * Math.pow(2, octaveShift); 
 
-        if (this.audioBuffers.has('pianoChordC')) {
-          // Play piano sample
-          const time = startTime + (config.genre === 'lofi' ? beatDuration / 8 : 0); // Slight strum delay
-          this.playSample(ctx, masterFilter, 'pianoChordC', time, 0.4, pitchRatio);
+        if (this.audioBuffers.has('pad') && config.genre !== '8bit') {
+          const time = startTime + (config.genre === 'lofi' ? beatDuration / 8 : 0); 
+          this.playSample(ctx, masterFilter, 'pad', time, 0.3, pitchRatio);
         } else {
-          // Synthetic pad fallback
           this.syntheticPad(ctx, masterFilter, startTime, barDuration, pitchRatio * 261.63, config.genre);
         }
       }
@@ -300,13 +358,13 @@ export class ProceduralMusicService {
       // Play Arp/Melody
       if (config.genre !== 'ambient') {
         let currentDegree = chordIndices[0] % 7;
-        for (let b = 0; b < 4; b++) { // 4 beats
+        for (let b = 0; b < 4; b++) { 
           if (Math.random() > 0.4) {
-             const pitchRatio = scaleRatios[currentDegree] * 2; // Up an octave
+             const pitchRatio = scaleRatios[currentDegree] * 2; 
              const time = startTime + (b * beatDuration);
              
-             if (config.genre === 'lofi' && this.audioBuffers.has('pianoChordC')) {
-               this.playSample(ctx, masterFilter, 'pianoChordC', time, 0.3, pitchRatio);
+             if (this.audioBuffers.has('lead') && config.genre !== '8bit') {
+               this.playSample(ctx, masterFilter, 'lead', time, 0.5, pitchRatio);
              } else {
                this.syntheticPluck(ctx, masterFilter, time, pitchRatio * 261.63, config.genre);
              }
