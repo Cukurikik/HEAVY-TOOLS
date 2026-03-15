@@ -162,7 +162,7 @@ export class StyleParserService {
     }
 
     // 5. Calculate BPM from genre base, modified by mood
-    const baseBpm = (gc.bpmRange[0] + gc.bpmRange[1]) / 2;
+    const baseBpm = (gc.bpm_range[0] + gc.bpm_range[1]) / 2;
     const bpm = Math.floor(Math.min(200, Math.max(40, baseBpm * bpmMultiplier)));
 
     // 6. Extract explicit BPM if mentioned (e.g. "120 bpm")

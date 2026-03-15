@@ -455,7 +455,12 @@ export class MusicGeneratorComponent {
   readonly audioUrl = signal<string | null>(null);
   readonly aiDecision = signal<CompositionRequest | null>(null);
 
-  readonly genreList = Object.values(GENRE_CONFIGS);
+  readonly genreList = Object.entries(GENRE_CONFIGS).map(([key, config]) => ({
+    name: key,
+    label: config.display_name,
+    icon: config.display_name.split(' ')[0],
+    ...config
+  }));
   readonly noteNames = [...NOTE_NAMES];
   readonly instrumentOptions = INSTRUMENT_OPTIONS;
 
