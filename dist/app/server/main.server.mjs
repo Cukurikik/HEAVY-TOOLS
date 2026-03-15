@@ -15,9 +15,6 @@ import {
   audioReplacerFeature
 } from "./chunk-HOYUTQGC.mjs";
 import {
-  trimmerFeature
-} from "./chunk-ADZR7BO4.mjs";
-import {
   mergerFeature
 } from "./chunk-LKHYOTP5.mjs";
 import {
@@ -50,14 +47,6 @@ import {
   updateTaskProgress
 } from "./chunk-L7KGEU65.mjs";
 import {
-  createAction,
-  createFeature,
-  createReducer,
-  on,
-  props,
-  provideStore
-} from "./chunk-H6XTXBPT.mjs";
-import {
   ActivatedRoute,
   Router,
   RouterOutlet,
@@ -72,6 +61,17 @@ import {
   HTTP_ROOT_INTERCEPTOR_FNS,
   bootstrapApplication
 } from "./chunk-FP5PS4KU.mjs";
+import {
+  trimmerFeature
+} from "./chunk-ADZR7BO4.mjs";
+import {
+  createAction,
+  createFeature,
+  createReducer,
+  on,
+  props,
+  provideStore
+} from "./chunk-H6XTXBPT.mjs";
 import {
   APP_BASE_HREF,
   NullViewportScroller,
@@ -28704,25 +28704,13 @@ var App = class _App {
 var routes = [
   __spreadValues({
     path: "",
-    loadComponent: () => import("./chunk-WZS7QQHW.mjs").then((m) => m.ShellComponent),
+    loadComponent: () => import("./chunk-3MW5QXMK.mjs").then((m) => m.ShellComponent),
     children: [
-      { path: "", loadComponent: () => import("./chunk-UCXNAMDN.mjs").then((m) => m.DashboardComponent) },
-      {
-        path: "video",
-        children: [
-          { path: "", loadComponent: () => import("./chunk-IAN6DH5B.mjs").then((m) => m.VideoComponent) },
-          { path: "", loadChildren: () => import("./chunk-OMBVFC6D.mjs").then((m) => m.VIDEO_ROUTES) }
-        ]
-      },
-      { path: "audio", loadChildren: () => import("./chunk-SU5TF4JY.mjs").then((m) => m.AUDIO_ROUTES) },
-      { path: "image", loadComponent: () => import("./chunk-TYUCBBOJ.mjs").then((m) => m.ImageMatrixComponent) },
-      {
-        path: "converter",
-        children: [
-          { path: "", loadComponent: () => import("./chunk-YGVKC36F.mjs").then((m) => m.ConverterComponent) },
-          { path: "", loadChildren: () => import("./chunk-MIS7BFJ3.mjs").then((m) => m.CONVERTER_ROUTES) }
-        ]
-      },
+      { path: "", loadComponent: () => import("./chunk-PMNWMP6M.mjs").then((m) => m.DashboardComponent) },
+      { path: "video", loadChildren: () => import("./chunk-JVD632XY.mjs").then((m) => m.VIDEO_ROUTES) },
+      { path: "audio", loadChildren: () => import("./chunk-J6JKI5PL.mjs").then((m) => m.AUDIO_ROUTES) },
+      { path: "image", loadComponent: () => import("./chunk-YX734LEE.mjs").then((m) => m.ImageMatrixComponent) },
+      { path: "converter", loadChildren: () => import("./chunk-VLY6VWZI.mjs").then((m) => m.CONVERTER_ROUTES) },
       { path: "pdf", loadChildren: () => import("./chunk-GCEOUECK.mjs").then((m) => m.PDF_ROUTES) },
       { path: "settings", loadComponent: () => import("./chunk-Q2MHIKQA.mjs").then((m) => m.SettingsComponent) }
     ]

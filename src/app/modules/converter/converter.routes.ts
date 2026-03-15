@@ -253,7 +253,8 @@ export const CONVERTER_ROUTES: Routes = [
   },
   {
     path: '',
-    redirectTo: 'image-converter',
+    loadComponent: () => import('./converter.component').then(m => m.ConverterComponent),
     pathMatch: 'full'
   }
 ];
+

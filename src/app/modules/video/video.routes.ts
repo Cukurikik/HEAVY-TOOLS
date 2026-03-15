@@ -188,7 +188,8 @@ export const VIDEO_ROUTES: Routes = [
   },
   {
     path: '',
-    redirectTo: 'trimmer',
+    loadComponent: () => import('./video.component').then(m => m.VideoComponent),
     pathMatch: 'full'
   }
 ];
+
