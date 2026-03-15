@@ -3,12 +3,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ImageUtilsService } from '../../services/image-utils.service';
-import { Store } from '@ngrx/store';
-import { ImageActions } from '../../store/image.actions';
-import { selectAllImageTasks } from '../../store/image.selectors';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ImageTask } from '../../types/image-task.type';
+
 
 @Component({
   selector: 'app-ai-generator',

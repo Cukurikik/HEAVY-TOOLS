@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # 1. The Real Backend (Ghost Server)
+  ghost-backend:
+    build: 
+      context: ./ghost-server
+      dockerfile: Dockerfile
+    container_name: ghost_backend
+    environment:
+      - PORT=3000
+    volumes:
+      - ./ghost-server/uploads:/usr/src/app/uploads
+      - ./ghost-server/ghost.db:/usr/src/app/ghost.db
+    restart: always
+    # Intentionally omitted `ports` so it is NOT directly exposed to the internet
+    
+  # 2. The Edge CDN (NGINX)
+  edge-cdn:
+    image: nginx:alpine
+    container_name: edge_cdn
+    ports:
+      - "3000:80" # Exposed to the world on port 3000 (Matches the frontend expectation)
+    volumes:
+      - ./cdn/nginx-edge.conf:/etc/nginx/nginx.conf:ro
+      - nginx-cache:/var/cache/nginx
+    depends_on:
+      - ghost-backend
+    restart: always
+
+volumes:
+  nginx-cache:
