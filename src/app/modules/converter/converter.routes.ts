@@ -37,9 +37,6 @@ import { rawImageConverterFeature } from './29-raw-image-converter/raw-image-con
 import { batchConverterFeature } from './30-batch-converter/batch-converter.store';
 
 
-
-
-
 export const CONVERTER_ROUTES: Routes = [
   {
     path: 'image-converter',
@@ -253,8 +250,7 @@ export const CONVERTER_ROUTES: Routes = [
   },
   {
     path: '',
-    loadComponent: () => import('./converter.component').then(m => m.ConverterComponent),
+    redirectTo: 'image-converter',
     pathMatch: 'full'
   }
 ];
-

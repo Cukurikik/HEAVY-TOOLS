@@ -16,7 +16,6 @@ export const AUDIO_ROUTES: Routes = [
   { path: 'time-stretch',   loadComponent: () => import('./08-time-stretch/time-stretch.component').then(m => m.TimeStretchComponent),    title: 'Time Stretcher — Omni-Tool',       data: { category: 'advanced' } },
   { path: 'normalizer',     loadComponent: () => import('./09-normalizer/normalizer.component').then(m => m.NormalizerComponent),         title: 'Audio Normalizer — Omni-Tool',     data: { category: 'advanced' } },
   { path: 'reverb',         loadComponent: () => import('./10-reverb/reverb.component').then(m => m.ReverbComponent),                    title: 'Reverb & Room Sim — Omni-Tool',    data: { category: 'pro' } },
-  { path: 'music-generator',loadComponent: () => import('./11-music-generator/music-generator.component').then(m => m.MusicGeneratorComponent), title: 'Music Generator — Omni-Tool',    data: { category: 'ai' } },
   { path: 'noise-remover',  loadComponent: () => import('./11-noise-remover/noise-remover.component').then(m => m.NoiseRemoverComponent), title: 'Noise Remover — Omni-Tool',        data: { category: 'pro' } },
   { path: 'splitter',       loadComponent: () => import('./12-splitter/splitter.component').then(m => m.AudioSplitterComponent),          title: 'Audio Splitter — Omni-Tool',       data: { category: 'advanced' } },
   { path: 'metadata',       loadComponent: () => import('./13-metadata/metadata.component').then(m => m.AudioMetadataComponent),         title: 'Metadata Editor — Omni-Tool',      data: { category: 'pro' } },

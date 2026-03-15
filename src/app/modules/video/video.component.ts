@@ -60,7 +60,7 @@ export const VIDEO_TOOLS: Tool[] = [
 
       <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         @for (tool of videoTools; track tool.id) {
-          <app-tool-card [tool]="tool" [basePath]="'video'" />
+          <app-tool-card [tool]="tool" />
         }
       </section>
     </div>
