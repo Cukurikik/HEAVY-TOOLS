@@ -23,6 +23,7 @@ export const routes: Routes = [
         ]
       },
       { path: 'pdf',      loadChildren: () => import('./modules/pdf/pdf.routes').then(m => m.PDF_ROUTES) },
+      { path: 'plugins',  loadChildren: () => import('./modules/plugin-system/plugin.routes').then(m => m.PLUGIN_ROUTES) },
       { path: 'settings', loadComponent: () => import('./modules/settings/settings.component').then(m => m.SettingsComponent) },
     ]
   },
