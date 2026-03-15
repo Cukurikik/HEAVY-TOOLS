@@ -1,0 +1,36 @@
+﻿src/app/modules/converter/05-image-resizer/image-resizer.component.ts(325,65): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/05-image-resizer/image-resizer.component.ts(334,9): error TS2322: Type '"RESIZE_FAILED"' is not assignable to type 'ConverterErrorCode'.
+src/app/modules/converter/06-image-compressor/image-compressor.component.ts(281,70): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/07-svg-converter/svg-converter.component.ts(244,67): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/08-base64-encoder/base64-encoder.component.ts(345,64): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/08-base64-encoder/base64-encoder.component.ts(363,64): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/08-base64-encoder/base64-encoder.component.ts(402,64): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/09-json-converter/json-converter.component.ts(230,66): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/10-csv-converter/csv-converter.component.ts(212,65): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/11-markdown-converter/markdown-converter.component.ts(200,70): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/12-html-converter/html-converter.component.ts(170,66): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/13-color-converter/color-converter.component.ts(347,67): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+src/app/modules/converter/17-number-base-converter/number-base-converter.component.ts(149,12): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
+  Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+    Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+      Types of property '[Symbol.toStringTag]' are incompatible.
+        Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+src/app/modules/converter/17-number-base-converter/number-base-converter.component.ts(165,11): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'Uint8Array<ArrayBuffer>'.
+  Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+    Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+      Types of property '[Symbol.toStringTag]' are incompatible.
+        Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.
+src/app/modules/converter/25-qr-generator/qr-generator.component.ts(277,9): error TS2353: Object literal may only specify known properties, and 'margin' does not exist in type 'QRCodeOptions'.
+src/app/modules/converter/25-qr-generator/qr-generator.component.ts(311,66): error TS2345: Argument of type '{ outputBlob: Blob; outputSizeMB: number; }' is not assignable to parameter of type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
+  Property 'outputText' is missing in type '{ outputBlob: Blob; outputSizeMB: number; }' but required in type '{ outputBlob: Blob | null; outputText: string; outputSizeMB: number; }'.
