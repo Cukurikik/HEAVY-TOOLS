@@ -82,7 +82,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           @for (tool of quickTools; track tool.id) {
-            <app-tool-card class="tool-card-item" [tool]="tool" [basePath]="getBasePath(tool.category)" />
+            <app-tool-card class="tool-card-item" [tool]="tool" />
           }
         </div>
       </section>
@@ -134,25 +134,13 @@ export class DashboardComponent {
   tasks$ = this.store.select(selectTasks);
 
   quickTools: Tool[] = [
-    { id: 'trimmer',      label: 'Video Trimmer',    icon: 'content_cut',    category: 'video',   status: 'stable' },
-    { id: 'image-converter', label: 'Format Converter', icon: 'sync',        category: 'converter', status: 'stable' },
-    { id: 'upscaler',     label: 'AI Upscaler',      icon: 'rocket_launch',  category: 'video',   status: 'experimental' },
-    { id: 'denoiser',     label: 'AI Denoiser',      icon: 'auto_awesome',   category: 'video',   status: 'experimental' },
-    { id: 'stem-splitter',label: 'Stem Splitter',    icon: 'call_split',     category: 'audio',   status: 'beta' },
-    { id: 'compressor',   label: 'Compressor',       icon: 'compress',       category: 'video',   status: 'stable' }
+    { id: 'trim', label: 'Video Trimmer', icon: 'content_cut', category: 'basic', status: 'stable' },
+    { id: 'convert', label: 'Format Converter', icon: 'sync', category: 'basic', status: 'stable' },
+    { id: 'upscale', label: 'AI Upscaler', icon: 'rocket_launch', category: 'ai', status: 'experimental' },
+    { id: 'denoise', label: 'AI Denoiser', icon: 'auto_awesome', category: 'ai', status: 'experimental' },
+    { id: 'audio-split', label: 'Stem Splitter', icon: 'call_split', category: 'audio', status: 'beta' },
+    { id: 'compress', label: 'Compressor', icon: 'compress', category: 'basic', status: 'stable' }
   ];
-
-  /** Get the basePath for a tool based on its category */
-  getBasePath(category: string): string {
-    switch (category) {
-      case 'video': return 'video';
-      case 'audio': return 'audio';
-      case 'converter': return 'converter';
-      case 'image': return 'image';
-      case 'pdf': return 'pdf';
-      default: return 'video';
-    }
-  }
 
   constructor() {
     afterNextRender(async () => {

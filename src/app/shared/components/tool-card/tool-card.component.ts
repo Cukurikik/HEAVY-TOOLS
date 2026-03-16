@@ -8,8 +8,6 @@ export interface Tool {
   icon: string;
   category: string;
   status: string;
-  /** Optional: override route path if different from id */
-  routePath?: string;
 }
 
 @Component({
@@ -39,11 +37,7 @@ export class ToolCardComponent {
   basePath = input<string>('video');
 
   navigate() {
-    const t = this.tool();
-    const routeId = t.routePath ?? t.id;
-    // Use absolute navigation: split basePath to handle multi-segment paths
-    const segments = this.basePath().split('/').filter(s => s.length > 0);
-    this.router.navigate(['/', ...segments, routeId]);
+    this.router.navigate([this.basePath(), this.tool().id]);
   }
 
   getStatusClass(status: string): string {
@@ -55,4 +49,3 @@ export class ToolCardComponent {
     }
   }
 }
-
