@@ -8,10 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
-import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { CsvConverterActions, selectCsvConverterState } from './csv-converter.store';
-import { ConverterPreviewPanelComponent } from '../shared/components/preview-panel/preview-panel.component';
 
 import * as Papa from 'papaparse';
 import * as XLSX from 'xlsx';
@@ -28,7 +25,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
 @Component({
   selector: 'app-csv-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterPreviewPanelComponent],
+  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -56,7 +53,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
             </div>
             
             <textarea rows="16" [value]="inputText()"
-              (input)="onInputChange(($event.target as HTMLTextAreaElement).value)"
+              (input)="onInputEvent($event)"
               placeholder="id,name,email&#10;1,John,john@example.com&#10;2,Jane,jane@example.com"
               class="w-full px-3 py-3 text-sm bg-[#12121a] border border-white/15 rounded-xl text-white placeholder-white/20 focus:outline-none focus:border-cyan-400 resize-none font-mono tracking-tight whitespace-pre"></textarea>
           </div>
@@ -130,8 +127,8 @@ export class CsvConverterComponent implements OnDestroy {
   readonly errorMessage = signal('');
   readonly showCopied = signal(false);
 
-  private debounceTimer: any;
-  private currentParsedData: any[] = [];
+  private debounceTimer: ReturnType<typeof setTimeout> | undefined;
+  private currentParsedData: Record<string, unknown>[] = [];
   private currentHeaders: string[] = [];
 
   // Temporary blob for XLSX
@@ -147,6 +144,13 @@ export class CsvConverterComponent implements OnDestroy {
       this.process();
     } catch {
       this.errorMessage.set('Could not process document format.');
+    }
+  }
+
+  onInputEvent(event: Event): void {
+    const target = event.target as HTMLTextAreaElement;
+    if (target) {
+      this.onInputChange(target.value);
     }
   }
 
@@ -174,7 +178,7 @@ export class CsvConverterComponent implements OnDestroy {
          // Silently ignore minor parsing errors unless the whole thing fails
       }
 
-      this.currentParsedData = parseResult.data;
+      this.currentParsedData = parseResult.data as Record<string, unknown>[];
       this.currentHeaders = parseResult.meta.fields || [];
 
       if (this.currentParsedData.length === 0) {
@@ -218,7 +222,7 @@ export class CsvConverterComponent implements OnDestroy {
     }
   }
 
-  private generateXml(data: any[]): string {
+  private generateXml(data: Record<string, unknown>[]): string {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<Root>\n';
     data.forEach((row, i) => {
       xml += `  <Row index="${i}">\n`;
@@ -233,7 +237,7 @@ export class CsvConverterComponent implements OnDestroy {
     return xml;
   }
 
-  private generateHtml(data: any[], headers: string[]): string {
+  private generateHtml(data: Record<string, unknown>[], headers: string[]): string {
     let html = '<table>\n  <thead>\n    <tr>\n';
     headers.forEach(h => html += `      <th>${this.escapeHtml(h)}</th>\n`);
     html += '    </tr>\n  </thead>\n  <tbody>\n';
@@ -248,7 +252,7 @@ export class CsvConverterComponent implements OnDestroy {
     return html;
   }
 
-  private generateMarkdown(data: any[], headers: string[]): string {
+  private generateMarkdown(data: Record<string, unknown>[], headers: string[]): string {
     let md = '| ' + headers.join(' | ') + ' |\n';
     md += '|' + headers.map(() => '---').join('|') + '|\n';
     
@@ -258,7 +262,7 @@ export class CsvConverterComponent implements OnDestroy {
     return md;
   }
 
-  private generateSql(data: any[], headers: string[]): string {
+  private generateSql(data: Record<string, unknown>[], headers: string[]): string {
     const tableName = 'imported_data';
     const cols = headers.map(h => `\`${h.replace(/`/g, '')}\``).join(', ');
     
@@ -275,7 +279,7 @@ export class CsvConverterComponent implements OnDestroy {
     return sql;
   }
 
-  private generateXlsx(data: any[]): void {
+  private generateXlsx(data: Record<string, unknown>[]): void {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
@@ -284,7 +288,7 @@ export class CsvConverterComponent implements OnDestroy {
     this.binaryOutputBlob = new Blob([wbout], { type: 'application/octet-stream' });
   }
 
-  private escapeHtml(unsafe: any): string {
+  private escapeHtml(unsafe: unknown): string {
     return String(unsafe || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 

@@ -131,7 +131,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
             <div class="space-y-2">
               <span class="text-xs text-white/40 block">Error Correction Level</span>
               <div class="flex gap-2">
-                @for (ec of ['L', 'M', 'Q', 'H']; track ec) {
+                @for (ec of ecLevels; track ec) {
                   <button (click)="errorCorrection.set(ec); onInput()"
                     [class]="errorCorrection() === ec ? 'flex-1 py-1 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs' : 'flex-1 py-1 rounded bg-white/5 text-white/50 hover:bg-white/10 text-xs'">
                     {{ ec }} {{ ec === 'L' ? '(7%)' : ec === 'M' ? '(15%)' : ec === 'Q' ? '(25%)' : '(30%)' }}
@@ -196,6 +196,7 @@ export class QrGeneratorComponent implements OnDestroy {
   private store = inject(Store);
   state$ = this.store.select(selectQrGeneratorState);
   outputFormats = OUTPUT_FORMATS;
+  readonly ecLevels: QRCode.QRCodeErrorCorrectionLevel[] = ['L', 'M', 'Q', 'H'];
 
   readonly dataTypes = [
     { key: 'text', icon: '📝', label: 'Text' },
@@ -226,20 +227,22 @@ export class QrGeneratorComponent implements OnDestroy {
   readonly outputText = signal<string | null>(null); // Added for text/terminal output
 
   private tempUrl: string | null = null;
-  private debounceTimer: any;
+  private debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
   // Compile the data segment
   getRawData(): string {
     switch (this.dataType()) {
-      case 'url':
+      case 'url': {
         let url = this.urlData.trim();
         if (url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
         return url;
-      case 'wifi':
+      }
+      case 'wifi': {
         if (!this.wifiSsid.trim()) return '';
         const escape = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/:/g, '\\:');
         return `WIFI:T:${this.wifiType};S:${escape(this.wifiSsid)};P:${escape(this.wifiPass)};;`;
-      case 'email':
+      }
+      case 'email': {
         if (!this.emailTo.trim()) return '';
         let mailto = `mailto:${this.emailTo}`;
         const params = [];
@@ -247,6 +250,7 @@ export class QrGeneratorComponent implements OnDestroy {
         if (this.emailBody) params.push(`body=${encodeURIComponent(this.emailBody)}`);
         if (params.length > 0) mailto += `?${params.join('&')}`;
         return mailto;
+      }
       case 'text':
       default:
         return this.textData;
@@ -278,7 +282,7 @@ export class QrGeneratorComponent implements OnDestroy {
   private async generateQR(data: string): Promise<void> {
     this.errorMessage.set(null);
     try {
-      const opts: QRCode.QRCodeOptions = {
+      const opts: QRCode.QRCodeToDataURLOptions & QRCode.QRCodeToStringOptions = {
         errorCorrectionLevel: this.errorCorrection(), // Type is now QRCode.QRCodeErrorCorrectionLevel
         margin: 2,
         color: {
@@ -316,7 +320,7 @@ export class QrGeneratorComponent implements OnDestroy {
           if (format === 'jpeg') mimeType = 'image/jpeg';
           else if (format === 'webp') mimeType = 'image/webp';
 
-          const dataUrl = await QRCode.toDataURL(data, { ...opts, type: mimeType as any });
+          const dataUrl = await QRCode.toDataURL(data, { ...opts, type: mimeType as unknown as QRCode.QRCodeToDataURLOptions['type'] });
           
           if (this.tempUrl) {
             URL.revokeObjectURL(this.tempUrl);
