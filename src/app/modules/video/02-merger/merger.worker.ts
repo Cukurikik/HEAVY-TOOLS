@@ -28,7 +28,7 @@ const { clips = [], outputFormat = 'mp4' } = config;
 
 await Promise.all(clips.map(async (clip: any, i: number) => {
   const name = 'clip' + i + '.mp4';
-  await ffmpeg.writeFile(name, await fetchFile(clip.file || clip));
+  await ffmpeg!.writeFile(name, await fetchFile(clip.file || clip));
 }));
 
 let listContent = '';

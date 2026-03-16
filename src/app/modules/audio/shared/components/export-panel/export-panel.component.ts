@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+export type ExportFormat = 'wav' | 'mp3' | 'aac' | 'ogg' | 'flac' | 'opus' | 'm4a';
+
 @Component({
   selector: 'app-audio-export-panel',
   standalone: true,
