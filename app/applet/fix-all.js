@@ -31,7 +31,7 @@ walk(root, (file) => {
     content = content.replace(/const\s*\{\s*file,\s*task\s*\}\s*=\s*config;/g, 'const { file } = config;');
     content = content.replace(/const\s*\{\s*file,\s*outputFormat,\s*crf,\s*encodingSpeed\s*\}\s*=\s*event\.data;/g, 'const { file, outputFormat } = event.data;');
 
-    // 4. Fix any types
+    // 4. Update any types
     content = content.replace(/\(\{ progress: p \}: any\)/g, '({ progress: p }: { progress: number })');
     content = content.replace(/onFileSelected\(e: any\)/g, 'onFileSelected(e: Event)');
     
