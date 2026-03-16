@@ -16,15 +16,15 @@ import {trimmerFeature} from './modules/video/01-trimmer/trimmer.store';
 import {compressorFeature} from './modules/video/04-compressor/compressor.store';
 import {stabilizerFeature} from './modules/video/05-stabilizer/stabilizer.store';
 import {reverserFeature} from './modules/video/06-reverser/reverser.store';
-import {speedControllerFeature} from './modules/video/07-speed-controller/speedController.store';
+import {speedControllerFeature} from './modules/video/07-speed-controller/speed-controller.store';
 import {looperFeature} from './modules/video/08-looper/looper.store';
 import {watermarkFeature} from './modules/video/14-watermark/watermark.store';
-import {subtitleBurnerFeature} from './modules/video/12-subtitle-burner/subtitleBurner.store';
+import {subtitleBurnerFeature} from './modules/video/12-subtitle-burner/subtitle-burner.store';
 import {audioExtractorFeature} from './modules/video/15-audio-extractor/audioExtractor.store';
 import {audioReplacerFeature} from './modules/video/16-audio-replacer/audioReplacer.store';
-import {flipRotateFeature} from './modules/video/09-flip-rotate/flipRotate.store';
-import {cropResizeFeature} from './modules/video/10-crop-resize/cropResize.store';
-import {colorGradingFeature} from './modules/video/11-color-grading/colorGrading.store';
+import {flipRotateFeature} from './modules/video/09-flip-rotate/flip-rotate.store';
+import {cropResizeFeature} from './modules/video/10-crop-resize/crop-resize.store';
+import {colorGradingFeature} from './modules/video/11-color-grading/color-grading.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [

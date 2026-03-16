@@ -36,6 +36,5 @@ export const AUDIO_ROUTES: Routes = [
   { path: 'transcriber',    loadComponent: () => import('./28-transcriber/transcriber.component').then(m => m.TranscriberComponent),      title: 'Audio Transcriber — Omni-Tool',    data: { category: 'ai' } },
   { path: 'watermark',      loadComponent: () => import('./29-watermark/watermark.component').then(m => m.AudioWatermarkComponent),      title: 'Audio Watermark — Omni-Tool',      data: { category: 'pro' } },
   { path: 'stem-splitter',  loadComponent: () => import('./30-stem-splitter/stem-splitter.component').then(m => m.StemSplitterComponent), title: 'AI Stem Splitter — Omni-Tool',     data: { category: 'ai' } },
-  { path: 'music-generator',loadComponent: () => import('./11-music-generator/music-generator.component').then(m => m.MusicGeneratorComponent), title: 'AI Music Generator — Omni-Tool', data: { category: 'ai' } },
   { path: '', redirectTo: 'recorder', pathMatch: 'full' }
 ];
