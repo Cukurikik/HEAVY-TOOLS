@@ -14,7 +14,13 @@ export const routes: Routes = [
         ]
       },
       { path: 'audio',    loadChildren: () => import('./modules/audio/audio.routes').then(m => m.AUDIO_ROUTES) },
-      { path: 'image',    loadComponent: () => import('./modules/image-matrix/image-matrix.component').then(m => m.ImageMatrixComponent) },
+      { 
+        path: 'image',
+        children: [
+          { path: '', loadComponent: () => import('./modules/image-matrix/image-matrix.component').then(m => m.ImageMatrixComponent) },
+          { path: '', loadChildren: () => import('./modules/image-matrix/image-matrix.routes').then(m => m.IMAGE_ROUTES) }
+        ]
+      },
       { 
         path: 'converter',
         children: [
