@@ -36,14 +36,7 @@ import { voiceChangerFeature, voiceChangerActions } from './voice-changer.store'
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="grid grid-cols-4 gap-2">
-              @for (p of presets; track p[1]) {
-                <button class="flex flex-col items-center gap-1 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all text-center">
-                  <span class="text-2xl">{{ p[0] }}</span>
-                  <span class="text-[10px] text-white/50">{{ p[1] }}</span>
-                </button>
-              }
-            </div>
+            <div class="grid grid-cols-4 gap-2">@for(p of [['🐿️','Chipmunk'],['🦖','Giant'],['🤖','Robot'],['👽','Alien'],['🎭','Male→Female'],['🎶','Female→Male'],['📢','Echo'],['🔇','Original']];track p[1]){<button class="flex flex-col items-center gap-1 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all text-center"><span class="text-2xl">{{p[0]}}</span><span class="text-[10px] text-white/50">{{p[1]}}</span></button>}</div>
           </div>
 
           <!-- Processing -->
@@ -86,17 +79,6 @@ export class VoiceChangerComponent implements OnDestroy {
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(voiceChangerFeature.selectVoiceChangerState);
   localPreset='chipmunk';
-
-  presets = [
-    ['🐿️', 'Chipmunk'],
-    ['🦖', 'Giant'],
-    ['🤖', 'Robot'],
-    ['👽', 'Alien'],
-    ['🎭', 'Male→Female'],
-    ['🎶', 'Female→Male'],
-    ['📢', 'Echo'],
-    ['🔇', 'Original']
-  ];
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(voiceChangerActions.loadFile({ file: files[0] }));

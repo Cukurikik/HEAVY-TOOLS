@@ -12,7 +12,7 @@ import {
 import { ToExcelActions, selectToExcelPdfState, selectToExcelIsLoading, selectToExcelCanProcess } from './toExcel.store';
 
 @Component({
-  selector: 'app-pdf-to-excel',
+  selector: 'app-pdf-t-xcel',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

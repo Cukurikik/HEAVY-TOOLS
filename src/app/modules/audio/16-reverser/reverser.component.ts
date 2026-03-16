@@ -36,20 +36,7 @@ import { audioReverserFeature, audioReverserActions } from './reverser.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="flex gap-2 mb-4">
-              <button
-                class="px-4 py-2 rounded-lg text-sm"
-                [class.bg-cyan-500]="localRMode === 'full'"
-                (click)="localRMode = 'full'">
-                Full Reverse
-              </button>
-              <button
-                class="px-4 py-2 rounded-lg text-sm"
-                [class.bg-cyan-500]="localRMode === 'region'"
-                (click)="localRMode = 'region'">
-                Region
-              </button>
-            </div>
+            <div class="flex gap-2 mb-4"><button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localRMode==='full'" (click)="localRMode='full'">Full Reverse</button><button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localRMode==='region'" (click)="localRMode='region'">Region</button></div>
           </div>
 
           <!-- Processing -->

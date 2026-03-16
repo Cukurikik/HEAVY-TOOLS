@@ -12,7 +12,7 @@ import {
 import { ImageExtractorActions, selectImageExtractorPdfState, selectImageExtractorIsLoading, selectImageExtractorCanProcess } from './imageExtractor.store';
 
 @Component({
-  selector: 'app-pdf-image-extractor',
+  selector: 'app-pdf-imag-xtractor',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

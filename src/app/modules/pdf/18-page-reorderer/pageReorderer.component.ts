@@ -12,7 +12,7 @@ import {
 import { PageReordererActions, selectPageReordererPdfState, selectPageReordererIsLoading, selectPageReordererCanProcess } from './pageReorderer.store';
 
 @Component({
-  selector: 'app-pdf-page-reorderer',
+  selector: 'app-pdf-pag-eorderer',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

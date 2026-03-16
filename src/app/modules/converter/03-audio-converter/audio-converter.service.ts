@@ -7,11 +7,8 @@ import { Injectable } from '@angular/core';
 export class AudioConverterService {
   /** Detect input format from filename and MIME type */
   detectFormat(file: File): string {
-    const parts = file.name.split('.');
-    const ext = parts.length > 1 ? parts.pop()?.toLowerCase() ?? '' : '';
-    const mimeSubtype = file.type.split('/').pop() || '';
-    const mimeExt = mimeSubtype.split('.').pop();
-    return ext || mimeExt || 'unknown';
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    return ext || file.type.split('/').pop() || 'unknown';
   }
 
   /** Generate semantic output filename */

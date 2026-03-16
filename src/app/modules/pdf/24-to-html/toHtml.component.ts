@@ -12,7 +12,7 @@ import {
 import { ToHtmlActions, selectToHtmlPdfState, selectToHtmlIsLoading, selectToHtmlCanProcess } from './toHtml.store';
 
 @Component({
-  selector: 'app-pdf-to-html',
+  selector: 'app-pdf-t-tml',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,7 +12,7 @@ import {
 import { TextExtractorActions, selectTextExtractorPdfState, selectTextExtractorIsLoading, selectTextExtractorCanProcess } from './textExtractor.store';
 
 @Component({
-  selector: 'app-pdf-text-extractor',
+  selector: 'app-pdf-tex-xtractor',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

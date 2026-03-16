@@ -8,20 +8,21 @@ import { ExportPanelComponent } from '../shared/components/export-panel/export-p
 import { MetadataEditorActions, selectMetadataEditorState, selectMetadataEditorIsLoading, selectMetadataEditorCanProcess } from './metadataEditor.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
-import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-metadata-editor',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-video-tool-layout
-      title="🏷️ Metadata Editor"
-      description="Edit video metadata tags: title, artist, year, comment, genre"
-      gradientClass="from-emerald-400 to-green-300">
-      <div leftPanel class="space-y-4">
-        <app-file-drop-zone accept="video/*" label="Drop video to edit metadata" (filesSelected)="onFileSelected($event)" />
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-300">🏷️ Metadata Editor</h1>
+        <p class="text-white/50 text-sm">Edit video metadata tags: title, artist, year, comment, genre</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video to edit metadata" (filesSelected)="onFileSelected($event)" />
           @if ((state$ | async)?.videoMeta; as meta) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
               <div class="grid grid-cols-3 gap-3 text-center">
@@ -50,13 +51,14 @@ import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout
             </div>
           }
           @if ((state$ | async)?.status === 'error') { <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div> }
-      </div>
-      <div rightPanel class="space-y-4">
-        @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
+        </div>
+        <div class="space-y-4">
+          @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
           @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Saving..." [size]="120" /></div> }
           @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_metadata" /> }
+        </div>
       </div>
-    </app-video-tool-layout>
+    </div>
   ` })
 export class MetadataEditorComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);

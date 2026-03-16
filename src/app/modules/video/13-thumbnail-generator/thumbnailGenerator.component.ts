@@ -8,20 +8,24 @@ import { ExportPanelComponent } from '../shared/components/export-panel/export-p
 import { ThumbnailGeneratorActions, selectThumbnailGeneratorState, selectThumbnailGeneratorIsLoading, selectThumbnailGeneratorCanProcess } from './thumbnailGenerator.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
-import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-thumbnail-generator',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-video-tool-layout
-      title="🖼️ Thumbnail Generator"
-      description="Generate single thumbnails or grid contact sheets from video"
-      gradientClass="from-fuchsia-400 to-pink-200">
-      <div leftPanel class="space-y-4">
-        <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-200">
+          🖼️ Thumbnail Generator
+        </h1>
+        <p class="text-white/50 text-sm">Generate single thumbnails or grid contact sheets from video</p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
 
           @if ((state$ | async)?.videoMeta; as meta) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -101,9 +105,10 @@ import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout
           @if ((state$ | async)?.status === 'error') {
             <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
           }
-      </div>
-      <div rightPanel class="space-y-4">
-        @if ((state$ | async)?.inputFile) {
+        </div>
+
+        <div class="space-y-4">
+          @if ((state$ | async)?.inputFile) {
             <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
           }
           @if ((state$ | async)?.status === 'processing') {
@@ -115,8 +120,9 @@ import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
               [availableFormats]="['png']" defaultFilename="omni_thumb" />
           }
+        </div>
       </div>
-    </app-video-tool-layout>
+    </div>
   ` })
 export class ThumbnailGeneratorComponent implements OnDestroy {
   private store = inject(Store);

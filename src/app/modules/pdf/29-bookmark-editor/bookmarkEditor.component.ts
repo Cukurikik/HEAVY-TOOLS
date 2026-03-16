@@ -12,7 +12,7 @@ import {
 import { BookmarkEditorActions, selectBookmarkEditorPdfState, selectBookmarkEditorIsLoading, selectBookmarkEditorCanProcess } from './bookmarkEditor.store';
 
 @Component({
-  selector: 'app-pdf-bookmark-editor',
+  selector: 'app-pdf-bookmar-ditor',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

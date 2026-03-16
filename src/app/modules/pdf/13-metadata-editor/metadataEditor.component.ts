@@ -12,7 +12,7 @@ import {
 import { MetadataEditorActions, selectMetadataEditorPdfState, selectMetadataEditorIsLoading, selectMetadataEditorCanProcess } from './metadataEditor.store';
 
 @Component({
-  selector: 'app-pdf-metadata-editor',
+  selector: 'app-pdf-metadat-ditor',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

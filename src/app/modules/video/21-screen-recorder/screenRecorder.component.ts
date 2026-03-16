@@ -3,20 +3,21 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { ScreenRecorderActions, selectScreenRecorderState, selectScreenRecorderIsLoading } from './screenRecorder.store';
-import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-screen-recorder',
   standalone: true,
-  imports: [CommonModule, ExportPanelComponent, VideoToolLayoutComponent],
+  imports: [CommonModule, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-video-tool-layout
-      title="🖥️ Screen Recorder"
-      description="Record screen, window, or browser tab with optional audio capture"
-      gradientClass="from-red-400 to-rose-400">
-      <div leftPanel class="space-y-4">
-        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-rose-400">🖥️ Screen Recorder</h1>
+        <p class="text-white/50 text-sm">Record screen, window, or browser tab with optional audio capture</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
             <!-- Source -->
             <div class="space-y-2">
               <p class="text-sm text-white/60">Capture Source</p>
@@ -72,14 +73,16 @@ import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout
               </button>
             }
           </div>
-      </div>
-      <div rightPanel class="space-y-4">
-        @if ((state$ | async)?.status === 'done') {
+        </div>
+
+        <div class="space-y-4">
+          @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_recording" />
           }
           @if ((state$ | async)?.status === 'error') { <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div> }
+        </div>
       </div>
-    </app-video-tool-layout>
+    </div>
   ` })
 export class ScreenRecorderComponent implements OnDestroy {
   private store = inject(Store);

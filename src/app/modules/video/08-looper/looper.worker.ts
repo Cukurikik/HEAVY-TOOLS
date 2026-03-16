@@ -27,7 +27,8 @@ addEventListener('message', async (e: MessageEvent) => {
 const { file, loopCount = 3 } = config;
 const inName = 'in.mp4';
 ffmpeg.writeFile(inName, await fetchFile(file));
-const listContent = `file ${inName}\n`.repeat(loopCount);
+let listContent = '';
+for (let i = 0; i < loopCount; i++) listContent += 'file ' + inName + '\n';
 ffmpeg.writeFile('list.txt', listContent);
 await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', 'looped.mp4']);
 const data = await ffmpeg.readFile('looped.mp4');

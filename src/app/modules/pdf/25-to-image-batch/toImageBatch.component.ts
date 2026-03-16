@@ -12,7 +12,7 @@ import {
 import { ToImageBatchActions, selectToImageBatchPdfState, selectToImageBatchIsLoading, selectToImageBatchCanProcess } from './toImageBatch.store';
 
 @Component({
-  selector: 'app-pdf-to-image-batch',
+  selector: 'app-pdf-t-mag-atch',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
