@@ -82,7 +82,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           @for (tool of quickTools; track tool.id) {
-            <app-tool-card class="tool-card-item" [tool]="tool" />
+            <app-tool-card class="tool-card-item" [tool]="tool" [basePath]="tool.category === 'audio' ? 'audio' : tool.category === 'ai' && tool.id === 'music-generator' ? 'audio' : 'video'" />
           }
         </div>
       </section>
@@ -139,6 +139,7 @@ export class DashboardComponent {
     { id: 'upscale', label: 'AI Upscaler', icon: 'rocket_launch', category: 'ai', status: 'experimental' },
     { id: 'denoise', label: 'AI Denoiser', icon: 'auto_awesome', category: 'ai', status: 'experimental' },
     { id: 'audio-split', label: 'Stem Splitter', icon: 'call_split', category: 'audio', status: 'beta' },
+    { id: 'music-generator', label: 'Music AI Generator', icon: 'music_note', category: 'ai', status: 'beta' },
     { id: 'compress', label: 'Compressor', icon: 'compress', category: 'basic', status: 'stable' }
   ];
 
