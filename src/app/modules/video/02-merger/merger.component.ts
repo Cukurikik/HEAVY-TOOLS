@@ -7,24 +7,20 @@ import { ExportPanelComponent } from '../shared/components/export-panel/export-p
 import { MergerActions, selectMergerState, selectMergerIsLoading, selectMergerCanProcess } from './merger.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-merger',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200">
-          🔗 Video Merger
-        </h1>
-        <p class="text-white/50 text-sm">Merge multiple video clips into one seamless video</p>
-      </header>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop video clips here (multiple files)" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
+    <app-video-tool-layout
+      title="🔗 Video Merger"
+      description="Merge multiple video clips into one seamless video"
+      gradientClass="from-blue-400 to-indigo-200">
+      <div leftPanel class="space-y-4">
+        <app-file-drop-zone accept="video/*" label="Drop video clips here (multiple files)" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
 
           <!-- Clips List -->
           @if (clips.length > 0) {
@@ -66,10 +62,9 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'error') {
             <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
           }
-        </div>
-
-        <div class="space-y-4">
-          @if ((state$ | async)?.status === 'processing') {
+      </div>
+      <div rightPanel class="space-y-4">
+        @if ((state$ | async)?.status === 'processing') {
             <div class="flex justify-center p-8">
               <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Merging clips..." [size]="120" />
             </div>
@@ -77,9 +72,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_merged" />
           }
-        </div>
       </div>
-    </div>
+    </app-video-tool-layout>
   ` })
 export class MergerComponent implements OnDestroy {
   private store = inject(Store);
