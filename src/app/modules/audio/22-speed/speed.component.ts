@@ -36,7 +36,20 @@ import { audioSpeedFeature, audioSpeedActions } from './speed.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="flex flex-wrap gap-2">@for(sp of [0.5,0.75,1,1.25,1.5,2];track sp){<button class="px-3 py-1.5 rounded-lg text-xs" [class.bg-cyan-500]="localSpd===sp" (click)="localSpd=sp">{{sp}}x</button>}</div><span class="flex items-center gap-2 text-sm text-white/60 mt-3" style="display: block;"><input type="checkbox" [(ngModel)]="localPitchLock" class="accent-cyan-400"> Lock Pitch</span>
+            <div class="flex flex-wrap gap-2">
+              @for (sp of [0.5, 0.75, 1, 1.25, 1.5, 2]; track sp) {
+                <button
+                  class="px-3 py-1.5 rounded-lg text-xs"
+                  [class.bg-cyan-500]="localSpd === sp"
+                  (click)="localSpd = sp"
+                >
+                  {{ sp }}x
+                </button>
+              }
+            </div>
+            <span class="flex items-center gap-2 text-sm text-white/60 mt-3" style="display: block;">
+              <input type="checkbox" [(ngModel)]="localPitchLock" class="accent-cyan-400"> Lock Pitch
+            </span>
           </div>
 
           <!-- Processing -->
@@ -78,7 +91,8 @@ export class AudioSpeedComponent implements OnDestroy {
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(audioSpeedFeature.selectAudioSpeedState);
-  localSpd=1;localPitchLock=true;
+  localSpd = 1;
+  localPitchLock = true;
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(audioSpeedActions.loadFile({ file: files[0] }));
