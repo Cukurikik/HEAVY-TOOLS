@@ -1,4 +1,6 @@
-/// <reference lib="webworker" />
+const fs = require('fs');
+
+const code = `/// <reference lib="webworker" />
 
 function seededRandom(seed: number) {
   const x = Math.sin(seed++) * 10000;
@@ -69,14 +71,19 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
 
   // Basic constraints based on genre
   let tempo = 120; // BPM
+  let scale = [0, 2, 4, 5, 7, 9, 11]; // Major
   if (genre === 'lofi' || prompt.toLowerCase().includes('lofi') || prompt.toLowerCase().includes('chill')) {
     tempo = 80 + seededRandom(seed++) * 20;
+    scale = [0, 2, 3, 5, 7, 8, 10]; // Minor
   } else if (genre === 'electronic' || prompt.toLowerCase().includes('techno') || prompt.toLowerCase().includes('edm')) {
     tempo = 125 + seededRandom(seed++) * 15;
+    scale = [0, 2, 3, 5, 7, 8, 10]; // Minor
   } else if (genre === 'ambient' || prompt.toLowerCase().includes('ambient') || prompt.toLowerCase().includes('drone')) {
     tempo = 60 + seededRandom(seed++) * 30;
+    scale = [0, 2, 4, 7, 9]; // Pentatonic Major
   } else if (genre === 'rock' || prompt.toLowerCase().includes('metal')) {
       tempo = 110 + seededRandom(seed++) * 60;
+      scale = [0, 3, 5, 6, 7, 10]; // Blues scale
   }
 
   const secondsPerBeat = 60.0 / tempo;
@@ -130,7 +137,7 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
             if (note.type === 'melody') srcIdx = Math.floor(s * 1.5);
             if (srcIdx >= note.buf.length) continue;
 
-            const val = note.buf[srcIdx] * note.amp;
+            let val = note.buf[srcIdx] * note.amp;
 
             // Pan based on track
             let panL = 0.5; let panR = 0.5;
@@ -209,3 +216,6 @@ addEventListener('message', async (e: MessageEvent) => {
     postMessage({ type: 'error', errorCode: 'GENERATION_FAILED', message: String(err) });
   }
 });
+`;
+
+fs.writeFileSync('src/app/modules/audio/31-music-generator/music-generator.worker.ts', code);

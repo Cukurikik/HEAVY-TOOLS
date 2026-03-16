@@ -539,3 +539,79 @@ chunk-PHCTIE2X.mjs   | denoiser-component           |  26.73 kB |
 ...and 161 more lazy chunks files. Use "--verbose" to show all the files.
 
 Application bundle generation complete. [1.209 seconds] - 2026-03-16T09:51:11.308Z
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Browser bundles
+Initial chunk files | Names                     | Raw size
+main.js             | main                      | 21.54 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-M6BJPTPL.js   | music-generator-component | 21.06 kB |
+chunk-W3S3B2KY.js   | audio-routes              |  9.79 kB |
+worker-IID4CUD5.js  | music-generator-worker    |  7.05 kB |
+chunk-WLKACLRG.js   | -                         |  5.06 kB |
+
+
+Server bundles
+Initial chunk files | Names                     | Raw size
+main.server.mjs     | main.server               | 22.82 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-DKHDG7NT.mjs  | music-generator-component | 21.10 kB |
+chunk-ZW2MLHO4.mjs  | audio-routes              |  9.83 kB |
+chunk-G6CO5UD7.mjs  | -                         |  5.10 kB |
+
+Application bundle generation complete. [38.921 seconds] - 2026-03-16T18:34:50.570Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Browser bundles
+Initial chunk files | Names                     | Raw size
+main.js             | main                      | 21.54 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-KGXMPAGA.js   | music-generator-component | 21.06 kB |
+chunk-ATWWVVCF.js   | audio-routes              |  9.79 kB |
+worker-4SMJI3MW.js  | music-generator-worker    |  7.05 kB |
+chunk-IPOT2ECK.js   | -                         |  5.06 kB |
+
+
+Server bundles
+Initial chunk files | Names                     | Raw size
+main.server.mjs     | main.server               | 22.82 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-F6XIJRW5.mjs  | music-generator-component | 21.10 kB |
+chunk-S54FE2PX.mjs  | audio-routes              |  9.83 kB |
+chunk-K2H4VPKP.mjs  | -                         |  5.10 kB |
+
+Application bundle generation complete. [1.825 seconds] - 2026-03-16T18:36:02.540Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Browser bundles
+Initial chunk files | Names                     | Raw size
+main.js             | main                      | 21.54 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-N6IQT2TJ.js   | music-generator-component | 21.06 kB |
+chunk-ZMZE2TVA.js   | audio-routes              |  9.79 kB |
+worker-52LHYOOQ.js  | music-generator-worker    |  6.88 kB |
+chunk-ZWSPFAAZ.js   | -                         |  5.06 kB |
+
+
+Server bundles
+Initial chunk files | Names                     | Raw size
+main.server.mjs     | main.server               | 22.82 kB |
+
+Lazy chunk files    | Names                     | Raw size
+chunk-H7LUXUOM.mjs  | music-generator-component | 21.10 kB |
+chunk-FAE7TGLL.mjs  | audio-routes              |  9.83 kB |
+chunk-W4KLZDLH.mjs  | -                         |  5.10 kB |
+
+Application bundle generation complete. [1.442 seconds] - 2026-03-16T18:36:15.760Z
+
+Page reload sent to client(s).
