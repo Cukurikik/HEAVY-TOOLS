@@ -51,10 +51,7 @@ def setup_api_key():
         title="Setup ANITA",
         border_style="cyan"
     ))
-    key = input("API Key (sk-ant-...): ").strip()
-    if not key.startswith("sk-ant-"):
-        console.print("[red]Format API key salah.[/red]")
-        return
+    key = input("API Key: ").strip()
 
     # Simpan ke .env
     env_file = Path(".env")

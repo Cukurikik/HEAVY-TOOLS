@@ -30,9 +30,14 @@ response = anita.chat(input_msg, stream=False)
 print(response)
   `;
 
+  // Inject user specific key
+  const env = Object.assign({}, process.env, {
+    ANTHROPIC_API_KEY: "AQ.Ab8RN6IcjBXv7QN0-mKrhbRpn-qrLvJ25H4qWIJf2FJ1YtqBkg"
+  });
+
   const pythonProcess = spawn('python3', ['-c', runCode], {
     cwd: rootDir,
-    env: process.env
+    env
   });
 
   let output = '';
