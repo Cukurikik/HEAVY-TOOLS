@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-card.component';
 
 export const IMAGE_TOOLS: Tool[] = [
-  { id: 'ai-generator', label: 'AI Generator', icon: 'auto_awesome', category: 'ai', status: 'new' },
   { id: 'upscale',    label: 'AI Upscaler',      icon: 'rocket_launch', category: 'ai',       status: 'experimental' },
   { id: 'heic',       label: 'HEIC Converter',   icon: 'image',        category: 'basic',    status: 'stable' },
   { id: 'filter',     label: 'WebGL Filters',    icon: 'filter_b_and_w', category: 'advanced', status: 'stable' },
