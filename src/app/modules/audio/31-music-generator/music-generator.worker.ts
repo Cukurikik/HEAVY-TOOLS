@@ -2,13 +2,24 @@
 
 // Simple procedurally generated music synthesis to mimic an AI generator
 // Since we can't run a full transformer locally in browser efficiently,
-// this generates a multi-track composition procedurally based on the prompt's seed.
+/**
+ * Derives a deterministic pseudo-random value in the range [0, 1) from a numeric seed.
+ *
+ * @param seed - Numeric seed used to produce the deterministic output
+ * @returns A pseudo-random number greater than or equal to 0 and less than 1, computed from `seed`
+ */
 
 function seededRandom(seed: number) {
   const x = Math.sin(seed++) * 10000;
   return x - Math.floor(x);
 }
 
+/**
+ * Produces a deterministic non-negative 32-bit integer hash from the input string.
+ *
+ * @param str - The input string to hash (commonly used to derive numeric seeds or identifiers)
+ * @returns A non-negative 32-bit integer hash of `str`
+ */
 function hashString(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -19,7 +30,15 @@ function hashString(str: string): number {
   return Math.abs(hash);
 }
 
-// Generate an AudioBuffer
+/**
+ * Synthetically generates a multi-track stereo composition from a text prompt and genre and encodes it as a WAV file.
+ *
+ * @param prompt - Text seed that influences melodic, rhythmic, and timbral choices
+ * @param durationSec - Length of the generated audio in seconds
+ * @param genre - Genre hint that biases tempo, scale, and rhythmic patterns
+ * @param onProgress - Progress callback invoked with a numeric percentage (0–100) as the synthesis proceeds
+ * @returns A Uint8Array containing a 16-bit PCM WAV file (stereo, 44100 Hz) with the rendered audio
+ */
 function synthesizeMusic(prompt: string, durationSec: number, genre: string, onProgress: (p: number) => void): Uint8Array {
   const sampleRate = 44100;
   const numChannels = 2;
