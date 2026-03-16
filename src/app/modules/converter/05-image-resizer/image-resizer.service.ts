@@ -7,7 +7,8 @@ import { Injectable } from '@angular/core';
 export class ImageResizerService {
   /** Detect input format from filename and MIME type */
   detectFormat(file: File): string {
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    const parts = file.name.split('.');
+    const ext = parts.length > 1 ? parts.pop()?.toLowerCase() ?? '' : '';
     return ext || file.type.split('/').pop() || 'unknown';
   }
 
