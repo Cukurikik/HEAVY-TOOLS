@@ -12,7 +12,7 @@ import {
 import { DigitalSignerActions, selectDigitalSignerPdfState, selectDigitalSignerIsLoading, selectDigitalSignerCanProcess } from './digitalSigner.store';
 
 @Component({
-  selector: 'app-pdf-digita-igner',
+  selector: 'app-pdf-digital-signer',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

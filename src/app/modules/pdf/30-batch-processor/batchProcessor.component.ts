@@ -12,7 +12,7 @@ import {
 import { BatchProcessorActions, selectBatchProcessorPdfState, selectBatchProcessorIsLoading, selectBatchProcessorCanProcess } from './batchProcessor.store';
 
 @Component({
-  selector: 'app-pdf-batc-rocessor',
+  selector: 'app-pdf-batch-processor',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -48,9 +48,17 @@ walk(root, (file) => {
 
     // 7. Handle PDF selectors (camelCase to kebab-case)
     if (file.includes('/pdf/')) {
-      content = content.replace(/selector:\s*'app-pdf-([a-zA-Z0-9]+)'/g, (match, p1) => {
-        const kebab = p1.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-        return `selector: 'app-pdf-${kebab}'`;
+      content = content.replace(/selector:\s*'app-pdf-([a-zA-Z0-9\-]+)'/g, (match) => {
+        const classMatch = content.match(/class\s+([A-Z][a-zA-Z0-9]*)Component/);
+        if (classMatch) {
+          const componentName = classMatch[1];
+          let kebab = componentName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+          if (kebab.startsWith('pdf-')) {
+            kebab = kebab.substring(4);
+          }
+          return `selector: 'app-pdf-${kebab}'`;
+        }
+        return match;
       });
     }
 

@@ -12,7 +12,7 @@ import {
 import { ToPowerpointActions, selectToPowerpointPdfState, selectToPowerpointIsLoading, selectToPowerpointCanProcess } from './toPowerpoint.store';
 
 @Component({
-  selector: 'app-pdf-t-owerpoint',
+  selector: 'app-pdf-to-powerpoint',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

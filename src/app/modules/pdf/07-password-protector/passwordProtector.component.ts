@@ -12,7 +12,7 @@ import {
 import { PasswordProtectorActions, selectPasswordProtectorPdfState, selectPasswordProtectorIsLoading, selectPasswordProtectorCanProcess } from './passwordProtector.store';
 
 @Component({
-  selector: 'app-pdf-passwor-rotector',
+  selector: 'app-pdf-password-protector',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
