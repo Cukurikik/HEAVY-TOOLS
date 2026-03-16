@@ -12,7 +12,7 @@ import {
 import { ThumbnailGeneratorActions, selectThumbnailGeneratorPdfState, selectThumbnailGeneratorIsLoading, selectThumbnailGeneratorCanProcess } from './thumbnailGenerator.store';
 
 @Component({
-  selector: 'app-pdf-thumbnai-enerator',
+  selector: 'app-pdf-thumbnail-generator',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

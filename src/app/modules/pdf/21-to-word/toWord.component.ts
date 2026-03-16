@@ -12,7 +12,7 @@ import {
 import { ToWordActions, selectToWordPdfState, selectToWordIsLoading, selectToWordCanProcess } from './toWord.store';
 
 @Component({
-  selector: 'app-pdf-t-ord',
+  selector: 'app-pdf-to-word',
   standalone: true,
   imports: [CommonModule, PdfDropZoneComponent, PdfPreviewComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
