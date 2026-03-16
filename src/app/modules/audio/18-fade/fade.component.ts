@@ -36,7 +36,23 @@ import { audioFadeFeature, audioFadeActions } from './fade.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="grid grid-cols-2 gap-4"><div><span class="text-xs text-white/40" style="display: block;">Fade In (s)</span><input type="range" class="w-full accent-cyan-400" min="0" max="30" step="0.1" [(ngModel)]="localFadeIn"></div><div><span class="text-xs text-white/40" style="display: block;">Fade Out (s)</span><input type="range" class="w-full accent-purple-400" min="0" max="30" step="0.1" [(ngModel)]="localFadeOut"></div></div><div class="flex gap-2">@for(c of ['linear','logarithmic','sCurve'];track c){<button class="px-3 py-1.5 rounded-lg text-xs" [class.bg-cyan-500]="localCurve===c" (click)="localCurve=c">{{c}}</button>}</div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-xs text-white/40" style="display: block;">Fade In (s)</span>
+                <input type="range" class="w-full accent-cyan-400" min="0" max="30" step="0.1" [(ngModel)]="localFadeIn">
+              </div>
+              <div>
+                <span class="text-xs text-white/40" style="display: block;">Fade Out (s)</span>
+                <input type="range" class="w-full accent-purple-400" min="0" max="30" step="0.1" [(ngModel)]="localFadeOut">
+              </div>
+            </div>
+            <div class="flex gap-2">
+              @for (c of ['linear', 'logarithmic', 'sCurve']; track c) {
+                <button class="px-3 py-1.5 rounded-lg text-xs" [class.bg-cyan-500]="localCurve === c" (click)="localCurve = c">
+                  {{ c }}
+                </button>
+              }
+            </div>
           </div>
 
           <!-- Processing -->
@@ -78,7 +94,9 @@ export class AudioFadeComponent implements OnDestroy {
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(audioFadeFeature.selectAudioFadeState);
-  localFadeIn=2;localFadeOut=2;localCurve='linear';
+  localFadeIn = 2;
+  localFadeOut = 2;
+  localCurve = 'linear';
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(audioFadeActions.loadFile({ file: files[0] }));
