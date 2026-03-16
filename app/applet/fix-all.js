@@ -54,7 +54,7 @@ walk(root, (file) => {
       });
     }
 
-    // 8. Fix unused ExportFormatSchema
+    // 8. Remove unused ExportFormatSchema
     content = content.replace(/export\s*const\s*ExportFormatSchema\s*=\s*z\.enum\(\['wav',\s*'mp3',\s*'ogg'\]\);?\n?/g, '');
 
     if (content !== original) {
