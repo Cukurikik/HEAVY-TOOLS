@@ -248,7 +248,9 @@ function generateAllFormats(rgb: RGB): string {
                 <div class="grid grid-cols-2 gap-2 text-sm">
                   @for (format of formatOutputs(); track format.label) {
                     <div class="p-3 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer transition-colors"
-                         (click)="copyValue(format.value)">
+                         tabindex="0" role="button"
+                         (click)="copyValue(format.value)"
+                         (keydown.enter)="copyValue(format.value)">
                       <span class="text-xs text-white/40 block">{{ format.label }}</span>
                       <span class="text-white font-mono text-sm">{{ format.value }}</span>
                       <span class="text-xs text-cyan-400/60 block mt-1">Click to copy</span>
@@ -291,7 +293,7 @@ export class ColorConverterComponent implements OnDestroy {
   readonly hexValue = signal('#000000');
   readonly outputText = signal('');
   readonly errorMessage = signal<string | null>(null);
-  readonly formatOutputs = signal<Array<{label: string; value: string}>>([]);
+  readonly formatOutputs = signal<{label: string; value: string}[]>([]);
   readonly showCopied = signal(false);
 
   // ═══════════════════════════════════════════════════
