@@ -346,6 +346,7 @@ export class ColorConverterComponent implements OnDestroy {
       const outputBlob = new Blob([this.outputText()], { type: 'text/plain' });
       this.store.dispatch(ColorConverterActions.processingSuccess({
         outputBlob,
+        outputText: this.outputText(),
         outputSizeMB: outputBlob.size / 1_048_576,
       }));
     }
