@@ -6,8 +6,13 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { TimezoneConverterActions, selectTimezoneConverterState } from './timezone-converter.store';
+
+interface FormatOption {
+  value: string;
+  label: string;
+  icon: string;
+}
 
 const OUTPUT_FORMATS: FormatOption[] = [
   { value: 'UTC', label: 'UTC', icon: '🌐' },
@@ -24,7 +29,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
 @Component({
   selector: 'app-timezone-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConverterFormatSelectorComponent],
+  imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -147,9 +152,10 @@ export class TimezoneConverterComponent implements OnDestroy {
     this.process();
   }
 
-  onLocalPickerChange(event: any): void {
-    const type = event.target.type; // 'date' or 'time'
-    const val = event.target.value;
+  onLocalPickerChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const type = target.type; // 'date' or 'time'
+    const val = target.value;
     
     if (type === 'date') this.localDate.set(val);
     if (type === 'time') this.localTime.set(val);
@@ -197,7 +203,7 @@ export class TimezoneConverterComponent implements OnDestroy {
       this.parsedDate.set(d);
       this.syncLocalPickers(d);
 
-    } catch (err) {
+    } catch {
       this.parsedDate.set(null);
       this.errorMessage.set('Invalid date format. Use ISO8601, Epoch millis, or standard English date strings.');
     }

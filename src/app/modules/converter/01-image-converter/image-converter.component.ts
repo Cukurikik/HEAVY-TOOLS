@@ -3,14 +3,13 @@
 // Route: /converter/image-converter
 // FULLY FUNCTIONAL: Canvas-based image format conversion
 // ============================================================
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { ImageConverterActions, selectImageConverterState } from './image-converter.store';
 
 // ============================================================
@@ -59,7 +58,7 @@ interface ImageInfo {
 @Component({
   selector: 'app-image-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent, ConverterExportPanelComponent],
+  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -332,7 +331,7 @@ export class ImageConverterComponent implements OnDestroy {
       // Update NgRx store with the first successful result (for export panel compatibility)
       const firstGood = convertedResults.find(r => r.blob.size > 0);
       if (firstGood) {
-        this.store.dispatch(ImageConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+        this.store.dispatch(ImageConverterActions.processingSuccess({ outputBlob: firstGood.blob, outputSizeMB: firstGood.blob.size / 1024 / 1024 }));
       }
 
       if (convertedResults.every(r => r.blob.size === 0)) {

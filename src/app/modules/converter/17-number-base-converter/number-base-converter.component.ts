@@ -112,7 +112,7 @@ export class NumberBaseConverterComponent implements OnDestroy {
   // Stored results by format key
   readonly results = signal<Record<string, string>>({});
 
-  private debounceTimer: any;
+  private debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
   // Base32 Character Set RFC 4648
   private readonly BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -136,7 +136,7 @@ export class NumberBaseConverterComponent implements OnDestroy {
       const format = this.inputFormat();
       
       // 1. Convert Input to ByteArray (Uint8Array)
-      let bytes: any = new Uint8Array(0);
+      let bytes: Uint8Array;
 
       switch (format) {
         case 'text':
@@ -146,14 +146,15 @@ export class NumberBaseConverterComponent implements OnDestroy {
            bytes = Uint8Array.from(atob(input), c => c.charCodeAt(0));
           break;
         case 'base32':
-           bytes = this.decodeBase32(input.toUpperCase());
-           break;
-        case 'hex':
-           const cleanHex = input.replace(/[^0-9A-Fa-f]/g, '');
-           if (cleanHex.length % 2 !== 0) throw new Error('Hex length must be even');
-           bytes = new Uint8Array(cleanHex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
-           break;
-        default:
+          bytes = this.decodeBase32(input.toUpperCase());
+          break;
+        case 'hex': {
+          const cleanHex = input.replace(/[^0-9A-Fa-f]/g, '');
+          if (cleanHex.length % 2 !== 0) throw new Error('Hex length must be even');
+          bytes = new Uint8Array(cleanHex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
+          break;
+        }
+        default: {
           // Binary, Octal, Decimal handled as BigInt for precision
           let radix = 10;
           if (format === 'binary') { radix = 2; if (/[^01\s]/.test(input)) throw new Error('Invalid Binary format'); }
@@ -161,9 +162,10 @@ export class NumberBaseConverterComponent implements OnDestroy {
           if (format === 'decimal') { radix = 10; if (/[^0-9\s]/.test(input)) throw new Error('Invalid Decimal format'); }
           
           const cleanInput = input.replace(/\s+/g, '');
-          const bigNum = this.parseBigInt(cleanInput, radix);
-          bytes = this.bigIntToBytes(bigNum);
+          const bigNumVal = this.parseBigInt(cleanInput, radix);
+          bytes = this.bigIntToBytes(bigNumVal);
           break;
+        }
       }
 
       // 2. Compute all outputs from the standard ByteArray, and BigInt representation
@@ -171,17 +173,18 @@ export class NumberBaseConverterComponent implements OnDestroy {
       
       this.results.set({
         text: this.safeDecodeText(bytes),
-        base64: btoa(String.fromCharCode(...bytes)),
+        base64: btoa(String.fromCharCode(...Array.from(bytes))),
         base32: this.encodeBase32(bytes),
-        hex: Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
+        hex: Array.from(bytes).map((b: number) => b.toString(16).padStart(2, '0')).join('').toUpperCase(),
         decimal: bigNum.toString(10),
         octal: bigNum.toString(8),
         binary: bigNum.toString(2)
       });
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       this.results.set({});
-      this.errorMessage.set(err.message || 'Invalid input for the selected format.');
+      const msg = err instanceof Error ? err.message : 'Invalid input for the selected format.';
+      this.errorMessage.set(msg);
     }
   }
 
@@ -190,7 +193,7 @@ export class NumberBaseConverterComponent implements OnDestroy {
     const size = 10;
     const factor = BigInt(radix ** size);
     let i = str.length % size || size;
-    let parts = [str.slice(0, i)];
+    const parts: string[] = [str.slice(0, i)];
     while (i < str.length) {
       parts.push(str.slice(i, i += size));
     }
@@ -209,7 +212,7 @@ export class NumberBaseConverterComponent implements OnDestroy {
   }
 
   private bytesToBigInt(bytes: Uint8Array): bigint {
-    let hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
     return hex ? BigInt('0x' + hex) : 0n;
   }
 
@@ -226,8 +229,8 @@ export class NumberBaseConverterComponent implements OnDestroy {
     let bits = 0;
     let value = 0;
     let output = '';
-    for (let i = 0; i < data.length; i++) {
-        value = (value << 8) | data[i];
+    for (const byte of data) {
+        value = (value << 8) | byte;
         bits += 8;
         while (bits >= 5) {
             output += this.BASE32_ALPHABET[(value >>> (bits - 5)) & 31];
@@ -244,10 +247,10 @@ export class NumberBaseConverterComponent implements OnDestroy {
   private decodeBase32(input: string): Uint8Array {
     let bits = 0;
     let value = 0;
-    let output = [];
+    const output: number[] = [];
     input = input.replace(/=+$/, '');
-    for (let i = 0; i < input.length; i++) {
-        const val = this.BASE32_ALPHABET.indexOf(input[i]);
+    for (const char of input) {
+        const val = this.BASE32_ALPHABET.indexOf(char);
         if (val === -1) throw new Error('Invalid Base32 characters');
         value = (value << 5) | val;
         bits += 5;

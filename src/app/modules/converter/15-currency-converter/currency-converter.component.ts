@@ -7,11 +7,9 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, OnInit }
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { CurrencyConverterActions, selectCurrencyConverterState } from './currency-converter.store';
+import { CurrencyConverterActions } from './currency-converter.store';
 
-interface CurrencyRateMap {
-  [currencyCode: string]: number;
-}
+export type CurrencyRateMap = Record<string, number>;
 
 @Component({
   selector: 'app-currency-converter',
@@ -190,7 +188,7 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
       this.lastUpdated.set(new Date());
       this.calculate();
       
-    } catch (err: any) {
+    } catch {
       this.errorMessage.set('Failed to connect to live rates API. Working offline is unavailable for currencies.');
       this.ratesLoaded.set(false);
     } finally {
@@ -198,8 +196,9 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAmountChange(event: any): void {
-    const val = parseFloat(event.target.value);
+  onAmountChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const val = parseFloat(target.value);
     this.amount.set(isNaN(val) ? 0 : val);
     this.calculate();
   }

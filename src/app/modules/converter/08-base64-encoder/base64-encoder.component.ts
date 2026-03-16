@@ -71,7 +71,7 @@ function base64ToText(base64: string): string {
   }
 }
 
-function base64ToBlob(base64: string, mimeType: string = 'application/octet-stream'): Blob {
+function base64ToBlob(base64: string, mimeType = 'application/octet-stream'): Blob {
   // Strip any data URI prefix
   const raw = base64.includes(',') ? base64.split(',')[1] : base64;
   const binary = atob(raw);
@@ -342,7 +342,7 @@ export class Base64EncoderComponent implements OnDestroy {
     this.compressionRatio.set(`${((rawBase64.length / file.size) * 100).toFixed(0)}% of original`);
 
     const blob = new Blob([output], { type: 'text/plain' });
-    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: blob, outputText: output, outputSizeMB: blob.size / 1024 / 1024 }));
   }
 
   // ---- Encode Text ----
@@ -357,7 +357,7 @@ export class Base64EncoderComponent implements OnDestroy {
     this.compressionRatio.set(`${((encoded.length / text.length) * 100).toFixed(0)}% of original`);
 
     const blob = new Blob([encoded], { type: 'text/plain' });
-    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: blob, outputText: encoded, outputSizeMB: blob.size / 1024 / 1024 }));
   }
 
   // ---- Decode ----
@@ -393,7 +393,7 @@ export class Base64EncoderComponent implements OnDestroy {
       this.previewUrl.set(url);
     }
 
-    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+    this.store.dispatch(Base64EncoderActions.processingSuccess({ outputBlob: blob, outputText: '', outputSizeMB: blob.size / 1024 / 1024 }));
   }
 
   // ═══════════════════════════════════════════════════

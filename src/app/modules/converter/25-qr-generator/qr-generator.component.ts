@@ -15,6 +15,8 @@ const OUTPUT_FORMATS: FormatOption[] = [
   { value: 'jpeg', label: 'JPEG', icon: '🖼️' },
   { value: 'webp', label: 'WEBP', icon: '🌐' },
   { value: 'svg',  label: 'SVG',  icon: '📐' },
+  { value: 'txt',  label: 'TXT',  icon: '📄' },
+  { value: 'terminal', label: 'Terminal', icon: '💻' },
 ];
 
 @Component({
@@ -155,11 +157,13 @@ const OUTPUT_FORMATS: FormatOption[] = [
                 <span class="text-3xl">⚠️</span>
                 <span>{{ errorMessage() }}</span>
               </div>
-            } @else if (!qrUrl() && !qrSvg()) {
+            } @else if (!qrUrl() && !qrSvg() && !outputText()) {
               <div class="text-white/20 text-sm flex flex-col items-center gap-3">
                 <span class="text-6xl">📱</span>
                 <span>Enter data to generate QR Code</span>
               </div>
+            } @else if (outputText()) {
+              <pre class="text-white text-xs bg-black p-4 rounded-lg overflow-auto max-h-80">{{ outputText() }}</pre>
             } @else {
               <!-- QR Display Box (with solid white background for contrast if user chose white background) -->
               <div class="bg-white p-4 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-transform hover:scale-105 duration-300">
@@ -177,7 +181,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
             }
           </div>
 
-          @if (qrUrl() || qrSvg()) {
+          @if (qrUrl() || qrSvg() || outputText()) {
             <button (click)="onDownload()"
               class="w-full py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-black shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-transform">
               📥 Download QR Code ({{ outputFormat().toUpperCase() }})
@@ -213,12 +217,13 @@ export class QrGeneratorComponent implements OnDestroy {
 
   colorDark = '#000000';
   colorLight = '#FFFFFF';
-  readonly errorCorrection = signal('M');
+  readonly errorCorrection = signal<QRCode.QRCodeErrorCorrectionLevel>('M'); // Explicitly type
   readonly outputFormat = signal('png');
 
   readonly qrUrl = signal<string | null>(null);
   readonly qrSvg = signal<string | null>(null);
   readonly errorMessage = signal<string | null>(null);
+  readonly outputText = signal<string | null>(null); // Added for text/terminal output
 
   private tempUrl: string | null = null;
   private debounceTimer: any;
@@ -255,6 +260,7 @@ export class QrGeneratorComponent implements OnDestroy {
       this.qrUrl.set(null);
       this.qrSvg.set(null);
       this.errorMessage.set(null);
+      this.outputText.set(null); // Clear text output
       return;
     }
 
@@ -273,7 +279,7 @@ export class QrGeneratorComponent implements OnDestroy {
     this.errorMessage.set(null);
     try {
       const opts: QRCode.QRCodeOptions = {
-        errorCorrectionLevel: this.errorCorrection() as any,
+        errorCorrectionLevel: this.errorCorrection(), // Type is now QRCode.QRCodeErrorCorrectionLevel
         margin: 2,
         color: {
           dark: this.colorDark,
@@ -282,35 +288,55 @@ export class QrGeneratorComponent implements OnDestroy {
       };
 
       const format = this.outputFormat();
-
-      if (format === 'svg') {
-        const svgString = await QRCode.toString(data, { ...opts, type: 'svg' });
-        this.qrSvg.set(svgString);
-        this.qrUrl.set(null);
-      } else {
-        // Image generation
-        let mimeType = 'image/png';
-        if (format === 'jpeg') mimeType = 'image/jpeg';
-        else if (format === 'webp') mimeType = 'image/webp';
-
-        const dataUrl = await QRCode.toDataURL(data, { ...opts, type: mimeType as any });
-        
-        if (this.tempUrl) {
-          URL.revokeObjectURL(this.tempUrl);
-          this.tempUrl = null;
+      switch (format) {
+        case 'svg': {
+          const svgData = await QRCode.toString(data, { ...opts, type: 'svg' });
+          this.qrSvg.set(svgData);
+          this.qrUrl.set(null);
+          this.outputText.set(null);
+          break;
         }
+        case 'txt': {
+          const txtData = await QRCode.toString(data, { ...opts, type: 'utf8' });
+          this.outputText.set(txtData);
+          this.qrUrl.set(null);
+          this.qrSvg.set(null);
+          break;
+        }
+        case 'terminal': {
+          const termData = await QRCode.toString(data, { ...opts, type: 'terminal' });
+          this.outputText.set(termData);
+          this.qrUrl.set(null);
+          this.qrSvg.set(null);
+          break;
+        }
+        default: {
+          // Image generation
+          let mimeType = 'image/png';
+          if (format === 'jpeg') mimeType = 'image/jpeg';
+          else if (format === 'webp') mimeType = 'image/webp';
 
-        // Convert base64 DataURL to Blob URL to be lightweight
-        const blob = this.dataURLToBlob(dataUrl);
-        this.tempUrl = URL.createObjectURL(blob);
-        
-        this.qrUrl.set(this.tempUrl);
-        this.qrSvg.set(null);
+          const dataUrl = await QRCode.toDataURL(data, { ...opts, type: mimeType as any });
+          
+          if (this.tempUrl) {
+            URL.revokeObjectURL(this.tempUrl);
+            this.tempUrl = null;
+          }
 
-        // Update Store
-        this.store.dispatch(QrGeneratorActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+          // Convert base64 DataURL to Blob URL to be lightweight
+          const blob = this.dataURLToBlob(dataUrl);
+          this.tempUrl = URL.createObjectURL(blob);
+          
+          this.qrUrl.set(this.tempUrl);
+          this.qrSvg.set(null);
+          this.outputText.set(null);
+
+          // Update Store
+          this.store.dispatch(QrGeneratorActions.processingSuccess({ outputBlob: blob, outputText: '', outputSizeMB: blob.size / 1024 / 1024 }));
+          break;
+        }
       }
-    } catch (err) {
+    } catch {
       this.errorMessage.set('Failed to generate QR Code. Data might be too large for this error correction level.');
     }
   }

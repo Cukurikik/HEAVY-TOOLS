@@ -167,9 +167,9 @@ export class HtmlConverterComponent implements OnDestroy {
       // Save to store
       const output = this.outputText();
       const blob = new Blob([output], { type: 'text/plain' });
-      this.store.dispatch(HtmlConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+      this.store.dispatch(HtmlConverterActions.processingSuccess({ outputBlob: blob, outputText: output, outputSizeMB: blob.size / 1024 / 1024 }));
 
-    } catch (err) {
+    } catch {
       this.errorMessage.set('Could not process document format.');
     }
   }

@@ -9,7 +9,6 @@ import { Store } from '@ngrx/store';
 import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { ImageResizerActions, selectImageResizerState } from './image-resizer.store';
 
 const OUTPUT_FORMATS: FormatOption[] = [
@@ -32,7 +31,7 @@ interface ResizeResult {
 @Component({
   selector: 'app-image-resizer',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent, ConverterExportPanelComponent],
+  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -284,12 +283,8 @@ export class ImageResizerComponent implements OnDestroy {
       if (!ctx) throw new Error('Canvas 2D context not available');
 
       // Transparent/white background handling based on format
-      let format = this.outputFormat();
-      let mimeType = file.type;
-      
-      if (format !== 'original') {
-        mimeType = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
-      }
+      const format = this.outputFormat();
+      const mimeType = format === 'original' ? file.type : (format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png');
       
       if (mimeType === 'image/jpeg') {
         ctx.fillStyle = '#FFFFFF';
@@ -322,7 +317,7 @@ export class ImageResizerComponent implements OnDestroy {
         originalSize: file.size,
       });
 
-      this.store.dispatch(ImageResizerActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+      this.store.dispatch(ImageResizerActions.processingSuccess({ outputBlob: blob, outputText: '', outputSizeMB: blob.size / 1024 / 1024 }));
 
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Resizing failed';

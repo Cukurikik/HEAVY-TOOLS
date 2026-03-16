@@ -9,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { SvgConverterActions, selectSvgConverterState } from './svg-converter.store';
+import { SvgConverterActions } from './svg-converter.store';
 
 const OUTPUT_FORMATS: FormatOption[] = [
   { value: 'png',  label: 'PNG',  icon: '🖼️' },
@@ -105,7 +105,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
               <div class="absolute top-2 left-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded border border-white/10 text-[10px] text-white/60">SOURCE</div>
               <!-- Checkboard background for transparency -->
               <div class="w-full h-[400px] rounded-xl checkerboard-bg flex items-center justify-center overflow-hidden">
-                <img [src]="inputUrl()" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
+                <img [src]="inputUrl()" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
               </div>
             </div>
           }
@@ -127,9 +127,9 @@ const OUTPUT_FORMATS: FormatOption[] = [
               <!-- Checkboard background for transparency -->
               <div class="w-full h-[400px] rounded-xl checkerboard-bg flex items-center justify-center overflow-hidden relative">
                 @if (outputFormat() === 'svg') {
-                  <img [src]="result()!.url" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
+                  <img [src]="result()!.url" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
                 } @else {
-                  <img [src]="result()!.url" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
+                  <img [src]="result()!.url" alt="" class="max-w-full max-h-full object-contain drop-shadow-2xl" />
                 }
               </div>
             </div>
@@ -222,7 +222,7 @@ export class SvgConverterComponent implements OnDestroy {
         // Path A: Raster -> SVG
         if (fmt === 'svg') {
           if (file.type === 'image/svg+xml') throw new Error('Input is already an SVG.');
-          blob = await this.rasterToSvg(file, url);
+          blob = await this.rasterToSvg(file);
         }
         // Path B: SVG/Raster -> Raster
         else {
@@ -232,7 +232,7 @@ export class SvgConverterComponent implements OnDestroy {
         const resUrl = URL.createObjectURL(blob);
         this.tempUrls.push(resUrl);
 
-        let ext = fmt === 'jpeg' ? 'jpg' : fmt;
+        const ext = fmt === 'jpeg' ? 'jpg' : fmt;
         this.result.set({
           name: `${baseName}_converted.${ext}`,
           url: resUrl,
@@ -241,10 +241,11 @@ export class SvgConverterComponent implements OnDestroy {
         });
 
         // Store integration
-        this.store.dispatch(SvgConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+        this.store.dispatch(SvgConverterActions.processingSuccess({ outputBlob: blob, outputText: '', outputSizeMB: blob.size / 1024 / 1024 }));
 
-      } catch (err: any) {
-        this.errorMessage.set(err.message || 'Conversion failed during DOM/Canvas operation.');
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Conversion failed during DOM/Canvas operation.';
+        this.errorMessage.set(msg);
       } finally {
         this.isProcessing.set(false);
       }
@@ -291,7 +292,7 @@ export class SvgConverterComponent implements OnDestroy {
   // 2. Wrap Raster into an SVG (Base64 encapsulation)
   // For true vectorization, we would need potrace/imagetracerjs WASM module,
   // which is heavy. Standard SVG `<image>` wrapper is the native 100% reliable fallback.
-  private async rasterToSvg(file: File, url: string): Promise<Blob> {
+  private async rasterToSvg(file: File): Promise<Blob> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {

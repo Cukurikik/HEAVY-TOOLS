@@ -11,6 +11,7 @@ import { ConverterFormatSelectorComponent, FormatOption } from '../shared/compon
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { CsvConverterActions, selectCsvConverterState } from './csv-converter.store';
+import { ConverterPreviewPanelComponent } from '../shared/components/preview-panel/preview-panel.component';
 
 import * as Papa from 'papaparse';
 import * as XLSX from 'xlsx';
@@ -27,7 +28,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
 @Component({
   selector: 'app-csv-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent],
+  imports: [CommonModule, FormsModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterPreviewPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -55,7 +56,7 @@ const OUTPUT_FORMATS: FormatOption[] = [
             </div>
             
             <textarea rows="16" [value]="inputText()"
-              (input)="onInputChange(($any($event.target)).value)"
+              (input)="onInputChange(($event.target as HTMLTextAreaElement).value)"
               placeholder="id,name,email&#10;1,John,john@example.com&#10;2,Jane,jane@example.com"
               class="w-full px-3 py-3 text-sm bg-[#12121a] border border-white/15 rounded-xl text-white placeholder-white/20 focus:outline-none focus:border-cyan-400 resize-none font-mono tracking-tight whitespace-pre"></textarea>
           </div>
@@ -145,7 +146,7 @@ export class CsvConverterComponent implements OnDestroy {
       this.inputText.set(text);
       this.process();
     } catch {
-      this.errorMessage.set('Failed to read file.');
+      this.errorMessage.set('Could not process document format.');
     }
   }
 
@@ -209,10 +210,11 @@ export class CsvConverterComponent implements OnDestroy {
 
       // Save to store logic can go here
       const finalBlob = this.binaryOutputBlob || new Blob([output], { type: 'text/plain' });
-      this.store.dispatch(CsvConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+      this.store.dispatch(CsvConverterActions.processingSuccess({ outputBlob: finalBlob, outputText: output, outputSizeMB: finalBlob.size / 1024 / 1024 }));
 
-    } catch (err: any) {
-      this.errorMessage.set('Invalid CSV data. ' + (err.message || ''));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown error';
+      this.errorMessage.set('Invalid CSV data. ' + msg);
     }
   }
 

@@ -197,7 +197,7 @@ export class MarkdownConverterComponent implements OnDestroy {
       // Save to store
       const output = this.outputText();
       const blob = new Blob([output], { type: 'text/plain' });
-      this.store.dispatch(MarkdownConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+      this.store.dispatch(MarkdownConverterActions.processingSuccess({ outputBlob: blob, outputText: output, outputSizeMB: blob.size / 1024 / 1024 }));
 
     } catch (err) {
       this.errorMessage.set('Could not process document format.');

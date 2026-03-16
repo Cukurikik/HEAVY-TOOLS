@@ -227,7 +227,7 @@ export class JsonConverterComponent implements OnDestroy {
 
       // Save to store
       const blob = new Blob([output], { type: 'text/plain' });
-      this.store.dispatch(JsonConverterActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+      this.store.dispatch(JsonConverterActions.processingSuccess({ outputBlob: blob, outputText: output, outputSizeMB: blob.size / 1024 / 1024 }));
 
     } catch (err) {
       this.errorMessage.set('Invalid JSON format. Please check syntax.');

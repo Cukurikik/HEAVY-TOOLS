@@ -103,18 +103,18 @@ interface CompressResult {
 
               <!-- Standard Views -->
               @if (viewMode() === 'original') {
-                <img [src]="inputUrl()" class="w-full h-full object-contain" />
+                <img [src]="inputUrl()" alt="" class="w-full h-full object-contain" />
               } @else if (viewMode() === 'compressed') {
-                <img [src]="result()!.url" class="w-full h-full object-contain" />
+                <img [src]="result()!.url" alt="" class="w-full h-full object-contain" />
               } @else {
                 <!-- CSS Split View -->
                 <div class="relative w-full h-full overflow-hidden" (mousemove)="onSplitMove($event)" (touchmove)="onSplitMove($event)" (mouseleave)="splitPos.set(50)">
                   <!-- Bottom: Compressed -->
-                  <img [src]="result()!.url" class="absolute top-0 left-0 w-full h-full object-cover" />
+                  <img [src]="result()!.url" alt="" class="absolute top-0 left-0 w-full h-full object-cover" />
                   
                   <!-- Top: Original (clipped) -->
                   <div class="absolute top-0 left-0 h-full w-full overflow-hidden" [style.clip-path]="'inset(0 ' + (100 - splitPos()) + '% 0 0)'">
-                    <img [src]="inputUrl()" class="absolute top-0 left-0 w-full h-full object-cover max-w-none" />
+                    <img [src]="inputUrl()" alt="" class="absolute top-0 left-0 w-full h-full object-cover max-w-none" />
                   </div>
                   
                   <!-- Slider Line -->
@@ -278,7 +278,7 @@ export class ImageCompressorComponent implements OnDestroy {
         });
         
         // Update NGRX
-        this.store.dispatch(ImageCompressorActions.processingSuccess({ outputBlob: , outputText: '', outputSizeMB:  }));
+        this.store.dispatch(ImageCompressorActions.processingSuccess({ outputBlob: blob, outputText: '', outputSizeMB: blob.size / 1024 / 1024 }));
 
       } catch (err) {
         this.errorMessage.set(err instanceof Error ? err.message : 'Compression failed');
