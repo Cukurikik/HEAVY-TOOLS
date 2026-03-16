@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject, afterNextRender } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, inject, afterNextRender, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
@@ -30,7 +30,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
           <div class="w-px h-12 bg-white/10"></div>
           <div class="text-center">
             <div class="text-sm text-text-muted uppercase tracking-wider mb-1">Memory</div>
-            <div class="text-2xl font-mono text-accent-purple">{{ (system$ | async)?.memoryUsage || 0 }}MB</div>
+            <div class="text-2xl font-mono text-accent-purple">{{ system()?.memoryUsage || 0 }}MB</div>
           </div>
         </div>
       </section>
@@ -51,7 +51,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
             <mat-icon>check_circle</mat-icon>
           </div>
           <div>
-            <div class="text-3xl font-mono font-bold">{{ (tasks$ | async)?.totalCompleted || 0 }}</div>
+            <div class="text-3xl font-mono font-bold">{{ tasks()?.totalCompleted || 0 }}</div>
             <div class="text-sm text-text-secondary">Tasks Completed</div>
           </div>
         </div>
@@ -95,30 +95,30 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">FFmpeg Engine</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.ffmpegLoaded" [class.text-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.ffmpegLoaded" [class.bg-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined"></span>
-              {{ (system$ | async)?.ffmpegLoaded ? 'Online' : 'Standby' }}
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="ffmpegLoaded()" [class.text-status-warning]="!ffmpegLoaded()">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="ffmpegLoaded()" [class.bg-status-warning]="!ffmpegLoaded()"></span>
+              {{ ffmpegLoaded() ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">ONNX Runtime</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.onnxLoaded" [class.text-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.onnxLoaded" [class.bg-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined"></span>
-              {{ (system$ | async)?.onnxLoaded ? 'Online' : 'Standby' }}
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="onnxLoaded()" [class.text-status-warning]="!onnxLoaded()">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="onnxLoaded()" [class.bg-status-warning]="!onnxLoaded()"></span>
+              {{ onnxLoaded() ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">OPFS Storage</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.opfsAvailable" [class.text-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.opfsAvailable" [class.bg-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined"></span>
-              {{ (system$ | async)?.opfsAvailable ? 'Available' : 'Unavailable' }}
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="opfsAvailable()" [class.text-status-error]="!opfsAvailable()">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="opfsAvailable()" [class.bg-status-error]="!opfsAvailable()"></span>
+              {{ opfsAvailable() ? 'Available' : 'Unavailable' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">Network</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.networkStatus === 'online'" [class.text-status-error]="(system$ | async)?.networkStatus === 'offline'">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.networkStatus === 'online'" [class.bg-status-error]="(system$ | async)?.networkStatus === 'offline'"></span>
-              {{ (system$ | async)?.networkStatus === 'online' ? 'Connected' : 'Offline' }}
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="isOnline()" [class.text-status-error]="isOffline()">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="isOnline()" [class.bg-status-error]="isOffline()"></span>
+              {{ isOnline() ? 'Connected' : 'Offline' }}
             </span>
           </div>
         </div>
@@ -130,8 +130,14 @@ export class DashboardComponent {
   private store = inject(Store);
   @ViewChild('container') container!: ElementRef;
   
-  system$ = this.store.select(selectSystem);
-  tasks$ = this.store.select(selectTasks);
+  system = this.store.selectSignal(selectSystem);
+  tasks = this.store.selectSignal(selectTasks);
+
+  ffmpegLoaded = computed(() => !!this.system()?.ffmpegLoaded);
+  onnxLoaded = computed(() => !!this.system()?.onnxLoaded);
+  opfsAvailable = computed(() => !!this.system()?.opfsAvailable);
+  isOnline = computed(() => this.system()?.networkStatus === 'online');
+  isOffline = computed(() => this.system()?.networkStatus === 'offline');
 
   quickTools: Tool[] = [
     { id: 'trim', label: 'Video Trimmer', icon: 'content_cut', category: 'basic', status: 'stable' },
