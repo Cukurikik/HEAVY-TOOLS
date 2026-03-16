@@ -6,21 +6,20 @@ import { ProgressRingComponent } from '../shared/components/progress-ring/progre
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { BatchActions, selectBatchState, selectBatchIsLoading, selectBatchCanProcess } from './batch.store';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-batch',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">⚡ Batch Processor</h1>
-        <p class="text-white/50 text-sm">Process multiple videos with the same operation at once</p>
-      </header>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop multiple videos" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
+    <app-video-tool-layout
+      title="⚡ Batch Processor"
+      description="Process multiple videos with the same operation at once"
+      gradientClass="from-cyan-400 to-blue-400">
+      <div leftPanel class="space-y-4">
+        <app-file-drop-zone accept="video/*" label="Drop multiple videos" [multiple]="true" (filesSelected)="onFilesSelected($event)" />
 
           @if (files.length > 0) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -77,13 +76,12 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
             </div>
           }
           @if ((state$ | async)?.status === 'error') { <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div> }
-        </div>
-        <div class="space-y-4">
-          @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Batch..." [size]="120" /></div> }
-          @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_batch" /> }
-        </div>
       </div>
-    </div>
+      <div rightPanel class="space-y-4">
+        @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Batch..." [size]="120" /></div> }
+          @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_batch" /> }
+      </div>
+    </app-video-tool-layout>
   ` })
 export class BatchComponent implements OnDestroy {
   private store = inject(Store); private bridge = inject(WorkerBridgeService);

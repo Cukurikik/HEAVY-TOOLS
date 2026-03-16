@@ -73,7 +73,10 @@
               "buildTarget": "app:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "allowedHosts": ["localhost", "127.0.0.1", "0.0.0.0"]
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"
