@@ -24,6 +24,7 @@ export const routes: Routes = [
       },
       { path: 'pdf',      loadChildren: () => import('./modules/pdf/pdf.routes').then(m => m.PDF_ROUTES) },
       { path: 'settings', loadComponent: () => import('./modules/settings/settings.component').then(m => m.SettingsComponent) },
+      { path: 'anita',    loadChildren: () => import('./modules/anita-assistant/anita-assistant.routes').then(m => m.ANITA_ROUTES) },
     ]
   },
   { path: '**', redirectTo: '' }

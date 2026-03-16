@@ -6,10 +6,12 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import {join} from 'node:path';
+import { anitaApiRouter } from './app/server/anita-api';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
+app.use(express.json()); // Enable JSON body parsing
 const angularApp = new AngularNodeAppEngine();
 
 /**
@@ -23,6 +25,11 @@ const angularApp = new AngularNodeAppEngine();
  * });
  * ```
  */
+
+/**
+ * Mount ANITA Assistant API
+ */
+app.use('/api/anita', anitaApiRouter);
 
 /**
  * Serve static files from /browser
@@ -40,7 +47,11 @@ app.use(
  */
 app.use((req, res, next) => {
   angularApp
-    .handle(req)
+    .handle(req, {
+      serverContext: {
+        req
+      }
+    })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )

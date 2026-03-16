@@ -27,6 +27,7 @@
     "@ffmpeg/util": "^0.12.2",
     "@google/genai": "^1.27.0",
     "@ngrx/effects": "^21.0.1",
+    "@ngrx/operators": "^21.0.1",
     "@ngrx/signals": "^21.0.1",
     "@ngrx/store": "^21.0.1",
     "express": "^5.1.0",
