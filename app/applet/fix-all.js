@@ -35,7 +35,7 @@ walk(root, (file) => {
     content = content.replace(/\(\{ progress: p \}: any\)/g, '({ progress: p }: { progress: number })');
     content = content.replace(/onFileSelected\(e: any\)/g, 'onFileSelected(e: Event)');
     
-    // 5. Fix empty catch blocks
+    // 5. Handle empty catch blocks
     content = content.replace(/catch\s*\{\s*\}/g, 'catch { /* ignore */ }');
     content = content.replace(/catch\s*\(err\)\s*\{\s*\}/g, 'catch (err) { /* ignore */ }');
 
