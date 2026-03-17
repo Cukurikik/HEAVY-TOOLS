@@ -9251,3 +9251,4 @@ DEBUG nx::native::tasks::task_hasher: hash_plans COMPLETED in 2.0741ms - process
 [NX v22.5.4 Daemon Server] - 2026-03-17T09:35:11.803Z - Done responding to the client handleRunPostTasksExecution
 [NX v22.5.4 Daemon Server] - 2026-03-17T09:35:11.803Z - Handled json message POST_TASKS_EXECUTION. Handling time: 0. Response time: 0.
 [NX v22.5.4 Daemon Client] - 2026-03-17T09:35:11.803Z - [Messenger] Received message, length: 4
+[NX v22.5.4 Daemon Server] - 2026-03-17T09:35:11.807Z - Closed a connection. Number of open connections: 2
