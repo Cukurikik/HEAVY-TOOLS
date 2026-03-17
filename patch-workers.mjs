@@ -1,9 +1,7 @@
-// Fix: Cast FFmpeg FileData to proper ArrayBuffer before using in Blob constructor
-// Patches all 30 worker files replacing:
-//   const blob = new Blob([data], { ... })
-// With:
-//   const blob = new Blob([data instanceof Uint8Array ? data.buffer : data], { ... })
-// But a simpler fix: cast with `data as unknown as BlobPart`
+// Resolve: Cast FFmpeg FileData to proper ArrayBuffer before using in Blob constructor
+// Patches all 30 worker files by replacing the original Blob construction
+// that directly uses the 'data' array with a version that casts 'data' to
+// 'unknown' and then to 'BlobPart' to fix the Uint8Array<SharedArrayBuffer> issue.
 
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
