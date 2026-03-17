@@ -4,6 +4,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
 import { selectSystem, selectTasks } from '../../store/app.selectors';
 import { map } from 'rxjs/operators';
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/fix/code-health-dashboard-conditions-15533403856965125280
 import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-card.component';
 
 @Component({
@@ -134,9 +138,9 @@ export class DashboardComponent {
   system$ = this.store.select(selectSystem);
   tasks$ = this.store.select(selectTasks);
 
-  isFfmpegStandby$ = this.system$.pipe(map(s => s?.ffmpegLoaded === false || s?.ffmpegLoaded === null || s?.ffmpegLoaded === undefined));
-  isOnnxStandby$ = this.system$.pipe(map(s => s?.onnxLoaded === false || s?.onnxLoaded === null || s?.onnxLoaded === undefined));
-  isOpfsUnavailable$ = this.system$.pipe(map(s => s?.opfsAvailable === false || s?.opfsAvailable === null || s?.opfsAvailable === undefined));
+  isFfmpegStandby$ = this.system$.pipe(map(s => !s?.ffmpegLoaded));
+  isOnnxStandby$ = this.system$.pipe(map(s => !s?.onnxLoaded));
+  isOpfsUnavailable$ = this.system$.pipe(map(s => !s?.opfsAvailable));
 
   quickTools: Tool[] = [
     { id: 'trim', label: 'Video Trimmer', icon: 'content_cut', category: 'basic', status: 'stable' },
