@@ -19,8 +19,7 @@ export class ConverterPandocService {
   async convert(
     input: string,
     from: string,
-    to: string,
-    
+    to: string
   ): Promise<string | Uint8Array> {
     // Stub — actual conversion happens in worker
     return `Converted from ${from} to ${to}: ${input.substring(0, 100)}`;
