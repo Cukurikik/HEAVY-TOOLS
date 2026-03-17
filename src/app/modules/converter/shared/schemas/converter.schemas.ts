@@ -13,7 +13,7 @@ export function fileSchema(maxSizeMB: number, mimePrefix?: string) {
   );
   if (mimePrefix) {
     schema = schema.refine(
-      (f) => f.type.startsWith(mimePrefix),
+      (f) => (f.type || '').startsWith(mimePrefix),
       { message: `File must be ${mimePrefix} type` }
     ) as unknown as typeof schema;
   }
