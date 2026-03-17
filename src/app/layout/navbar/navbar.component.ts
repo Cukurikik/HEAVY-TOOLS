@@ -34,7 +34,7 @@ import { selectSystem } from '../../store/app.selectors';
         </div>
 
         <!-- Notifications -->
-        <button class="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white">
+        <button aria-label="Notifications" class="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none">
           <mat-icon>notifications</mat-icon>
           <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent-pink animate-pulse"></span>
         </button>

@@ -41,10 +41,21 @@ export const NAV_ITEMS: NavItem[] = [
           </div>
           <span class="font-bold text-lg tracking-tight">Omni-Tool</span>
         </div>
-        <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0"
-                (click)="onToggleCollapse()">
-          <mat-icon>{{ (collapsed$ | async) ? 'menu' : 'menu_open' }}</mat-icon>
-        </button>
+        @if (collapsed$ | async; as isCollapsed) {
+          <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0 focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none"
+                  [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+                  [attr.aria-expanded]="!isCollapsed"
+                  (click)="onToggleCollapse()">
+            <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+          </button>
+        } @else {
+          <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0 focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none"
+                  [attr.aria-label]="'Collapse sidebar'"
+                  [attr.aria-expanded]="true"
+                  (click)="onToggleCollapse()">
+            <mat-icon>menu_open</mat-icon>
+          </button>
+        }
       </div>
 
       <!-- Navigation -->
