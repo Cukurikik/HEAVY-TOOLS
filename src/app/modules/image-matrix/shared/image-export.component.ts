@@ -3,7 +3,7 @@
 // File: src/app/modules/image-matrix/shared/image-export.component.ts
 // ============================================================
 
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -83,7 +83,7 @@ export class ImageExportComponent implements OnChanges, OnDestroy {
 
   previewUrl = signal('');
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges() {
     if (this.outputBlob) {
       const url = URL.createObjectURL(this.outputBlob);
       const oldUrl = this.previewUrl();

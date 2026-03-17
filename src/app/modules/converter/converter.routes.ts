@@ -37,10 +37,10 @@ import { rawImageConverterFeature } from "./29-raw-image-converter/raw-image-con
 import { batchConverterFeature } from "./30-batch-converter/batch-converter.store";
 
 
-function createRoute(
+function createRoute<T>(
   path: string,
   loadComponent: Route['loadComponent'],
-  feature: FeatureSlice<unknown>,
+  feature: FeatureSlice<T>,
   title: string,
   category: string,
 ): Route {
