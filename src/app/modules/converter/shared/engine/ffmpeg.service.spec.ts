@@ -4,13 +4,12 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // Mock the dynamic imports
 vi.mock('@ffmpeg/ffmpeg', () => {
-  return {
-    FFmpeg: vi.fn().mockImplementation(function() {
-      return {
-        load: vi.fn().mockResolvedValue(undefined),
-      };
-    })
-  };
+  const FFmpegMock = vi.fn().mockImplementation(function() {
+    return {
+      load: vi.fn().mockResolvedValue(undefined),
+    };
+  });
+  return { FFmpeg: FFmpegMock };
 });
 
 vi.mock('@ffmpeg/util', () => {
