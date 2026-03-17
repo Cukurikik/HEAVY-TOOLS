@@ -36,15 +36,7 @@ import { limiterFeature, limiterActions } from './limiter.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="grid grid-cols-2 gap-4">
-              @for (ctrl of [['Ceiling', '-6 to 0 dBFS'], ['Lookahead', '0-20ms'], ['Release', '0.01-1.0s']]; track ctrl[0]) {
-                <div>
-                  <span class="text-xs text-white/40" style="display: block;">{{ctrl[0]}}</span>
-                  <p class="text-[10px] text-white/20">{{ctrl[1]}}</p>
-                  <input type="range" class="w-full accent-red-400">
-                </div>
-              }
-            </div>
+            <div class="grid grid-cols-2 gap-4">@for(ctrl of [['Ceiling','-6 to 0 dBFS'],['Lookahead','0-20ms'],['Release','0.01-1.0s']];track ctrl[0]){<div><span class="text-xs text-white/40" style="display: block;">{{ctrl[0]}}</span><p class="text-[10px] text-white/20">{{ctrl[1]}}</p><input type="range" class="w-full accent-red-400"></div>}</div>
           </div>
 
           <!-- Processing -->

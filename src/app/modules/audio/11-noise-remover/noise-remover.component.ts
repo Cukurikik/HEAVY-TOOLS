@@ -36,27 +36,7 @@ import { noiseRemoverFeature, noiseRemoverActions } from './noise-remover.store'
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="flex gap-2 mb-4">
-              @for (a of ['spectral', 'ai', 'ffmpeg']; track a) {
-                <button
-                  class="px-4 py-2 rounded-lg text-sm"
-                  [class.bg-cyan-500]="localAlgo === a"
-                  (click)="localAlgo = a"
-                >
-                  {{ a === 'ai' ? 'AI (RNNoise)' : a === 'spectral' ? 'Spectral' : 'FFmpeg' }}
-                </button>
-              }
-            </div>
-            <div>
-              <span class="text-xs text-white/40" style="display: block;">Strength</span>
-              <input
-                type="range"
-                class="w-full accent-cyan-400"
-                min="0"
-                max="100"
-                [(ngModel)]="localStrength"
-              />
-            </div>
+            <div class="flex gap-2 mb-4">@for(a of ['spectral','ai','ffmpeg'];track a){<button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localAlgo===a" (click)="localAlgo=a">{{a==='ai'?'AI (RNNoise)':a==='spectral'?'Spectral':'FFmpeg'}}</button>}</div><div><span class="text-xs text-white/40" style="display: block;">Strength</span><input type="range" class="w-full accent-cyan-400" min="0" max="100" [(ngModel)]="localStrength"></div>
           </div>
 
           <!-- Processing -->
@@ -98,8 +78,7 @@ export class NoiseRemoverComponent implements OnDestroy {
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(noiseRemoverFeature.selectNoiseRemoverState);
-  localAlgo = 'spectral';
-  localStrength = 50;
+  localAlgo='spectral';localStrength=50;
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(noiseRemoverActions.loadFile({ file: files[0] }));

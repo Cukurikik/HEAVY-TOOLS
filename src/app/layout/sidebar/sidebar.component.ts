@@ -15,10 +15,10 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
-  { label: 'A.N.I.T.A',    icon: 'smart_toy',   route: '/anita',     badge: 'AI' },
   { label: 'Video Engine', icon: 'movie',       route: '/video',     badge: '30+' },
   { label: 'Audio Studio', icon: 'music_note',  route: '/audio',     badge: '20+' },
   { label: 'Image Matrix', icon: 'image',       route: '/image',     badge: '10+' },
+  { label: 'ANITA AI',     icon: 'psychology',  route: '/anita-ai',  badge: 'AI' },
   { label: 'Converter',    icon: 'sync',        route: '/converter', badge: 'NEW' },
   { label: 'Settings',     icon: 'settings',    route: '/settings',  badge: null },
 ];
@@ -41,25 +41,14 @@ export const NAV_ITEMS: NavItem[] = [
           </div>
           <span class="font-bold text-lg tracking-tight">Omni-Tool</span>
         </div>
-        @if (collapsed$ | async; as isCollapsed) {
-          <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0 focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none"
-                  [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
-                  [attr.aria-expanded]="!isCollapsed"
-                  (click)="onToggleCollapse()">
-            <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
-          </button>
-        } @else {
-          <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0 focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none"
-                  [attr.aria-label]="'Collapse sidebar'"
-                  [attr.aria-expanded]="true"
-                  (click)="onToggleCollapse()">
-            <mat-icon>menu_open</mat-icon>
-          </button>
-        }
+        <button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white shrink-0"
+                (click)="onToggleCollapse()">
+          <mat-icon>{{ (collapsed$ | async) ? 'menu' : 'menu_open' }}</mat-icon>
+        </button>
       </div>
 
       <!-- Navigation -->
-      <nav aria-label="Main navigation" class="flex-1 py-6 px-3 space-y-2 overflow-y-auto overflow-x-hidden">
+      <nav class="flex-1 py-6 px-3 space-y-2 overflow-y-auto overflow-x-hidden">
         @for (item of navItems; track item.route) {
           <a [routerLink]="item.route"
              routerLinkActive="bg-white/10 text-white shadow-[inset_4px_0_0_0_#00f5ff]"
@@ -93,7 +82,6 @@ export const NAV_ITEMS: NavItem[] = [
           <div class="relative flex h-3 w-3 shrink-0">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-success opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-status-success"></span>
-            <span class="sr-only">System status: online</span>
           </div>
           <span class="text-sm font-medium text-text-secondary whitespace-nowrap transition-opacity duration-300"
                 [class.opacity-0]="collapsed$ | async"

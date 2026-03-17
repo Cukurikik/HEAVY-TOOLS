@@ -1,5 +1,5 @@
 {
-  "name": "",
-  "description": "",
-  "requestFramePermissions": []
+  "name": "HEAVY-TOOLS",
+  "description": "A comprehensive hybrid-online enterprise suite for video, audio, and image processing.",
+  "requestFramePermissions": ["camera", "microphone"]
 }

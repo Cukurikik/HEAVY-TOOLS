@@ -16,13 +16,10 @@ export interface Tool {
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="glass-panel rounded-xl p-6 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-glow group focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none"
-         role="button"
-         [attr.aria-label]="'Open ' + tool().label + ' tool'"
+    <div class="glass-panel rounded-xl p-6 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-glow group" 
          tabindex="0" 
          (click)="navigate()" 
-         (keydown.enter)="navigate()"
-         (keydown.space)="$event.preventDefault(); navigate()">
+         (keydown.enter)="navigate()">
       <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent-cyan/20 transition-colors duration-300">
         <mat-icon class="text-3xl text-text-secondary group-hover:text-accent-cyan transition-colors duration-300">{{ tool().icon }}</mat-icon>
       </div>

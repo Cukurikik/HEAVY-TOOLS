@@ -36,7 +36,7 @@ export type PdfErrorCode =
   | 'INVALID_FILE_TYPE'
   | 'FILE_CORRUPTED'
   | 'PASSWORD_REQUIRED'
-  | 'INCORRECT_PASSPHRASE'
+  | 'WRONG_PASSWORD'
   | 'PERMISSION_DENIED'
   | 'PAGE_OUT_OF_RANGE'
   | 'MERGE_FAILED'
@@ -85,7 +85,7 @@ export const PdfErrorMessages: Record<PdfErrorCode, string> = {
   INVALID_FILE_TYPE: 'Only PDF files are accepted',
   FILE_CORRUPTED: 'The PDF file appears to be corrupted or invalid',
   PASSWORD_REQUIRED: 'This PDF is encrypted — please enter the password',
-  INCORRECT_PASSPHRASE: 'Incorrect password — please try again',
+  WRONG_PASSWORD: 'Incorrect password — please try again',
   PERMISSION_DENIED: 'This PDF has restrictions that prevent this operation',
   PAGE_OUT_OF_RANGE: 'The specified page range is invalid or out of bounds',
   MERGE_FAILED: 'Failed to merge PDF files. Some files may be corrupted or encrypted.',
@@ -111,7 +111,7 @@ export const PdfErrorRetryable: Record<PdfErrorCode, boolean> = {
   WORKER_TIMEOUT: true,
   FILE_CORRUPTED: false,
   PASSWORD_REQUIRED: false,
-  INCORRECT_PASSPHRASE: true,
+  WRONG_PASSWORD: true,
   FILE_TOO_LARGE: false,
   INVALID_FILE_TYPE: false,
   PERMISSION_DENIED: false,

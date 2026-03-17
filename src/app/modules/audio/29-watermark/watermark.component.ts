@@ -7,13 +7,12 @@ import { AudioPlayerComponent } from '../shared/components/audio-player/audio-pl
 import { AudioExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { AudioProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { WaveformDisplayComponent } from '../shared/components/waveform-display/waveform-display.component';
-import { AudioTextInputComponent } from '../shared/components/text-input/text-input.component';
 import { audioWatermarkFeature, audioWatermarkActions } from './watermark.store';
 
 @Component({
   selector: 'app-29-watermark',
   standalone: true,
-  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent, AudioTextInputComponent],
+  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6">
@@ -37,15 +36,7 @@ import { audioWatermarkFeature, audioWatermarkActions } from './watermark.store'
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="flex gap-2 mb-4">
-              <button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localWmMode === 'embed'" (click)="localWmMode = 'embed'">
-                Embed
-              </button>
-              <button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localWmMode === 'detect'" (click)="localWmMode = 'detect'">
-                Detect
-              </button>
-            </div>
-            <app-audio-text-input label="Watermark Text" [(value)]="localWmText" [maxlength]="128" placeholder="Enter watermark text..."></app-audio-text-input>
+            <div class="flex gap-2 mb-4"><button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localWmMode==='embed'" (click)="localWmMode='embed'">Embed</button><button class="px-4 py-2 rounded-lg text-sm" [class.bg-cyan-500]="localWmMode==='detect'" (click)="localWmMode='detect'">Detect</button></div><div><span class="text-xs text-white/40" style="display: block;">Watermark Text</span><input type="text" class="w-full bg-white/5 rounded-lg px-3 py-2 text-white text-sm" [(ngModel)]="localWmText" maxlength="128" placeholder="Enter watermark text..."></div>
           </div>
 
           <!-- Processing -->
@@ -87,9 +78,7 @@ export class AudioWatermarkComponent implements OnDestroy {
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(audioWatermarkFeature.selectAudioWatermarkState);
-
-  localWmMode = 'embed';
-  localWmText = '';
+  localWmMode='embed';localWmText='';
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(audioWatermarkActions.loadFile({ file: files[0] }));

@@ -7,13 +7,12 @@ import { AudioPlayerComponent } from '../shared/components/audio-player/audio-pl
 import { AudioExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { AudioProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { WaveformDisplayComponent } from '../shared/components/waveform-display/waveform-display.component';
-import { AudioTextInputComponent } from '../shared/components/text-input/text-input.component';
 import { audioLooperFeature, audioLooperActions } from './looper.store';
 
 @Component({
   selector: 'app-19-looper',
   standalone: true,
-  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent, AudioTextInputComponent],
+  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6">
@@ -37,7 +36,7 @@ import { audioLooperFeature, audioLooperActions } from './looper.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div class="grid grid-cols-2 gap-4"><div><span class="text-xs text-white/40" style="display: block;">Crossfade (s)</span><input type="range" class="w-full accent-cyan-400" min="0" max="5" step="0.1" [(ngModel)]="localXfade"></div><app-audio-text-input label="Repeat Count" type="number" [(value)]="localRepeat" [min]="1" [max]="50"></app-audio-text-input></div>
+            <div class="grid grid-cols-2 gap-4"><div><span class="text-xs text-white/40" style="display: block;">Crossfade (s)</span><input type="range" class="w-full accent-cyan-400" min="0" max="5" step="0.1" [(ngModel)]="localXfade"></div><div><span class="text-xs text-white/40" style="display: block;">Repeat Count</span><input type="number" class="w-full bg-white/5 rounded-lg px-3 py-2 text-white text-sm" min="1" max="50" [(ngModel)]="localRepeat"></div></div>
           </div>
 
           <!-- Processing -->

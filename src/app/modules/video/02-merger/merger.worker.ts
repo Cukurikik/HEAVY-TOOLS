@@ -25,19 +25,13 @@ addEventListener('message', async (e: MessageEvent) => {
     
     // Feature specific logic
 const { clips = [], outputFormat = 'mp4' } = config;
-
-await Promise.all(clips.map(async (clip: { file?: string | File } | string | File, i: number) => {
-  const name = 'clip' + i + '.mp4';
-  const fileToFetch = typeof clip === 'object' && clip !== null && 'file' in clip && clip.file ? clip.file : clip;
-  await ffmpeg!.writeFile(name, await fetchFile(fileToFetch as string | File));
-}));
-
 let listContent = '';
 for (let i = 0; i < clips.length; i++) {
   const name = 'clip' + i + '.mp4';
+  ffmpeg.writeFile(name, await fetchFile(clips[i].file || clips[i]));
   listContent += 'file ' + name + '\n';
 }
-await ffmpeg.writeFile('list.txt', listContent);
+ffmpeg.writeFile('list.txt', listContent);
 const outName = 'merged.' + outputFormat;
 await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'list.txt', '-c', 'copy', outName]);
 const data = await ffmpeg.readFile(outName);

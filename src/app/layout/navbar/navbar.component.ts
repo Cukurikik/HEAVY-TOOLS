@@ -10,14 +10,13 @@ import { selectSystem } from '../../store/app.selectors';
   imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header role="banner" class="h-16 glass-panel border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-50 transition-all duration-300">
+    <header class="h-16 glass-panel border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-50 transition-all duration-300">
       
       <!-- Search Bar -->
       <div class="flex items-center gap-4 flex-1 max-w-md">
         <div class="relative w-full group">
           <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-accent-cyan transition-colors">search</mat-icon>
-          <input type="text" placeholder="Search tools, tasks, files..."
-                 aria-label="Search tools, tasks, and files"
+          <input type="text" placeholder="Search tools, tasks, files..." 
                  class="w-full bg-bg-elevated/50 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-cyan/50 focus:ring-1 focus:ring-accent-cyan/50 transition-all duration-300">
         </div>
       </div>
@@ -35,7 +34,7 @@ import { selectSystem } from '../../store/app.selectors';
         </div>
 
         <!-- Notifications -->
-        <button aria-label="Notifications" class="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:outline-none">
+        <button class="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors text-text-secondary hover:text-white">
           <mat-icon>notifications</mat-icon>
           <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent-pink animate-pulse"></span>
         </button>

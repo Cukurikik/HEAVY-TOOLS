@@ -6,20 +6,21 @@ import { ProgressRingComponent } from '../shared/components/progress-ring/progre
 import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { SlideshowActions, selectSlideshowState, selectSlideshowIsLoading, selectSlideshowCanProcess } from './slideshow.store';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
-import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-slideshow',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
+  imports: [CommonModule, FileDropZoneComponent, ProgressRingComponent, ExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-video-tool-layout
-      title="🎠 Slideshow Maker"
-      description="Turn multiple images into a video slideshow with transitions and Ken Burns effect"
-      gradientClass="from-amber-400 to-yellow-300">
-      <div leftPanel class="space-y-4">
-        <app-file-drop-zone accept="image/*" label="Drop images for slideshow" [multiple]="true" (filesSelected)="onImagesSelected($event)" />
+    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
+      <header class="space-y-1">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300">🎠 Slideshow Maker</h1>
+        <p class="text-white/50 text-sm">Turn multiple images into a video slideshow with transitions and Ken Burns effect</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <app-file-drop-zone accept="image/*" label="Drop images for slideshow" [multiple]="true" (filesSelected)="onImagesSelected($event)" />
 
           @if (images.length > 0) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -77,12 +78,13 @@ import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout
             </div>
           }
           @if ((state$ | async)?.status === 'error') { <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div> }
-      </div>
-      <div rightPanel class="space-y-4">
-        @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Creating..." [size]="120" /></div> }
+        </div>
+        <div class="space-y-4">
+          @if ((state$ | async)?.status === 'processing') { <div class="flex justify-center p-8"><app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Creating..." [size]="120" /></div> }
           @if ((state$ | async)?.status === 'done') { <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null" defaultFilename="omni_slideshow" /> }
+        </div>
       </div>
-    </app-video-tool-layout>
+    </div>
   ` })
 export class SlideshowComponent implements OnDestroy {
   private store = inject(Store); private bridge = inject(WorkerBridgeService);

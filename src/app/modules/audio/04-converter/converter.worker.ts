@@ -2,10 +2,8 @@
 
 addEventListener('message', (_event: MessageEvent) => {
   try {
-    const { inputData } = _event.data.config;
-
-    self.postMessage({ type: 'progress', value: 50 });
-    self.postMessage({ type: 'complete', data: inputData });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { inputData, _targetFormat } = _event.data.config;self.postMessage({type:'progress',value:50});self.postMessage({type:'complete',data:inputData});
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unknown worker error';
     self.postMessage({ type: 'error', message: msg, errorCode: 'WORKER_CRASHED' });
