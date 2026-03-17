@@ -8,3 +8,6 @@ addEventListener('message', (_event: MessageEvent) => {
     self.postMessage({ type: 'error', message: msg, errorCode: 'WORKER_CRASHED' });
   }
 });
+
+// Added to allow importing this worker in tests without TypeScript "not a module" error.
+export {};
