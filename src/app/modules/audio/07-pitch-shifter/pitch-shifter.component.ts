@@ -36,7 +36,24 @@ import { pitchShifterFeature, pitchShifterActions } from './pitch-shifter.store'
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
-            <div><span class="text-xs text-white/40" style="display: block;">Semitones (-12 to +12)</span><input type="range" class="w-full accent-purple-400" min="-12" max="12" step="1" [(ngModel)]="localSemitones"><p class="text-center text-lg font-bold" [class.text-green-400]="localSemitones>0" [class.text-red-400]="localSemitones<0">{{localSemitones > 0 ? '+' : ''}}{{localSemitones}} st</p></div>
+            <div>
+              <span class="text-xs text-white/40" style="display: block;">Semitones (-12 to +12)</span>
+              <input
+                type="range"
+                class="w-full accent-purple-400"
+                min="-12"
+                max="12"
+                step="1"
+                [(ngModel)]="localSemitones"
+              >
+              <p
+                class="text-center text-lg font-bold"
+                [class.text-green-400]="localSemitones>0"
+                [class.text-red-400]="localSemitones<0"
+              >
+                {{localSemitones > 0 ? '+' : ''}}{{localSemitones}} st
+              </p>
+            </div>
           </div>
 
           <!-- Processing -->
@@ -78,7 +95,7 @@ export class PitchShifterComponent implements OnDestroy {
   private store = inject(Store);
   private destroyRef = inject(DestroyRef);
   state$ = this.store.select(pitchShifterFeature.selectPitchShifterState);
-  localSemitones=0;
+  localSemitones = 0;
 
   onFilesSelected(files: File[]): void {
     this.store.dispatch(pitchShifterActions.loadFile({ file: files[0] }));
