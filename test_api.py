@@ -1,7 +1,12 @@
 import os
 import requests
+import sys
 
-key = "AQ.Ab8RN6IcjBXv7QN0-mKrhbRpn-qrLvJ25H4qWIJf2FJ1YtqBkg"
+key = os.environ.get("ANTHROPIC_API_KEY")
+
+if not key:
+    print("ANTHROPIC_API_KEY environment variable not set.")
+    sys.exit(1)
 
 # Try Anthropic
 try:
