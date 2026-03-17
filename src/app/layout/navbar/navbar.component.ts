@@ -10,13 +10,14 @@ import { selectSystem } from '../../store/app.selectors';
   imports: [CommonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <header class="h-16 glass-panel border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-50 transition-all duration-300">
+    <header role="banner" class="h-16 glass-panel border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-50 transition-all duration-300">
       
       <!-- Search Bar -->
       <div class="flex items-center gap-4 flex-1 max-w-md">
         <div class="relative w-full group">
           <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-accent-cyan transition-colors">search</mat-icon>
-          <input type="text" placeholder="Search tools, tasks, files..." 
+          <input type="text" placeholder="Search tools, tasks, files..."
+                 aria-label="Search tools, tasks, and files"
                  class="w-full bg-bg-elevated/50 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-cyan/50 focus:ring-1 focus:ring-accent-cyan/50 transition-all duration-300">
         </div>
       </div>

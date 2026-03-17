@@ -10416,3 +10416,52 @@ DEBUG nx::native::tasks::task_hasher: hash_plans COMPLETED in 3.3656ms - process
 [NX v22.5.4 Daemon Client] - 2026-03-17T09:53:08.890Z - [Messenger] Sending message type: POST_TASKS_EXECUTION
 [NX v22.5.4 Daemon Client] - 2026-03-17T09:53:08.891Z - [Messenger] Message sent
 [NX v22.5.4 Daemon Client] - 2026-03-17T09:53:08.892Z - [Messenger] Received message, length: 4
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.477Z - [Messenger] Received message, length: 675475
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.482Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.482Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.485Z - [Messenger] Received message, length: 85668
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.630Z - [ProjectGraphListener] Socket closed, triggering reconnection
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.638Z - [Messenger] Setting up socket listeners
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.638Z - [Messenger] listen() complete
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.638Z - [Messenger] Sending message type: REGISTER_PROJECT_GRAPH_LISTENER
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:26.639Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.589Z - [Messenger] Received message, length: 675475
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.598Z - [Messenger] Sending message type: GET_CONTEXT_FILE_DATA
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.598Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.603Z - [Messenger] Received message, length: 85668
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.789Z - [ProjectGraphListener] Socket closed, triggering reconnection
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.793Z - [Messenger] Setting up socket listeners
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.794Z - [Messenger] listen() complete
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.794Z - [Messenger] Sending message type: REGISTER_PROJECT_GRAPH_LISTENER
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:28.794Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:39.945Z - [Messenger] Setting up socket listeners
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:39.946Z - [Messenger] listen() complete
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:39.947Z - [Messenger] Sending message type: GET_NX_CONSOLE_STATUS
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:39.947Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.112Z - [Messenger] Received message, length: 22
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.162Z - [Messenger] Sending message type: REQUEST_PROJECT_GRAPH
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.169Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.181Z - [Messenger] Received message, length: 675482
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.189Z - [Messenger] Sending message type: PRE_TASKS_EXECUTION
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.189Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.191Z - [Messenger] Received message, length: 2
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.226Z - [Messenger] Sending message type: HASH_TASKS
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.226Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.244Z - [Messenger] Received message, length: 95956
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.252Z - [Messenger] Sending message type: GET_ESTIMATED_TASK_TIMINGS
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.252Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:40.254Z - [Messenger] Received message, length: 30
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:41.082Z - [Messenger] Setting up socket listeners
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:41.083Z - [Messenger] listen() complete
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:41.085Z - [Messenger] Sending message type: REQUEST_PROJECT_GRAPH
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:41.086Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:41.248Z - [Messenger] Received message, length: 675482
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.486Z - [Messenger] Sending message type: RECORD_OUTPUTS_HASH
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.487Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.487Z - [Messenger] Received message, length: 2
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.491Z - [Messenger] Sending message type: RECORD_TASK_RUNS
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.491Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.493Z - [Messenger] Received message, length: 4
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.495Z - [Messenger] Sending message type: POST_TASKS_EXECUTION
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.496Z - [Messenger] Message sent
+[NX v22.5.4 Daemon Client] - 2026-03-17T09:57:46.497Z - [Messenger] Received message, length: 4
