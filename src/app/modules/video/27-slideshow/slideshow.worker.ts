@@ -27,8 +27,9 @@ addEventListener('message', async (e: MessageEvent) => {
 const { images = [], durationPerImage = 3 } = config;
 const outName = 'slideshow.mp4';
 if (images.length === 0) throw new Error('No images specified');
-    // Pre-fetch all image files concurrently to reduce I/O wait time
-    const imageFiles = await Promise.all(images.map((img: any) => fetchFile(img.file || img)));
+// Pre-fetch all image files concurrently to reduce I/O wait time
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const imageFiles = await Promise.all(images.map((img: any) => fetchFile(img.file || img)));
 
 let listContent = '';
 for (let i = 0; i < images.length; i++) {

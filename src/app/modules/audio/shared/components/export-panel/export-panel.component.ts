@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import type { ExportFormat } from '../../types/audio.types';
 
 @Component({
   selector: 'app-audio-export-panel',

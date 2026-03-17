@@ -25,18 +25,18 @@ import { FormsModule } from '@angular/forms';
   `
 })
 export class AudioTextInputComponent {
-  @Input() label: string = '';
+  @Input() label = '';
   @Input() type: 'text' | 'number' = 'text';
-  @Input() placeholder: string = '';
+  @Input() placeholder = '';
   @Input() maxlength?: number;
   @Input() min?: number;
   @Input() max?: number;
   @Input() step?: number | string;
 
-  @Input() value: any;
-  @Output() valueChange = new EventEmitter<any>();
+  @Input() value: unknown;
+  @Output() valueChange = new EventEmitter<unknown>();
 
-  onValueChange(newValue: any) {
+  onValueChange(newValue: unknown) {
     this.value = newValue;
     this.valueChange.emit(newValue);
   }

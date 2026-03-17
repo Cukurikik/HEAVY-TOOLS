@@ -124,6 +124,14 @@
       "angular.json",
       "nx-angular-json-plugin"
     ],
+    "targets.serve.options": [
+      "angular.json",
+      "nx-angular-json-plugin"
+    ],
+    "targets.serve.options.allowedHosts": [
+      "angular.json",
+      "nx-angular-json-plugin"
+    ],
     "targets.serve.configurations.production": [
       "angular.json",
       "nx-angular-json-plugin"

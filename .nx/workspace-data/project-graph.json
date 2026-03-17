@@ -70,7 +70,13 @@
               }
             },
             "defaultConfiguration": "development",
-            "options": {},
+            "options": {
+              "allowedHosts": [
+                "localhost",
+                "127.0.0.1",
+                "0.0.0.0"
+              ]
+            },
             "parallelism": true
           },
           "test": {
@@ -14067,17 +14073,17 @@
       },
       {
         "source": "app",
+        "target": "npm:vitest",
+        "type": "static"
+      },
+      {
+        "source": "app",
         "target": "npm:motion",
         "type": "dynamic"
       },
       {
         "source": "app",
         "target": "npm:pdf-lib",
-        "type": "static"
-      },
-      {
-        "source": "app",
-        "target": "npm:vitest",
         "type": "static"
       },
       {
@@ -32408,5 +32414,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1773721192958
+  "computedAt": 1773738606688
 }

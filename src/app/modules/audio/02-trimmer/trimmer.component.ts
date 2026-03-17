@@ -37,7 +37,20 @@ import { trimmerFeature, trimmerActions } from './trimmer.store';
         @if ((state$ | async)?.inputFile) {
           <div class="bg-[#12121a] rounded-2xl p-6 border border-white/5 space-y-4">
             <app-waveform-display [waveformData]="(state$ | async)?.waveformData ?? null"></app-waveform-display>
+<<<<<<< HEAD
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-xs text-white/40" style="display: block;">Start Time</span>
+                <input type="number" class="w-full bg-white/5 rounded-lg px-3 py-2 text-white text-sm" [(ngModel)]="localStart" min="0" step="0.01">
+              </div>
+              <div>
+                <span class="text-xs text-white/40" style="display: block;">End Time</span>
+                <input type="number" class="w-full bg-white/5 rounded-lg px-3 py-2 text-white text-sm" [(ngModel)]="localEnd" min="0" step="0.01">
+              </div>
+            </div>
+=======
             <div class="grid grid-cols-2 gap-4"><app-audio-text-input label="Start Time" type="number" [(value)]="localStart" [min]="0" [step]="0.01"></app-audio-text-input><app-audio-text-input label="End Time" type="number" [(value)]="localEnd" [min]="0" [step]="0.01"></app-audio-text-input></div>
+>>>>>>> origin/refactor/audio-text-input-component-6912172973801441688
           </div>
 
           <!-- Processing -->

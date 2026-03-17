@@ -36,9 +36,12 @@ import { gifConverterFeature } from "./28-gif-converter/gif-converter.store";
 import { rawImageConverterFeature } from "./29-raw-image-converter/raw-image-converter.store";
 import { batchConverterFeature } from "./30-batch-converter/batch-converter.store";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createRoute(
   path: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   loadComponent: () => Promise<any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   feature: any,
   title: string,
   category: string,
