@@ -1,13 +1,17 @@
 /// <reference lib="webworker" />
 
-addEventListener('message', (_event: MessageEvent) => {
+addEventListener("message", (event: MessageEvent) => {
   try {
-    const { inputData } = _event.data.config;
+    const { inputData } = event.data.config;
 
-    self.postMessage({ type: 'progress', value: 50 });
-    self.postMessage({ type: 'complete', data: inputData });
+    self.postMessage({ type: "progress", value: 50 });
+    self.postMessage({ type: "complete", data: inputData });
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Unknown worker error';
-    self.postMessage({ type: 'error', message: msg, errorCode: 'WORKER_CRASHED' });
+    const msg = err instanceof Error ? err.message : "Unknown worker error";
+    self.postMessage({
+      type: "error",
+      message: msg,
+      errorCode: "WORKER_CRASHED",
+    });
   }
 });
