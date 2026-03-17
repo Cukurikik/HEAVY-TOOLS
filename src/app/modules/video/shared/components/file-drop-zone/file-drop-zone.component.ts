@@ -9,7 +9,9 @@ import type { VideoErrorCode } from '../../types/video.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="relative flex flex-col items-center justify-center w-full min-h-[180px] rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer select-none"
+      class="relative flex flex-col items-center justify-center w-full min-h-[180px] rounded-2xl border-2 border-dashed transition-all duration-300 cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
+      role="button"
+      [attr.aria-label]="label"
       [class.border-cyan-400]="isDragOver()"
       [class.bg-cyan-500/5]="isDragOver()"
       [class.border-red-500]="errorMsg()"
@@ -21,9 +23,10 @@ import type { VideoErrorCode } from '../../types/video.types';
       (dragover)="onDragOver($event)"
       (dragleave)="onDragLeave()"
       (drop)="onDrop($event)"
-      (click)="fileInput.click()" (keydown.enter)="fileInput.click()" tabindex="0"
+      (click)="fileInput.click()" (keydown.enter)="fileInput.click()"
+      (keydown.space)="$event.preventDefault(); fileInput.click()" tabindex="0"
     >
-      <input #fileInput type="file" [accept]="accept" [multiple]="multiple" class="hidden" (change)="onFileChange($event)" />
+      <input #fileInput type="file" [accept]="accept" [multiple]="multiple" class="hidden" (change)="onFileChange($event)" tabindex="-1" />
 
       @if (isValidating()) {
         <div class="flex flex-col items-center gap-3">
