@@ -32,7 +32,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
           <div class="w-px h-12 bg-white/10"></div>
           <div class="text-center">
             <div class="text-sm text-text-muted uppercase tracking-wider mb-1">Memory</div>
-            <div class="text-2xl font-mono text-accent-purple">{{ system()?.memoryUsage || 0 }}MB</div>
+            <div class="text-2xl font-mono text-accent-purple">{{ system().memoryUsage || 0 }}MB</div>
           </div>
         </div>
       </section>
@@ -53,7 +53,7 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
             <mat-icon>check_circle</mat-icon>
           </div>
           <div>
-            <div class="text-3xl font-mono font-bold">{{ tasks()?.totalCompleted || 0 }}</div>
+            <div class="text-3xl font-mono font-bold">{{ tasks().totalCompleted || 0 }}</div>
             <div class="text-sm text-text-secondary">Tasks Completed</div>
           </div>
         </div>
