@@ -8,24 +8,20 @@ import { ExportPanelComponent } from '../shared/components/export-panel/export-p
 import { AudioExtractorActions, selectAudioExtractorState, selectAudioExtractorIsLoading, selectAudioExtractorCanProcess } from './audioExtractor.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-audio-extractor',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent, VideoToolLayoutComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">
-          🎵 Audio Extractor
-        </h1>
-        <p class="text-white/50 text-sm">Extract audio track from video as MP3, WAV, or AAC</p>
-      </header>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
+    <app-video-tool-layout
+      title="🎵 Audio Extractor"
+      description="Extract audio track from video as MP3, WAV, or AAC"
+      gradientClass="from-amber-400 to-yellow-200">
+      <div leftPanel class="space-y-4">
+        <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
 
           @if ((state$ | async)?.videoMeta; as meta) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -79,10 +75,9 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           @if ((state$ | async)?.status === 'error') {
             <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div>
           }
-        </div>
-
-        <div class="space-y-4">
-          @if ((state$ | async)?.inputFile) {
+      </div>
+      <div rightPanel class="space-y-4">
+        @if ((state$ | async)?.inputFile) {
             <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
           }
           @if ((state$ | async)?.status === 'processing') {
@@ -94,9 +89,8 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
               [availableFormats]="[outputFormat]" defaultFilename="omni_audio" />
           }
-        </div>
       </div>
-    </div>
+    </app-video-tool-layout>
   ` })
 export class AudioExtractorComponent implements OnDestroy {
   private store = inject(Store);

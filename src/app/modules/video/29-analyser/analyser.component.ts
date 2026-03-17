@@ -6,21 +6,20 @@ import { VideoPreviewComponent } from '../shared/components/video-preview/video-
 import { AnalyserActions, selectAnalyserState, selectAnalyserIsLoading, selectAnalyserCanProcess } from './analyser.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { VideoToolLayoutComponent } from '../shared/components/video-tool-layout/video-tool-layout.component';
 
 @Component({
   selector: 'app-analyser',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent],
+  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, VideoToolLayoutComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
-      <header class="space-y-1">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-300 to-zinc-400">📊 Video Analyser</h1>
-        <p class="text-white/50 text-sm">Deep analysis of video properties: codec, bitrate, frame rate, audio channels</p>
-      </header>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop video to analyse" (filesSelected)="onFileSelected($event)" />
+    <app-video-tool-layout
+      title="📊 Video Analyser"
+      description="Deep analysis of video properties: codec, bitrate, frame rate, audio channels"
+      gradientClass="from-slate-300 to-zinc-400">
+      <div leftPanel class="space-y-4">
+        <app-file-drop-zone accept="video/*" label="Drop video to analyse" (filesSelected)="onFileSelected($event)" />
 
           @if ((state$ | async)?.videoMeta; as meta) {
             <div class="space-y-3">
@@ -63,12 +62,11 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
             </div>
           }
           @if ((state$ | async)?.status === 'error') { <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">⚠️ {{ (state$ | async)?.errorMessage }}</div> }
-        </div>
-        <div class="space-y-4">
-          @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
-        </div>
       </div>
-    </div>
+      <div rightPanel class="space-y-4">
+        @if ((state$ | async)?.inputFile) { <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" /> }
+      </div>
+    </app-video-tool-layout>
   ` })
 export class AnalyserComponent implements OnDestroy {
   private store = inject(Store); private ffmpeg = inject(FFmpegService); private bridge = inject(WorkerBridgeService);
