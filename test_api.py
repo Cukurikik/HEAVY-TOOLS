@@ -1,7 +1,11 @@
 import os
 import requests
 
-key = "AQ.Ab8RN6IcjBXv7QN0-mKrhbRpn-qrLvJ25H4qWIJf2FJ1YtqBkg"
+# Use environment variable for security
+key = os.environ.get("ANTHROPIC_API_KEY", "YOUR_API_KEY_HERE")
+
+if key == "YOUR_API_KEY_HERE":
+    print("Please set the ANTHROPIC_API_KEY environment variable.")
 
 # Try Anthropic
 try:

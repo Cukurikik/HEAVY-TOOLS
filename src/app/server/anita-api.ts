@@ -17,6 +17,12 @@ router.post('/chat', (req, res) => {
     return;
   }
 
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    res.status(500).json({ error: 'ANTHROPIC_API_KEY is not configured on the server.' });
+    return;
+  }
+
   // Create a temporary python script to call anita_core that reads from stdin
   const runCode = `
 import sys
@@ -32,7 +38,7 @@ print(response)
 
   // Inject user specific key
   const env = Object.assign({}, process.env, {
-    ANTHROPIC_API_KEY: "AQ.Ab8RN6IcjBXv7QN0-mKrhbRpn-qrLvJ25H4qWIJf2FJ1YtqBkg"
+    ANTHROPIC_API_KEY: apiKey
   });
 
   const pythonProcess = spawn('python3', ['-c', runCode], {
