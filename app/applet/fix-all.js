@@ -21,7 +21,7 @@ walk(root, (file) => {
     content = content.replace(/import\s*\{\s*ExportFormat\s*\}\s*from\s*['"][^'"]+['"];?\n?/g, '');
     
     // 2. Resolve unused config in services
-    content = content.replace(/config:\s*Record<string,\s*unknown>/g, '_config: Record<string, unknown>');
+    content = content.replace(/\bconfig:\s*Record<string,\s*unknown>/g, '_config: Record<string, unknown>');
     content = content.replace(/,\s*config:\s*Record<string,\s*unknown>/g, ', _config: Record<string, unknown>');
 
     // 3. Resolve unused variables in workers
