@@ -27,15 +27,13 @@ addEventListener('message', async (e: MessageEvent) => {
 const { images = [], durationPerImage = 3 } = config;
 const outName = 'slideshow.mp4';
 if (images.length === 0) throw new Error('No images specified');
-await Promise.all(images.map(async (img: { file?: string | File | Blob } | string | File | Blob, i: number) => {
-  const name = `img${i}.jpg`;
-  const fileToFetch = (typeof img === 'object' && img !== null && 'file' in img) ? img.file : img;
-  await ffmpeg!.writeFile(name, await fetchFile(fileToFetch as string | File | Blob));
-}));
+    // Pre-fetch all image files concurrently to reduce I/O wait time
+    const imageFiles = await Promise.all(images.map((img: any) => fetchFile(img.file || img)));
 
 let listContent = '';
 for (let i = 0; i < images.length; i++) {
   const name = `img${i}.jpg`;
+  await ffmpeg.writeFile(name, imageFiles[i]);
   listContent += `file '${name}'\nduration ${durationPerImage}\n`;
 }
 listContent += `file 'img${images.length-1}.jpg'\n`;
