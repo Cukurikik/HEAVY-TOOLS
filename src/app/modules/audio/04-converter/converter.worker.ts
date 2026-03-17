@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
-addEventListener('message', (_event: MessageEvent) => {
+addEventListener('message', (event: MessageEvent) => {
   try {
-    const { inputData } = _event.data.config;
+    const { inputData } = event.data.config;
 
     self.postMessage({ type: 'progress', value: 50 });
     self.postMessage({ type: 'complete', data: inputData });
