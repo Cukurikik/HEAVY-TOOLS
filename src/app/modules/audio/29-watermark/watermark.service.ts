@@ -26,6 +26,6 @@ export class AudioWatermarkService {
   async processAudio(file: File): Promise<Blob> {
     const buffer = await this.audioCtx.decodeFile(file);
     const wavData = this.renderer.encodeToWav(buffer);
-    return new Blob([new Uint8Array(wavData as unknown as ArrayBuffer)], { type: 'audio/wav' });
+    return new Blob([new Uint8Array(wavData as Uint8Array)], { type: 'audio/wav' });
   }
 }
