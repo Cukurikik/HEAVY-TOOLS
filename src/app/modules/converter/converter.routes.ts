@@ -3,7 +3,7 @@
 // File: src/app/modules/converter/converter.routes.ts
 // ============================================================
 
-import { Routes } from "@angular/router";
+import { Routes, Route } from "@angular/router";
 import { provideState } from "@ngrx/store";
 import { imageConverterFeature } from "./01-image-converter/image-converter.store";
 import { videoConverterFeature } from "./02-video-converter/video-converter.store";
@@ -36,20 +36,17 @@ import { gifConverterFeature } from "./28-gif-converter/gif-converter.store";
 import { rawImageConverterFeature } from "./29-raw-image-converter/raw-image-converter.store";
 import { batchConverterFeature } from "./30-batch-converter/batch-converter.store";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createRoute(
+function createRoute<F>(
   path: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  loadComponent: () => Promise<any>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  feature: any,
+  loadComponent: Route['loadComponent'],
+  feature: F,
   title: string,
   category: string,
-) {
+): Route {
   return {
     path,
     loadComponent,
-    providers: [provideState(feature)],
+    providers: [provideState(feature as Parameters<typeof provideState>[0])],
     title,
     data: { category },
   };

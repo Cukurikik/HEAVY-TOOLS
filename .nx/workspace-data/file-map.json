@@ -73,7 +73,7 @@
         },
         {
           "file": "app/applet/fix-all.js",
-          "hash": "4659975552640163738"
+          "hash": "16351488001493087980"
         },
         {
           "file": "app/applet/fix-lint-errors4.mjs",
@@ -166,6 +166,26 @@
           "hash": "17025243309378817914"
         },
         {
+          "file": "lint-results-utf8.json",
+          "hash": "10578083641202034851"
+        },
+        {
+          "file": "lint-results-utf8.txt",
+          "hash": "15221536441989165417"
+        },
+        {
+          "file": "lint-results.json",
+          "hash": "8806606286932600467"
+        },
+        {
+          "file": "lint-results.txt",
+          "hash": "5216822167940596447"
+        },
+        {
+          "file": "lint-results2.json",
+          "hash": "10141344897747944440"
+        },
+        {
           "file": "merge_branches.ps1",
           "hash": "1161141722441293333"
         },
@@ -175,7 +195,7 @@
         },
         {
           "file": "nx.json",
-          "hash": "9105709839985093550"
+          "hash": "12911179095435358662"
         },
         {
           "file": "nx_error.txt",
@@ -481,7 +501,7 @@
         },
         {
           "file": "src/app/modules/audio/02-trimmer/trimmer.component.ts",
-          "hash": "16509927413255701199",
+          "hash": "13827237178528724607",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -1057,7 +1077,7 @@
         },
         {
           "file": "src/app/modules/audio/15-analyser/analyser.worker.ts",
-          "hash": "15988327585916704696"
+          "hash": "7499658793814051463"
         },
         {
           "file": "src/app/modules/audio/15-analyser/index.ts",
@@ -1607,7 +1627,7 @@
         },
         {
           "file": "src/app/modules/audio/28-transcriber/transcriber.worker.ts",
-          "hash": "15433925827480863332"
+          "hash": "2987667960076028928"
         },
         {
           "file": "src/app/modules/audio/29-watermark/index.ts",
@@ -1615,7 +1635,7 @@
         },
         {
           "file": "src/app/modules/audio/29-watermark/watermark.component.ts",
-          "hash": "9354877922202797104",
+          "hash": "6879057452987246919",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -1748,7 +1768,7 @@
         },
         {
           "file": "src/app/modules/audio/shared/components/export-panel/export-panel.component.ts",
-          "hash": "9284378682137134858",
+          "hash": "15701805433364253470",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -1773,7 +1793,7 @@
         },
         {
           "file": "src/app/modules/audio/shared/components/text-input/text-input.component.ts",
-          "hash": "15571628538517332471",
+          "hash": "2750931762715970071",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -1870,6 +1890,13 @@
           ]
         },
         {
+          "file": "src/app/modules/converter/01-image-converter/image-converter.service.spec.ts",
+          "hash": "11503584099762363104",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
           "file": "src/app/modules/converter/01-image-converter/image-converter.service.ts",
           "hash": "415259804731395873",
           "deps": [
@@ -1909,6 +1936,13 @@
           "hash": "16332422314326048855",
           "deps": [
             "npm:zod"
+          ]
+        },
+        {
+          "file": "src/app/modules/converter/02-video-converter/video-converter.service.spec.ts",
+          "hash": "3432824232207091674",
+          "deps": [
+            "npm:vitest"
           ]
         },
         {
@@ -3011,7 +3045,7 @@
         },
         {
           "file": "src/app/modules/converter/converter.routes.ts",
-          "hash": "13955517970052366815",
+          "hash": "6039339658164615744",
           "deps": [
             "npm:@angular/router",
             "npm:@ngrx/store"
@@ -3059,7 +3093,7 @@
         },
         {
           "file": "src/app/modules/converter/shared/engine/ffmpeg.service.spec.ts",
-          "hash": "13553757087605976871",
+          "hash": "5052064348856006730",
           "deps": [
             "npm:@angular/core",
             "npm:vitest"
@@ -3118,6 +3152,13 @@
           "hash": "8151175346416361712"
         },
         {
+          "file": "src/app/modules/converter/shared/schemas/converter.schemas.spec.ts",
+          "hash": "5652864410246119325",
+          "deps": [
+            "npm:vitest"
+          ]
+        },
+        {
           "file": "src/app/modules/converter/shared/schemas/converter.schemas.ts",
           "hash": "9603926231800705344",
           "deps": [
@@ -3130,13 +3171,12 @@
         },
         {
           "file": "src/app/modules/dashboard/dashboard.component.ts",
-          "hash": "8251338026773987020",
+          "hash": "12252588526673917294",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
             "npm:@angular/material",
             "npm:@ngrx/store",
-            "npm:rxjs",
             [
               "npm:motion",
               "dynamic"
@@ -4595,7 +4635,7 @@
         },
         {
           "file": "src/app/modules/video/02-merger/merger.worker.ts",
-          "hash": "16809208911447765813",
+          "hash": "1481326290873473219",
           "deps": [
             "npm:@ffmpeg/ffmpeg",
             "npm:@ffmpeg/util"
@@ -4746,8 +4786,12 @@
           "hash": "5103226828359318016"
         },
         {
+          "file": "src/app/modules/video/07-speed-controller/speed-controller.component.html",
+          "hash": "10139179975660764064"
+        },
+        {
           "file": "src/app/modules/video/07-speed-controller/speed-controller.component.ts",
-          "hash": "7063586008972788876",
+          "hash": "5640954361797037755",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -5590,7 +5634,7 @@
         },
         {
           "file": "src/app/modules/video/27-slideshow/slideshow.worker.ts",
-          "hash": "5839124543830464536",
+          "hash": "4253997213999922540",
           "deps": [
             "npm:@ffmpeg/ffmpeg",
             "npm:@ffmpeg/util"

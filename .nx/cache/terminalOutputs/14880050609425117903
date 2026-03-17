@@ -1,0 +1,20 @@
+
+Linting "app"...
+[0m[0m
+[0m[4mC:\Users\IKYY\Downloads\HEAVY-TOOLS\src\app\modules\audio\15-analyser\analyser.worker.ts[24m[0m
+[0m  [2m3:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')[0m
+[0m[0m
+[0m[4mC:\Users\IKYY\Downloads\HEAVY-TOOLS\src\app\modules\audio\28-transcriber\transcriber.worker.ts[24m[0m
+[0m  [2m3:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')[0m
+[0m[0m
+[0m[4mC:\Users\IKYY\Downloads\HEAVY-TOOLS\src\app\modules\converter\converter.routes.ts[24m[0m
+[0m  [2m7:24[22m  [31merror[39m  'FeatureSlice' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m7:38[22m  [31merror[39m  'Action' is defined but never used        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 4 problems (2 errors, 2 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[31m[1m  0 errors and 2 warnings potentially fixable with the `--fix` option.[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
+Lint warnings found in the listed files.
+
+Lint errors found in the listed files.
+

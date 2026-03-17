@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx build app --skip-nx-cache",
-    "startTime": "2026-03-17T09:34:50.489Z",
-    "endTime": "2026-03-17T09:35:11.793Z",
+    "command": "nx lint app",
+    "startTime": "2026-03-17T09:44:11.399Z",
+    "endTime": "2026-03-17T09:44:16.870Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "app:build:production",
-      "target": "build",
+      "taskId": "app:lint",
+      "target": "lint",
       "projectName": "app",
-      "hash": "18381947720780734048",
-      "startTime": "2026-03-17T09:34:50.501Z",
-      "endTime": "2026-03-17T09:35:11.748Z",
+      "hash": "2303684583034348108",
+      "startTime": "2026-03-17T09:44:11.408Z",
+      "endTime": "2026-03-17T09:44:16.867Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0
