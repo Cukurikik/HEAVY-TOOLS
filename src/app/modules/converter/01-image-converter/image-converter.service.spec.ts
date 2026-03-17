@@ -30,9 +30,6 @@ describe('ImageConverterService', () => {
     });
 
     it('should fallback to filename if no extension and no mime type is present', () => {
-      // The current implementation returns the filename if there is no extension:
-      // const ext = file.name.split('.').pop()?.toLowerCase() ?? ''; // 'test'
-      // Therefore, if it has no extension, we expect the fallback behavior to happen.
       const file = new File([''], 'test', { type: '' });
       expect(service.detectInputFormat(file)).toBe('test');
     });
