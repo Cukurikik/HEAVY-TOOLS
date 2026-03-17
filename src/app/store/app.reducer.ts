@@ -94,26 +94,36 @@ export const appReducer = createReducer(
     }
   })),
   on(AppActions.completeTask, (state, { id }) => {
-    const task = state.tasks.active.find(t => t.id === id);
-    if (!task) return state;
+    const index = state.tasks.active.findIndex(t => t.id === id);
+    if (index === -1) return state;
+
+    const active = [...state.tasks.active];
+    const [task] = active.splice(index, 1);
     const completedTask = { ...task, status: 'success' as const, progress: 100 };
+
     return {
       ...state,
       tasks: {
-        active: state.tasks.active.filter(t => t.id !== id),
+        ...state.tasks,
+        active,
         history: [completedTask, ...state.tasks.history],
         totalCompleted: state.tasks.totalCompleted + 1
       }
     };
   }),
   on(AppActions.failTask, (state, { id }) => {
-    const task = state.tasks.active.find(t => t.id === id);
-    if (!task) return state;
+    const index = state.tasks.active.findIndex(t => t.id === id);
+    if (index === -1) return state;
+
+    const active = [...state.tasks.active];
+    const [task] = active.splice(index, 1);
     const failedTask = { ...task, status: 'error' as const };
+
     return {
       ...state,
       tasks: {
-        active: state.tasks.active.filter(t => t.id !== id),
+        ...state.tasks,
+        active,
         history: [failedTask, ...state.tasks.history],
         totalCompleted: state.tasks.totalCompleted
       }
