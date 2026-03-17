@@ -33,11 +33,13 @@ const imageFiles = await Promise.all(images.map((img: { file?: string | File } |
   return fetchFile(fileToFetch as string | File);
 }));
 
+// Write all image files concurrently to the virtual file system
+await Promise.all(images.map((_, i) => ffmpeg!.writeFile(`img${i}.jpg`, imageFiles[i])));
+
+// Build the sequential list content
 let listContent = '';
 for (let i = 0; i < images.length; i++) {
-  const name = `img${i}.jpg`;
-  await ffmpeg.writeFile(name, imageFiles[i]);
-  listContent += `file '${name}'\nduration ${durationPerImage}\n`;
+  listContent += `file 'img${i}.jpg'\nduration ${durationPerImage}\n`;
 }
 listContent += `file 'img${images.length-1}.jpg'\n`;
 ffmpeg.writeFile('list.txt', listContent);
