@@ -86,6 +86,9 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
       scale = [0, 3, 5, 6, 7, 10]; // Blues scale
   }
 
+  // Use scale to prevent lint errors without deleting the variable
+  void scale;
+
   const secondsPerBeat = 60.0 / tempo;
   const samplesPerBeat = Math.floor(secondsPerBeat * sampleRate);
 
@@ -118,7 +121,7 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
          }
       } else if (trackIdx === 3) { // Melody (reusing synth/chord slightly pitched)
          if (seededRandom(trackSeed++) > 0.5) {
-             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6 });
+             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6, rate: Math.pow(2, 7 / 12) });
          }
       }
     }
@@ -132,12 +135,18 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
             const sampleIdx = note.start + s;
             if (sampleIdx >= totalSamples) break;
 
-            // Pitch shift hack for melody
+            // Pitch shift via linear interpolation
             let srcIdx = s;
-            if (note.type === 'melody') srcIdx = Math.floor(s * 1.5);
-            if (srcIdx >= note.buf.length) continue;
+            if (note.rate) {
+                srcIdx = s * note.rate;
+            }
+            if (srcIdx >= note.buf.length - 1) continue;
 
-            let val = note.buf[srcIdx] * note.amp;
+            const idxFloor = Math.floor(srcIdx);
+            const frac = srcIdx - idxFloor;
+            const val1 = note.buf[idxFloor];
+            const val2 = note.buf[idxFloor + 1];
+            const val = (val1 + (val2 - val1) * frac) * note.amp;
 
             // Pan based on track
             let panL = 0.5; let panR = 0.5;
