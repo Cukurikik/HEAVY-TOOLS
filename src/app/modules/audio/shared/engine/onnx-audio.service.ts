@@ -1,20 +1,16 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class OnnxAudioService {
   readonly modelLoaded = signal(false);
   readonly downloadProgress = signal(0);
 
-  async loadModel(
-    modelUrl: string, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    modelName: string
-  ): Promise<unknown> {
+  async loadModel(modelUrl: string): Promise<unknown> {
     this.downloadProgress.set(0);
     try {
-      const ort = await import('onnxruntime-web');
+      const ort = await import("onnxruntime-web");
       const session = await ort.InferenceSession.create(modelUrl, {
-        executionProviders: ['wasm']
+        executionProviders: ["wasm"],
       });
       this.modelLoaded.set(true);
       this.downloadProgress.set(100);

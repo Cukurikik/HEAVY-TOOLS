@@ -3,9 +3,9 @@
 // File: src/app/modules/converter/shared/engine/libreoffice.service.ts
 // ============================================================
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ConverterLibreOfficeService {
   readonly isReady = signal(false);
 
@@ -16,12 +16,7 @@ export class ConverterLibreOfficeService {
   }
 
   /** Convert using LibreOffice engine (actual work in worker) */
-  async convert(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    file: File, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    targetFormat: string
-  ): Promise<Uint8Array> {
+  async convert(): Promise<Uint8Array> {
     // Stub — actual conversion happens in worker
     return new Uint8Array(0);
   }
