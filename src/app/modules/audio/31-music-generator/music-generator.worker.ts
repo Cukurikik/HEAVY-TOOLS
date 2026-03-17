@@ -69,14 +69,19 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
 
   // Basic constraints based on genre
   let tempo = 120; // BPM
+  let scale = [0, 2, 4, 5, 7, 9, 11]; // Major
   if (genre === 'lofi' || prompt.toLowerCase().includes('lofi') || prompt.toLowerCase().includes('chill')) {
     tempo = 80 + seededRandom(seed++) * 20;
+    scale = [0, 2, 3, 5, 7, 8, 10]; // Minor
   } else if (genre === 'electronic' || prompt.toLowerCase().includes('techno') || prompt.toLowerCase().includes('edm')) {
     tempo = 125 + seededRandom(seed++) * 15;
+    scale = [0, 2, 3, 5, 7, 8, 10]; // Minor
   } else if (genre === 'ambient' || prompt.toLowerCase().includes('ambient') || prompt.toLowerCase().includes('drone')) {
     tempo = 60 + seededRandom(seed++) * 30;
+    scale = [0, 2, 4, 7, 9]; // Pentatonic Major
   } else if (genre === 'rock' || prompt.toLowerCase().includes('metal')) {
       tempo = 110 + seededRandom(seed++) * 60;
+      scale = [0, 3, 5, 6, 7, 10]; // Blues scale
   }
 
   const secondsPerBeat = 60.0 / tempo;
@@ -93,25 +98,28 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
     for(let b=0; b < numBeats; b++) {
       if (trackIdx === 0) { // Drums
         if (genre === 'electronic' || b % 2 === 0 || seededRandom(trackSeed++) > 0.7) {
-            notes.push({ start: b * samplesPerBeat, buf: kickBuf, type: 'kick', amp: 0.8 });
+            notes.push({ start: b * samplesPerBeat, buf: kickBuf, type: 'kick', amp: 0.8, rate: 1.0 });
         }
         if (b % 2 !== 0 && seededRandom(trackSeed++) > 0.3) {
-            notes.push({ start: b * samplesPerBeat, buf: snareBuf, type: 'snare', amp: 0.7 });
+            notes.push({ start: b * samplesPerBeat, buf: snareBuf, type: 'snare', amp: 0.7, rate: 1.0 });
         }
         if (seededRandom(trackSeed++) > 0.4) {
-            notes.push({ start: Math.floor((b + 0.5) * samplesPerBeat), buf: hihatBuf, type: 'hihat', amp: 0.5 });
+            notes.push({ start: Math.floor((b + 0.5) * samplesPerBeat), buf: hihatBuf, type: 'hihat', amp: 0.5, rate: 1.0 });
         }
       } else if (trackIdx === 1) { // Bass
          if (b % 4 === 0 || seededRandom(trackSeed++) > 0.5) {
-             notes.push({ start: b * samplesPerBeat, buf: bassBuf, type: 'bass', amp: 0.8 });
+             notes.push({ start: b * samplesPerBeat, buf: bassBuf, type: 'bass', amp: 0.8, rate: 1.0 });
          }
       } else if (trackIdx === 2) { // Chords
          if (b % 4 === 0 || (b % 2 === 0 && seededRandom(trackSeed++) > 0.5)) {
-             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'chord', amp: 0.5 });
+             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'chord', amp: 0.5, rate: 1.0 });
          }
-      } else if (trackIdx === 3) { // Melody (reusing synth/chord slightly pitched)
+      } else if (trackIdx === 3) { // Melody (reusing synth/chord pitched via scale)
          if (seededRandom(trackSeed++) > 0.5) {
-             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6 });
+             const noteIdx = Math.floor(seededRandom(trackSeed++) * scale.length);
+             const semitones = scale[noteIdx] + 12; // One octave up
+             const rate = Math.pow(2, semitones / 12);
+             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6, rate });
          }
       }
     }
@@ -121,16 +129,26 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
         const note = notes[i];
         if (!note.buf || note.buf.length === 0) continue;
 
-        for (let s = 0; s < note.buf.length; s++) {
+        const rate = note.rate || 1.0;
+        const durationSamples = Math.floor(note.buf.length / rate);
+
+        for (let s = 0; s < durationSamples; s++) {
             const sampleIdx = note.start + s;
             if (sampleIdx >= totalSamples) break;
 
-            // Pitch shift hack for melody
-            let srcIdx = s;
-            if (note.type === 'melody') srcIdx = Math.floor(s * 1.5);
-            if (srcIdx >= note.buf.length) continue;
+            // Linear interpolation for pitch shifting
+            const pos = s * rate;
+            const i1 = Math.floor(pos);
+            const i2 = i1 + 1;
+            const frac = pos - i1;
 
-            const val = note.buf[srcIdx] * note.amp;
+            if (i1 >= note.buf.length) break;
+
+            let val = note.buf[i1];
+            if (i2 < note.buf.length) {
+                val = val * (1 - frac) + note.buf[i2] * frac;
+            }
+            val *= note.amp;
 
             // Pan based on track
             let panL = 0.5; let panR = 0.5;
@@ -152,8 +170,7 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
 
   // Soft Clip / Limiter
   for (let i = 0; i < outBuf.length; i++) {
-      const x = outBuf[i];
-      outBuf[i] = x < -3 ? -1 : (x > 3 ? 1 : x * (27 + x * x) / (27 + 9 * x * x));
+      outBuf[i] = Math.tanh(outBuf[i]);
   }
 
   onProgress(90);
