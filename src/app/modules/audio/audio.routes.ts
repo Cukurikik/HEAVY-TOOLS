@@ -4,6 +4,9 @@
 // ============================================================
 
 import { Routes } from '@angular/router';
+import { provideState } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { musicGeneratorFeature, MusicGeneratorEffects } from './31-music-generator/music-generator.store';
 
 export const AUDIO_ROUTES: Routes = [
   { path: 'recorder',       loadComponent: () => import('./01-recorder/recorder.component').then(m => m.RecorderComponent),              title: 'Audio Recorder — Omni-Tool',       data: { category: 'basic' } },
@@ -36,5 +39,15 @@ export const AUDIO_ROUTES: Routes = [
   { path: 'transcriber',    loadComponent: () => import('./28-transcriber/transcriber.component').then(m => m.TranscriberComponent),      title: 'Audio Transcriber — Omni-Tool',    data: { category: 'ai' } },
   { path: 'watermark',      loadComponent: () => import('./29-watermark/watermark.component').then(m => m.AudioWatermarkComponent),      title: 'Audio Watermark — Omni-Tool',      data: { category: 'pro' } },
   { path: 'stem-splitter',  loadComponent: () => import('./30-stem-splitter/stem-splitter.component').then(m => m.StemSplitterComponent), title: 'AI Stem Splitter — Omni-Tool',     data: { category: 'ai' } },
+  {
+      path: 'music-generator',
+      loadComponent: () => import('./31-music-generator/music-generator.component').then(m => m.MusicGeneratorComponent),
+      providers: [
+        provideState(musicGeneratorFeature),
+        provideEffects(MusicGeneratorEffects)
+      ],
+      title: 'Music AI Generator — Omni-Tool',
+      data: { category: 'ai' }
+    },
   { path: '', redirectTo: 'recorder', pathMatch: 'full' }
 ];
