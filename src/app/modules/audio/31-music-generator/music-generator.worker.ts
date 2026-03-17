@@ -111,7 +111,7 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
          }
       } else if (trackIdx === 3) { // Melody (reusing synth/chord slightly pitched)
          if (seededRandom(trackSeed++) > 0.5) {
-             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6 });
+             notes.push({ start: b * samplesPerBeat, buf: chordBuf, type: 'melody', amp: 0.6, rate: 1.5 });
          }
       }
     }
@@ -121,16 +121,22 @@ async function synthesizeMusic(prompt: string, durationSec: number, genre: strin
         const note = notes[i];
         if (!note.buf || note.buf.length === 0) continue;
 
-        for (let s = 0; s < note.buf.length; s++) {
+        // Calculate max source samples based on rate
+        const rate = ('rate' in note) ? (note as {rate: number}).rate : 1.0;
+        const outSamples = Math.floor(note.buf.length / rate);
+
+        for (let s = 0; s < outSamples; s++) {
             const sampleIdx = note.start + s;
             if (sampleIdx >= totalSamples) break;
 
-            // Pitch shift hack for melody
-            let srcIdx = s;
-            if (note.type === 'melody') srcIdx = Math.floor(s * 1.5);
-            if (srcIdx >= note.buf.length) continue;
+            // Resampling via linear interpolation
+            const srcIdx = s * rate;
+            const idx1 = Math.floor(srcIdx);
+            const idx2 = Math.min(idx1 + 1, note.buf.length - 1);
+            const frac = srcIdx - idx1;
 
-            const val = note.buf[srcIdx] * note.amp;
+            const srcVal = note.buf[idx1] * (1 - frac) + note.buf[idx2] * frac;
+            const val = srcVal * note.amp;
 
             // Pan based on track
             let panL = 0.5; let panR = 0.5;
