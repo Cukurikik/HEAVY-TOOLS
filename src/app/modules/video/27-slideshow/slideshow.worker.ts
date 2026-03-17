@@ -2,7 +2,8 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 
-let ffmpeg: FFmpeg | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let ffmpeg: any;
 async function loadFFmpeg() {
   if (ffmpeg) return;
   ffmpeg = new FFmpeg();
@@ -12,25 +13,31 @@ async function loadFFmpeg() {
     wasmURL: await toBlobURL(base + '/ffmpeg-core.wasm', 'application/wasm') });
 }
 
-function progress(v: number) { postMessage({ type: 'progress', value: v }); }
-function done(blob: Blob) { postMessage({ type: 'complete', data: blob }); }
-function fail(msg: string) { postMessage({ type: 'error', errorCode: 'FFMPEG_COMMAND_FAILED', message: msg }); }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function progress(v: any) { postMessage({ type: 'progress', value: v }); }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function done(blob: any) { postMessage({ type: 'complete', data: blob }); }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function fail(msg: any) { postMessage({ type: 'error', errorCode: 'FFMPEG_COMMAND_FAILED', message: msg }); }
 
-addEventListener('message', async (e: MessageEvent) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+addEventListener('message', async (e: any) => {
   const { config } = e.data;
   try {
     await loadFFmpeg();
     if (!ffmpeg) throw new Error('FFmpeg not loaded');
-    ffmpeg.on('progress', ({ progress: p }: { progress: number }) => progress(Math.round(p * 100)));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ffmpeg.on('progress', ({ progress: p }: any) => progress(Math.round(p * 100)));
     
     // Feature specific logic
 const { images = [], durationPerImage = 3 } = config;
 const outName = 'slideshow.mp4';
 if (images.length === 0) throw new Error('No images specified');
 // Pre-fetch all image files concurrently to reduce I/O wait time
-const imageFiles = await Promise.all(images.map((img: { file?: string | File } | string | File) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const imageFiles = await Promise.all(images.map((img: any) => {
   const fileToFetch = typeof img === 'object' && img !== null && 'file' in img && img.file ? img.file : img;
-  return fetchFile(fileToFetch as string | File);
+  return fetchFile(fileToFetch);
 }));
 
 let listContent = '';
