@@ -4,10 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
 import { selectSystem, selectTasks } from '../../store/app.selectors';
 import { map } from 'rxjs/operators';
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/fix/code-health-dashboard-conditions-15533403856965125280
 import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-card.component';
 
 @Component({
