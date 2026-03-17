@@ -6,9 +6,7 @@ export class OnnxAudioService {
   readonly downloadProgress = signal(0);
 
   async loadModel(
-    modelUrl: string, 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    modelName: string
+    modelUrl: string
   ): Promise<unknown> {
     this.downloadProgress.set(0);
     try {
