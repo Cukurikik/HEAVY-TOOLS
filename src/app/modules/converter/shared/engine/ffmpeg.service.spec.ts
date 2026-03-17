@@ -52,8 +52,7 @@ describe('ConverterFFmpegService', () => {
       // After load, it should return the mocked FFmpeg instance
       const instance = service.getInstance();
       expect(instance).toBeTruthy();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((instance as any).load).toBeDefined();
+      expect((instance as { load?: unknown }).load).toBeDefined();
     });
   });
 });

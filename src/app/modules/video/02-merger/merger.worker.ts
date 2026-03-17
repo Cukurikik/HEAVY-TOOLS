@@ -26,10 +26,10 @@ addEventListener('message', async (e: MessageEvent) => {
     // Feature specific logic
 const { clips = [], outputFormat = 'mp4' } = config;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-await Promise.all(clips.map(async (clip: any, i: number) => {
+await Promise.all(clips.map(async (clip: { file?: string | File } | string | File, i: number) => {
   const name = 'clip' + i + '.mp4';
-  await ffmpeg!.writeFile(name, await fetchFile(clip.file || clip));
+  const fileToFetch = typeof clip === 'object' && clip !== null && 'file' in clip && clip.file ? clip.file : clip;
+  await ffmpeg!.writeFile(name, await fetchFile(fileToFetch as string | File));
 }));
 
 let listContent = '';
