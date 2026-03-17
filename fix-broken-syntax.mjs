@@ -49,7 +49,7 @@ for (const rootDir of rootDirs) {
       // audio/04-converter/converter.worker.ts
       if (filepath.endsWith('audio/04-converter/converter.worker.ts')) {
         if (content.includes('_targetFormat') && !content.includes('eslint-disable')) {
-          content = content.replace(/const\{inputData,_targetFormat\}=_event\.data\.config;/, '// eslint-disable-next-line @typescript-eslint/no-unused-vars\n    const { inputData, _targetFormat } = _event.data.config;');
+          content = content.replace(/const\s*\{\s*inputData\s*,\s*_targetFormat\s*\}\s*=\s*_event\.data\.config;/, 'const { inputData } = _event.data.config;');
           changed = true;
         }
       }
@@ -57,7 +57,7 @@ for (const rootDir of rootDirs) {
       // audio/15-analyser/analyser.worker.ts and audio/28-transcriber/transcriber.worker.ts
       if (filepath.endsWith('audio/15-analyser/analyser.worker.ts') || filepath.endsWith('audio/28-transcriber/transcriber.worker.ts')) {
         if (content.includes('(_event: MessageEvent)') && !content.includes('eslint-disable')) {
-          content = content.replace(/addEventListener\('message', \(_event: MessageEvent\) => \{/, '// eslint-disable-next-line @typescript-eslint/no-unused-vars\naddEventListener(\'message\', (event: MessageEvent) => {');
+          content = content.replace(/addEventListener\('message', \(_event: MessageEvent\) => \{/, 'addEventListener(\'message\', () => {');
           changed = true;
         }
       }
@@ -65,7 +65,7 @@ for (const rootDir of rootDirs) {
       // audio/shared/engine/onnx-audio.service.ts
       if (filepath.endsWith('audio/shared/engine/onnx-audio.service.ts')) {
         if (content.includes('_modelName: string') && !content.includes('eslint-disable')) {
-          content = content.replace(/async loadModel\(modelUrl: string, _modelName: string\)/, 'async loadModel(\n    modelUrl: string, \n    // eslint-disable-next-line @typescript-eslint/no-unused-vars\n    modelName: string\n  )');
+          content = content.replace(/async loadModel\(modelUrl: string, _modelName: string\)/, 'async loadModel(modelUrl: string)');
           changed = true;
         }
       }
@@ -73,7 +73,7 @@ for (const rootDir of rootDirs) {
       // converter/shared/engine/libreoffice.service.ts
       if (filepath.endsWith('converter/shared/engine/libreoffice.service.ts')) {
         if (content.includes('_file: File') && !content.includes('eslint-disable')) {
-          content = content.replace(/async convert\(_file: File, _targetFormat: string\)/, 'async convert(\n    // eslint-disable-next-line @typescript-eslint/no-unused-vars\n    file: File, \n    // eslint-disable-next-line @typescript-eslint/no-unused-vars\n    targetFormat: string\n  )');
+          content = content.replace(/async convert\(_file: File, _targetFormat: string\)/, 'async convert()');
           changed = true;
         }
       }
@@ -81,7 +81,7 @@ for (const rootDir of rootDirs) {
       // pdf/shared/engine/opfs.service.ts
       if (filepath.endsWith('pdf/shared/engine/opfs.service.ts')) {
         if (content.includes('_path: string') && !content.includes('eslint-disable')) {
-          content = content.replace(/async exists\(_path: string\)/, 'async exists(\n    // eslint-disable-next-line @typescript-eslint/no-unused-vars\n    path: string\n  )');
+          content = content.replace(/async exists\(_path: string\)/, 'async exists()');
           changed = true;
         }
       }
@@ -127,7 +127,7 @@ for (const rootDir of rootDirs) {
       // 6. Fix specific opfs.service.ts issues
       if (filepath.endsWith('pdf/shared/engine/opfs.service.ts')) {
         if (content.includes('_path: string') && !content.includes('eslint-disable')) {
-          content = content.replace(/async getFile\(_path: string\)/, 'async getFile(\n    // eslint-disable-next-line @typescript-eslint/no-unused-vars\n    path: string\n  )');
+          content = content.replace(/async getFile\(_path: string\)/, 'async getFile()');
           changed = true;
         }
       }
