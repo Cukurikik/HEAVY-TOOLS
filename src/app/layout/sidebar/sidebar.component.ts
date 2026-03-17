@@ -15,6 +15,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
+  { label: 'A.N.I.T.A',    icon: 'smart_toy',   route: '/anita',     badge: 'AI' },
   { label: 'Video Engine', icon: 'movie',       route: '/video',     badge: '30+' },
   { label: 'Audio Studio', icon: 'music_note',  route: '/audio',     badge: '20+' },
   { label: 'Image Matrix', icon: 'image',       route: '/image',     badge: '10+' },
