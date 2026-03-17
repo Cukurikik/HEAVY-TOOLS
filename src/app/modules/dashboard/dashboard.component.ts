@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
 import { selectSystem, selectTasks } from '../../store/app.selectors';
+import { map } from 'rxjs/operators';
 import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-card.component';
 
 @Component({
@@ -95,22 +96,22 @@ import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">FFmpeg Engine</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.ffmpegLoaded" [class.text-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.ffmpegLoaded" [class.bg-status-warning]="(system$ | async)?.ffmpegLoaded === false || (system$ | async)?.ffmpegLoaded === null || (system$ | async)?.ffmpegLoaded === undefined"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.ffmpegLoaded" [class.text-status-warning]="isFfmpegStandby$ | async">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.ffmpegLoaded" [class.bg-status-warning]="isFfmpegStandby$ | async"></span>
               {{ (system$ | async)?.ffmpegLoaded ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">ONNX Runtime</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.onnxLoaded" [class.text-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.onnxLoaded" [class.bg-status-warning]="(system$ | async)?.onnxLoaded === false || (system$ | async)?.onnxLoaded === null || (system$ | async)?.onnxLoaded === undefined"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.onnxLoaded" [class.text-status-warning]="isOnnxStandby$ | async">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.onnxLoaded" [class.bg-status-warning]="isOnnxStandby$ | async"></span>
               {{ (system$ | async)?.onnxLoaded ? 'Online' : 'Standby' }}
             </span>
           </div>
           <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
             <span class="text-text-secondary">OPFS Storage</span>
-            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.opfsAvailable" [class.text-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined">
-              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.opfsAvailable" [class.bg-status-error]="(system$ | async)?.opfsAvailable === false || (system$ | async)?.opfsAvailable === null || (system$ | async)?.opfsAvailable === undefined"></span>
+            <span class="flex items-center gap-2 text-sm font-medium" [class.text-status-success]="(system$ | async)?.opfsAvailable" [class.text-status-error]="isOpfsUnavailable$ | async">
+              <span class="w-2 h-2 rounded-full" [class.bg-status-success]="(system$ | async)?.opfsAvailable" [class.bg-status-error]="isOpfsUnavailable$ | async"></span>
               {{ (system$ | async)?.opfsAvailable ? 'Available' : 'Unavailable' }}
             </span>
           </div>
@@ -132,6 +133,10 @@ export class DashboardComponent {
   
   system$ = this.store.select(selectSystem);
   tasks$ = this.store.select(selectTasks);
+
+  isFfmpegStandby$ = this.system$.pipe(map(s => s?.ffmpegLoaded === false || s?.ffmpegLoaded === null || s?.ffmpegLoaded === undefined));
+  isOnnxStandby$ = this.system$.pipe(map(s => s?.onnxLoaded === false || s?.onnxLoaded === null || s?.onnxLoaded === undefined));
+  isOpfsUnavailable$ = this.system$.pipe(map(s => s?.opfsAvailable === false || s?.opfsAvailable === null || s?.opfsAvailable === undefined));
 
   quickTools: Tool[] = [
     { id: 'trim', label: 'Video Trimmer', icon: 'content_cut', category: 'basic', status: 'stable' },
