@@ -7,12 +7,13 @@ import { AudioPlayerComponent } from '../shared/components/audio-player/audio-pl
 import { AudioExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { AudioProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { WaveformDisplayComponent } from '../shared/components/waveform-display/waveform-display.component';
+import { AudioTextInputComponent } from '../shared/components/text-input/text-input.component';
 import { audioWatermarkFeature, audioWatermarkActions } from './watermark.store';
 
 @Component({
   selector: 'app-29-watermark',
   standalone: true,
-  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent],
+  imports: [CommonModule, FormsModule, AudioDropZoneComponent, AudioPlayerComponent, AudioExportPanelComponent, AudioProgressRingComponent, WaveformDisplayComponent, AudioTextInputComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6">
@@ -44,10 +45,7 @@ import { audioWatermarkFeature, audioWatermarkActions } from './watermark.store'
                 Detect
               </button>
             </div>
-            <div>
-              <span class="text-xs text-white/40" style="display: block;">Watermark Text</span>
-              <input type="text" class="w-full bg-white/5 rounded-lg px-3 py-2 text-white text-sm" [(ngModel)]="localWmText" maxlength="128" placeholder="Enter watermark text...">
-            </div>
+            <app-audio-text-input label="Watermark Text" [(value)]="localWmText" [maxlength]="128" placeholder="Enter watermark text..."></app-audio-text-input>
           </div>
 
           <!-- Processing -->

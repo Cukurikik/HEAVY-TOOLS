@@ -141,6 +141,8 @@ export class DashboardComponent {
   isOnline = computed(() => this.system()?.networkStatus === 'online');
   isOffline = computed(() => this.system()?.networkStatus === 'offline');
 
+
+
   quickTools: Tool[] = [
     { id: 'trim', label: 'Video Trimmer', icon: 'content_cut', category: 'basic', status: 'stable' },
     { id: 'convert', label: 'Format Converter', icon: 'sync', category: 'basic', status: 'stable' },
