@@ -97,13 +97,11 @@ lalu langsung ke kode lengkapnya."""
 
 class ANITAAssistant:
     def __init__(self, api_key: Optional[str] = None):
-        # Override to user-provided key for Jules integration
-        self.api_key = "AQ.Ab8RN6IcjBXv7QN0-mKrhbRpn-qrLvJ25H4qWIJf2FJ1YtqBkg"
+        # Use provided key or fallback to environment variable
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
 
-        # In case the user updates .env
-        env_key = os.environ.get("ANTHROPIC_API_KEY")
-        if env_key and env_key != "":
-            self.api_key = env_key
+        if not self.api_key:
+            raise ValueError("ANTHROPIC_API_KEY environment variable or api_key argument must be provided")
 
         self.client = anthropic.Anthropic(api_key=self.api_key)
         self.history = []
