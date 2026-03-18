@@ -7,7 +7,7 @@ export class TrimmerService {
   }
   validate(start: number, end: number): string | null {
     if (end <= start) return 'End time must be after start time';
-    if ((end - start) < 0.1) return 'Clip must be at least 0.1 seconds';
+    if (Number((end - start).toFixed(2)) < 0.1) return 'Clip must be at least 0.1 seconds';
     return null;
   }
   formatTime(s: number): string {
