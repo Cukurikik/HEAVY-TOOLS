@@ -4,12 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToolCardComponent, Tool } from '../../shared/components/tool-card/tool-card.component';
 
 export const IMAGE_TOOLS: Tool[] = [
-  { id: 'upscale',    label: 'AI Upscaler',      icon: 'rocket_launch', category: 'ai',       status: 'experimental' },
-  { id: 'heic',       label: 'HEIC Converter',   icon: 'image',        category: 'basic',    status: 'stable' },
-  { id: 'filter',     label: 'WebGL Filters',    icon: 'filter_b_and_w', category: 'advanced', status: 'stable' },
-  { id: 'ocr',        label: 'WASM OCR',         icon: 'document_scanner', category: 'ai',       status: 'beta' },
-  { id: 'pdf',        label: 'PDF Engine',       icon: 'picture_as_pdf', category: 'pro',      status: 'stable' },
-  { id: 'compress',   label: 'Smart Compress',   icon: 'compress',     category: 'basic',    status: 'stable' },
+  { id: 'ai-generator', label: 'AI Image Generator', icon: 'auto_awesome', category: 'ai',       status: 'experimental' },
 ];
 
 @Component({
@@ -24,13 +19,13 @@ export const IMAGE_TOOLS: Tool[] = [
           <h1 class="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan to-status-success mb-2">
             Image Matrix
           </h1>
-          <p class="text-text-secondary">GPU-accelerated image processing and AI vision.</p>
+          <p class="text-text-secondary">GPU-accelerated image processing and AI vision tools.</p>
         </div>
       </header>
 
       <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         @for (tool of imageTools; track tool.id) {
-          <app-tool-card [tool]="tool" />
+          <app-tool-card [tool]="tool" basePath="image" />
         }
       </section>
     </div>
