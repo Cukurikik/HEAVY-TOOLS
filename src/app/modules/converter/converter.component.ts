@@ -27,7 +27,7 @@ export const CONVERTER_TOOLS: Tool[] = [
 
       <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         @for (tool of converterTools; track tool.id) {
-          <app-tool-card [tool]="tool" />
+          <app-tool-card [tool]="tool" basePath="converter" />
         }
       </section>
     </div>

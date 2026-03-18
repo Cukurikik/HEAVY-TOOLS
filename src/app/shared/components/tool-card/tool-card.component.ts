@@ -37,7 +37,8 @@ export class ToolCardComponent {
   basePath = input<string>('video');
 
   navigate() {
-    this.router.navigate([this.basePath(), this.tool().id]);
+    const base = this.basePath().startsWith('/') ? this.basePath() : '/' + this.basePath();
+    this.router.navigate([base, this.tool().id]);
   }
 
   getStatusClass(status: string): string {
