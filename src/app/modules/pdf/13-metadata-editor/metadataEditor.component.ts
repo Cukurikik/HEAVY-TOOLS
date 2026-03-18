@@ -2,6 +2,7 @@ import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 import { 
     PdfDropZoneComponent, 
     PdfPreviewComponent, 
