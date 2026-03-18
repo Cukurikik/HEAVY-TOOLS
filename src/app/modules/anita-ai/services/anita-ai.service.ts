@@ -34,17 +34,9 @@ export class AnitaAiService {
   constructor(private http: HttpClient) {}
 
   async sendMessage(message: string, history: AnitaMessage[] = []): Promise<AnitaMessage> {
-    // Get API key from environment variable during build time or window object in browser
-    // Added null check for process.env to prevent runtime errors
-    const apiKey = typeof window !== 'undefined' 
-      ? (window as any)['ALIBABA_CLOUD_API_KEY'] || (window as any)['GEMINI_API_KEY']
-      : (process.env && (process.env['ALIBABA_CLOUD_API_KEY'] || process.env['GEMINI_API_KEY']));
-      
-    if (!apiKey) {
-      throw new Error('ALIBABA_CLOUD_API_KEY is not configured');
-    }
+    const apiKey = 'sk-e391a1e39ed048e1ac26d158b379b857';
 
-    // Prepare the messages array including system instruction and history
+    // Prepare messages for Qwen API (OpenAI compatible format)
     const messages = [
       { role: 'system', content: this.systemInstruction },
       ...history.map(msg => ({
@@ -55,35 +47,25 @@ export class AnitaAiService {
     ];
 
     try {
-      // Using Google Generative AI API via proxy
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       });
 
-      // Call to Google's API 
-      const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' + apiKey;
+      // Alibaba Cloud DashScope (Qwen) Compatible API Endpoint
+      const url = 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions';
       
       const body = {
-        contents: [{
-          parts: [{
-            text: message
-          }]
-        }],
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-            threshold: "BLOCK_NONE"
-          }
-        ]
+        model: 'qwen-max', 
+        messages: messages
       };
       
       const response = await lastValueFrom(
         this.http.post<any>(url, body, { headers })
       );
 
-      if (response && response.candidates && response.candidates.length > 0) {
-        const text = response.candidates[0].content.parts[0].text;
+      if (response && response.choices && response.choices.length > 0) {
+        const text = response.choices[0].message.content;
         return {
           id: uuidv4(),
           role: 'assistant',
@@ -97,7 +79,6 @@ export class AnitaAiService {
     } catch (error: any) {
       console.error('Error calling Alibaba Cloud Qwen API:', error);
       
-      // Return an error message as an AnitaMessage
       return {
         id: uuidv4(),
         role: 'assistant',

@@ -14,12 +14,10 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 
 const localIps = ['localhost', '127.0.0.1'];
-const nets = networkInterfaces();
-for (const name of Object.keys(nets)) {
-  for (const net of nets[name] || []) {
-    if (net.family === 'IPv4' || net.family === 'IPv6') {
-      localIps.push(net.address);
-    }
+const nets: any = networkInterfaces();
+for (const name in nets) {
+  for (const net of nets[name]) {
+    localIps.push(net.address);
   }
 }
 
