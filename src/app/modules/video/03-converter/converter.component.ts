@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -158,7 +159,7 @@ export class ConverterComponent implements OnDestroy {
   outputFileUrl = signal<string | null>(null);
 
   constructor() {
-    this.state$.subscribe(state => {
+    this.state$.pipe(take(1)).subscribe(state => {
       if (state.inputFile && !this.inputFileUrl()) {
         this.inputFileUrl.set(URL.createObjectURL(state.inputFile));
       } else if (!state.inputFile && this.inputFileUrl()) {

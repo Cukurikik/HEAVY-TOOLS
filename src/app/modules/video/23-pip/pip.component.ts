@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -86,7 +87,7 @@ export class PipComponent implements OnDestroy {
   onOverlay(e: Event) { const f = (e.target as HTMLInputElement).files?.[0]; if (f) { this.overlayFile = f; this.overlayName = f.name; } }
   onProcess() {
     this.store.dispatch(PipActions.startProcessing());
-    this.state$.subscribe(state => {
+    this.state$.pipe(take(1)).subscribe(state => {
       if (!state.inputFile || !this.overlayFile) return;
       this.bridge.process<unknown, Blob>(
         () => new Worker(new URL('./pip.worker', import.meta.url), { type: 'module' }),

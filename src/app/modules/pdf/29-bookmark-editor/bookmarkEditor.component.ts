@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -101,7 +102,7 @@ export class BookmarkEditorComponent implements OnDestroy {
   
   onProcess() {
      this.store.dispatch(BookmarkEditorActions.startProcessing());
-     this.state$.subscribe(state => {
+     this.state$.pipe(take(1)).subscribe(state => {
         if (!state.inputFile) return;
         this.bridge.process<unknown, Blob>(
           () => new Worker(new URL('./bookmarkEditor.worker', import.meta.url), { type: 'module' }),

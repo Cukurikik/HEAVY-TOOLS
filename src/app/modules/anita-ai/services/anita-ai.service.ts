@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { AnitaMessage } from '../types/anita.types';
 import { v4 as uuidv4 } from 'uuid';
-
-declare var process: { env: { [key: string]: string } };
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +29,37 @@ export class AnitaAiService {
     - If generating a file, specify the filename if possible.
   `;
 
+  // Provide a default that is known to work for Qwen (DashScope)
+  defaultEndpoint = 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions';
+  
+  config = signal({
+    apiKey: localStorage.getItem('anita_api_key') || 'sk-e391a1e39ed048e1ac26d158b379b857',
+    endpoint: localStorage.getItem('anita_endpoint') || this.defaultEndpoint,
+    model: localStorage.getItem('anita_model') || 'qwen-max'
+  });
+
   constructor(private http: HttpClient) {}
 
-  async sendMessage(message: string, history: AnitaMessage[] = []): Promise<AnitaMessage> {
-    const apiKey = 'sk-e391a1e39ed048e1ac26d158b379b857';
+  updateConfig(apiKey: string, endpoint: string, model: string) {
+    this.config.set({ apiKey, endpoint, model });
+    localStorage.setItem('anita_api_key', apiKey);
+    localStorage.setItem('anita_endpoint', endpoint);
+    localStorage.setItem('anita_model', model);
+  }
 
-    // Prepare messages for Qwen API (OpenAI compatible format)
+  async sendMessage(message: string, history: AnitaMessage[] = []): Promise<AnitaMessage> {
+    const { apiKey, endpoint, model } = this.config();
+
+    if (!apiKey) {
+      return {
+        id: uuidv4(),
+        role: 'assistant',
+        content: `ERROR: API Key is missing. Please configure your API key in settings.`,
+        timestamp: new Date(),
+        codeBlocks: []
+      };
+    }
+
     const messages = [
       { role: 'system', content: this.systemInstruction },
       ...history.map(msg => ({
@@ -51,17 +74,14 @@ export class AnitaAiService {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       });
-
-      // Alibaba Cloud DashScope (Qwen) Compatible API Endpoint
-      const url = 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions';
       
       const body = {
-        model: 'qwen-max', 
+        model: model, 
         messages: messages
       };
       
       const response = await lastValueFrom(
-        this.http.post<any>(url, body, { headers })
+        this.http.post<any>(endpoint, body, { headers })
       );
 
       if (response && response.choices && response.choices.length > 0) {
@@ -77,12 +97,11 @@ export class AnitaAiService {
         throw new Error('Invalid response from AI service');
       }
     } catch (error: any) {
-      console.error('Error calling Alibaba Cloud Qwen API:', error);
-      
+      console.error('Error calling AI API:', error);
       return {
         id: uuidv4(),
         role: 'assistant',
-        content: `ERROR: Failed to connect to Qwen API. ${error.message || 'Unknown error'}`,
+        content: `ERROR: Failed to connect to AI API. ${error.message || 'Unknown error'}. Please check your endpoint url and API key in settings.`,
         timestamp: new Date(),
         codeBlocks: []
       };
@@ -90,7 +109,7 @@ export class AnitaAiService {
   }
 
   private extractCodeBlocks(text: string) {
-    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    const codeBlockRegex = /\`\`\`(\w+)?\n([\s\S]*?)\`\`\`/g;
     const blocks = [];
     let match;
     while ((match = codeBlockRegex.exec(text)) !== null) {

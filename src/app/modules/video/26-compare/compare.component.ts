@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -80,7 +81,7 @@ export class CompareComponent implements OnDestroy {
   onSecondVideo(e: Event) { const f = (e.target as HTMLInputElement).files?.[0]; if (f) { this.secondVideo = f; this.secondVideoName = f.name; } }
   onProcess() {
     this.store.dispatch(CompareActions.startProcessing());
-    this.state$.subscribe(state => {
+    this.state$.pipe(take(1)).subscribe(state => {
       if (!state.inputFile || !this.secondVideo) return;
       this.bridge.process<unknown, Blob>(
         () => new Worker(new URL('./compare.worker', import.meta.url), { type: 'module' }),

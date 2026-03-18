@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -115,7 +116,7 @@ export class AudioReplacerComponent implements OnDestroy {
 
   onProcess() {
     this.store.dispatch(AudioReplacerActions.startProcessing());
-    this.state$.subscribe(state => {
+    this.state$.pipe(take(1)).subscribe(state => {
       if (!state.inputFile || !this.audioFile) return;
       this.bridge.process<unknown, Blob>(
         () => new Worker(new URL('./audioReplacer.worker', import.meta.url), { type: 'module' }),

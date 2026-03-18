@@ -1,3 +1,4 @@
+import { take } from 'rxjs';
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -170,7 +171,7 @@ export class CompressorComponent implements OnDestroy {
 
   onProcess() {
     this.store.dispatch(CompressorActions.startProcessing());
-    this.state$.subscribe(state => {
+    this.state$.pipe(take(1)).subscribe(state => {
       if (!state.inputFile) return;
       this.bridge.process<unknown, Blob>(
         () => new Worker(new URL('./compressor.worker', import.meta.url), { type: 'module' }),
