@@ -3,7 +3,7 @@
 // File: src/app/modules/converter/shared/components/export-panel/export-panel.component.ts
 // ============================================================
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -32,22 +32,36 @@ import { CommonModule } from '@angular/common';
       </button>
     </div>
   ` })
-export class ConverterExportPanelComponent {
+export class ConverterExportPanelComponent implements OnDestroy {
   @Input() outputBlob: Blob | null = null;
   @Input() outputSizeMB: number | null = null;
   @Input() filename = 'converted_file';
   @Input() disabled = false;
   @Output() download = new EventEmitter<void>();
 
+  private downloadUrl: string | null = null;
+
   onDownload(): void {
     if (!this.outputBlob) return;
-    const url = URL.createObjectURL(this.outputBlob);
+
+    // Revoke previous URL if it exists to avoid memory leaks
+    if (this.downloadUrl) {
+      URL.revokeObjectURL(this.downloadUrl);
+    }
+
+    this.downloadUrl = URL.createObjectURL(this.outputBlob);
     const a = document.createElement('a');
-    a.href = url;
+    a.href = this.downloadUrl;
     a.download = this.filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 150);
+  }
+
+  ngOnDestroy(): void {
+    if (this.downloadUrl) {
+      URL.revokeObjectURL(this.downloadUrl);
+      this.downloadUrl = null;
+    }
   }
 }
