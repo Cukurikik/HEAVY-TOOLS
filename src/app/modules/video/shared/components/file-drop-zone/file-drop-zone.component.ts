@@ -51,16 +51,15 @@ import type { VideoErrorCode } from '../../types/video.types';
           <p class="text-xs text-white/50">Click to try again</p>
         </div>
       } @else {
-        <div class="flex flex-col items-center gap-3 px-6 text-center pointer-events-none">
-          <div class="w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
+        <div class="flex flex-col items-center gap-3 px-6 text-center">
+          <div class="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center">
             <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
             </svg>
           </div>
           <div>
-            <p class="text-sm font-medium text-white">{{ label }}</p>
-            <p class="text-xs text-white/40 mt-1">Max {{ maxSizeMB >= 1024 ? (maxSizeMB / 1024).toFixed(0) + 'GB' : maxSizeMB + 'MB' }}</p>
+            <p class="font-medium text-white">{{ label }}</p>
+            <p class="text-sm text-white/50 mt-1">Click or drag a file to upload</p>
           </div>
         </div>
       }
@@ -68,53 +67,108 @@ import type { VideoErrorCode } from '../../types/video.types';
   `
 })
 export class FileDropZoneComponent {
-  @Input() accept = 'video/*';
+  @Input() accept = '*';
+  @Input() label = 'Select a file';
   @Input() multiple = false;
-  @Input() maxSizeMB = 2048;
   @Input() disabled = false;
-  @Input() label = 'Drop video file here or click to browse';
   @Output() filesSelected = new EventEmitter<File[]>();
-  @Output() validationError = new EventEmitter<VideoErrorCode>();
+  @Output() error = new EventEmitter<VideoErrorCode>();
 
   isDragOver = signal(false);
-  isValidating = signal(false);
   hasFile = signal(false);
+  selectedFile = signal<File | null>(null);
   selectedFileName = signal('');
   selectedFileSize = signal('');
   errorMsg = signal('');
+  isValidating = signal(false);
 
-  onDragOver(event: DragEvent) { event.preventDefault(); event.stopPropagation(); this.isDragOver.set(true); }
-  onDragLeave() { this.isDragOver.set(false); }
-  onDrop(event: DragEvent) {
-    event.preventDefault(); event.stopPropagation();
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    if (this.disabled) return;
+    this.isDragOver.set(true);
+  }
+
+  onDragLeave() {
     this.isDragOver.set(false);
-    const files = Array.from(event.dataTransfer?.files ?? []);
-    if (files.length) this.processFiles(files);
   }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver.set(false);
+
+    if (this.disabled) return;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFiles(files);
+    }
+  }
+
   onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const files = Array.from(input.files ?? []);
-    if (files.length) this.processFiles(files);
-    input.value = '';
+    if (this.disabled) return;
+    
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.handleFiles(target.files);
+    }
   }
-  private processFiles(files: File[]) {
-    this.isValidating.set(true);
+
+  private handleFiles(files: FileList) {
+    // Reset states
     this.errorMsg.set('');
-    const selected = this.multiple ? files : [files[0]];
-    const maxBytes = this.maxSizeMB * 1_048_576;
-    for (const file of selected) {
-      if (file.size > maxBytes) {
-        this.isValidating.set(false);
-        this.errorMsg.set('File too large. Max ' + (this.maxSizeMB >= 1024 ? (this.maxSizeMB/1024)+'GB' : this.maxSizeMB+'MB'));
-        this.validationError.emit('FILE_TOO_LARGE');
-        return;
+    this.hasFile.set(false);
+    
+    // Process files
+    const fileList = Array.from(files);
+    if (fileList.length > 0) {
+      const file = fileList[0]; // Just take the first file
+      
+      // Validate file
+      if (this.validateFile(file)) {
+        this.selectedFile.set(file);
+        this.selectedFileName.set(file.name);
+        this.selectedFileSize.set(this.formatFileSize(file.size));
+        this.hasFile.set(true);
+        this.filesSelected.emit(fileList);
       }
     }
-    this.isValidating.set(false);
-    this.hasFile.set(true);
-    this.selectedFileName.set(selected.length === 1 ? selected[0].name : `${selected.length} files selected`);
-    const totalMB = selected.reduce((s, f) => s + f.size, 0) / 1_048_576;
-    this.selectedFileSize.set(`${totalMB.toFixed(2)} MB`);
-    this.filesSelected.emit(selected);
+  }
+
+  private validateFile(file: File): boolean {
+    // Set validating state
+    this.isValidating.set(true);
+
+    // Simulate short validation time
+    setTimeout(() => {
+      this.isValidating.set(false);
+      
+      // Basic validation
+      if (!file.type.startsWith(this.accept.replace('*','')) && this.accept !== '*') {
+        const errorCode: VideoErrorCode = 'FILE_TYPE_INVALID' as VideoErrorCode;
+        this.errorMsg.set('Invalid file type');
+        this.error.emit(errorCode);
+        return false;
+      }
+      
+      // File size validation (optional, adjust as needed)
+      if (file.size > 500 * 1024 * 1024) { // 500MB limit
+        const errorCode: VideoErrorCode = 'FILE_TOO_LARGE' as VideoErrorCode;
+        this.errorMsg.set('File too large (>500MB)');
+        this.error.emit(errorCode);
+        return false;
+      }
+      
+      return true;
+    }, 300);
+    
+    return true;
+  }
+
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 }

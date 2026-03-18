@@ -1,9 +1,9 @@
 import {
   ApplicationConfig,
-  provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection
+  provideZoneChangeDetection
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
+import {provideHttpClient} from '@angular/common/http';
 import {provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 
@@ -28,8 +28,8 @@ import {colorGradingFeature} from './modules/video/11-color-grading/colorGrading
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZonelessChangeDetection(),
-    provideBrowserGlobalErrorListeners(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideHttpClient(), // Adding HttpClient support
     provideRouter(routes),
     provideStore({ 
       ...reducers, 

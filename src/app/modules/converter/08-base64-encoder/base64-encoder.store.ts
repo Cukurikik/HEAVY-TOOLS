@@ -5,6 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface Base64EncoderState {
+  wrapLines: boolean;
   inputFile: File | null;
   inputText: string;
   outputFormat: string;
@@ -39,7 +40,7 @@ export const Base64EncoderActions = createActionGroup({
     'Set Output Format': props<{ format: string }>(),
     'Start Processing': emptyProps(),
     'Update Progress': props<{ progress: number }>(),
-    'Processing Success': props<{ outputBlob: Blob | null; outputText: string; outputSizeMB: number }>(),
+    'Processing Success': props<{ outputBlob?: Blob | null; outputText?: string; outputSizeMB?: number | null }>(),
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
@@ -57,7 +58,7 @@ export const base64EncoderFeature = createFeature({
       ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(Base64EncoderActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(Base64EncoderActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
+      ...state, status: 'done' as const, progress: 100, outputBlob: outputBlob || null, outputText: outputText || '', outputSizeMB: outputSizeMB || null })),
     on(Base64EncoderActions.processingFailure, (state, { errorCode, message, retryable }) => ({
       ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(Base64EncoderActions.resetState, () => initialState),

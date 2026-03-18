@@ -39,13 +39,12 @@ import { FormsModule } from '@angular/forms';
 export class AudioExportPanelComponent {
   @Input() disabled = true;
   @Input() outputSizeMB: number | null = null;
-  @Output() formatChange = new EventEmitter<ExportFormat>();
+  @Input() formats: ExportFormat[] = ['wav', 'mp3', 'aac', 'ogg', 'flac', 'opus', 'm4a'];
   @Output() download = new EventEmitter<void>();
-  formats: ExportFormat[] = ['wav', 'mp3', 'aac', 'ogg', 'flac', 'opus', 'm4a'];
-  selectedFormat = signal<ExportFormat>('wav');
 
-  selectFormat(fmt: ExportFormat): void {
-    this.selectedFormat.set(fmt);
-    this.formatChange.emit(fmt);
+  selectedFormat = signal<ExportFormat>('mp3');
+
+  selectFormat(format: ExportFormat) {
+    this.selectedFormat.set(format);
   }
 }

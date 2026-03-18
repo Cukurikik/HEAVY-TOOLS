@@ -7,18 +7,22 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
+import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { BarcodeGeneratorActions, selectBarcodeGeneratorState } from './barcode-generator.store';
+import { ConverterWorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { take } from 'rxjs';
 
 const OUTPUT_FORMATS: FormatOption[] = [
-  { value: 'png', label: 'PNG', icon: '📄' },
-  { value: 'svg', label: 'SVG', icon: '📄' },
-  { value: 'jpeg', label: 'JPEG', icon: '📄' },
+  { value: 'code128', label: 'CODE128', icon: '📊' },
+  { value: 'ean13', label: 'EAN-13', icon: '📊' },
+  { value: 'upca', label: 'UPC-A', icon: '📊' },
+  { value: 'itf', label: 'ITF', icon: '📊' },
 ];
 
 @Component({
   selector: 'app-barcode-generator',
   standalone: true,
-  imports: [CommonModule, ConverterFormatSelectorComponent, ConverterProgressRingComponent],
+  imports: [CommonModule, ConverterFormatSelectorComponent, ConverterProgressRingComponent, ConverterExportPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -26,35 +30,33 @@ const OUTPUT_FORMATS: FormatOption[] = [
         <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
           📊 Barcode Generator
         </h1>
-        <p class="text-white/50 text-sm">Generate 1D and 2D barcodes: Code128, EAN, UPC, CODE39, DataMatrix</p>
+        <p class="text-white/50 text-sm">Generate inventory barcodes (CODE128, EAN-13, UPC, and more)</p>
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="space-y-4">
-          <!-- Text input mode for utility converters -->
-          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-            <span class="text-xs text-white/40 uppercase tracking-wider font-semibold" style="display: block;">Input</span>
+          <div class="relative group">
             <textarea
-              rows="6"
-              placeholder="Enter value to convert..."
-              (input)="onInputChange(($any($event.target)).value)"
-              class="w-full px-3 py-2 text-sm bg-white/5 border border-white/15 rounded-xl text-white placeholder-white/20 focus:outline-none focus:border-cyan-400 resize-none font-mono"></textarea>
+              [value]="((state$ | async)?.inputText ?? '')"
+              (input)="onTextInput($any($event.target).value)"
+              placeholder="Enter numerical data for barcode..."
+              class="w-full h-32 p-4 rounded-xl bg-white/5 border border-white/10 text-white font-mono text-lg focus:outline-none focus:border-cyan-400/50 transition-all resize-none"></textarea>
           </div>
 
           <app-converter-format-selector
             [formats]="outputFormats"
-            [selected]="(state$ | async)?.outputFormat ?? 'png'"
+            [selected]="((state$ | async)?.outputFormat ?? 'code128')"
             (formatChange)="onFormatChange($event)" />
 
           <button
-            [disabled]="(state$ | async)?.status === 'processing'"
+            [disabled]="(state$ | async)?.status === 'processing' || !(state$ | async)?.inputText"
             (click)="onProcess()"
             class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2
                    bg-gradient-to-r from-cyan-500 to-blue-500 text-black disabled:opacity-40 disabled:cursor-not-allowed">
             @if ((state$ | async)?.status === 'processing') {
               <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-              Processing...
-            } @else { 📊 Convert }
+              Generating...
+            } @else { 🚀 Generate }
           </button>
 
           @if ((state$ | async)?.status === 'error') {
@@ -67,17 +69,18 @@ const OUTPUT_FORMATS: FormatOption[] = [
         <div class="space-y-4">
           @if ((state$ | async)?.status === 'processing') {
             <div class="flex justify-center p-8">
-              <app-converter-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Converting..." />
+              <app-converter-progress-ring [progress]="(state$ | async)?.progress ?? 0"></app-converter-progress-ring>
             </div>
           }
-          @if ((state$ | async)?.outputText) {
-            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-white/40 uppercase tracking-wider font-semibold" style="display: block;">Output</span>
-                <button (click)="onCopy()" class="text-xs text-cyan-400 hover:text-cyan-300">📋 Copy</button>
-              </div>
-              <pre class="text-sm text-white/80 font-mono whitespace-pre-wrap break-all bg-white/5 p-3 rounded-lg max-h-64 overflow-auto">{{ (state$ | async)?.outputText }}</pre>
-            </div>
+          @if ((state$ | async)?.status === 'done') {
+             <div class="bg-white p-4 rounded-xl flex justify-center mb-4">
+                <img [src]="barcodePreviewUrl()" class="w-full h-32 object-contain" alt="Barcode Preview" />
+             </div>
+            <app-converter-export-panel
+              [outputBlob]="((state$ | async)?.outputBlob ?? null)"
+              [outputSizeMB]="((state$ | async)?.outputSizeMB ?? null)"
+              [filename]="'barcode.png'"
+              (download)="onDownload()" />
           }
         </div>
       </div>
@@ -85,22 +88,60 @@ const OUTPUT_FORMATS: FormatOption[] = [
   ` })
 export class BarcodeGeneratorComponent implements OnDestroy {
   private store = inject(Store);
+  private bridge = inject(ConverterWorkerBridgeService);
+  
   state$ = this.store.select(selectBarcodeGeneratorState);
   outputFormats = OUTPUT_FORMATS;
+  private _previewUrl: string | null = null;
 
-  onInputChange(value: string): void {
-    this.store.dispatch(BarcodeGeneratorActions.setInputText({ text: value }));
+  barcodePreviewUrl() {
+    this.state$.pipe(take(1)).subscribe(state => {
+      if (state.outputBlob && !this._previewUrl) {
+        this._previewUrl = URL.createObjectURL(state.outputBlob);
+      }
+    });
+    return this._previewUrl;
   }
-  onCopy(): void {
-    this.store.dispatch(BarcodeGeneratorActions.copyToClipboard());
+
+  onTextInput(text: string): void {
+    this.store.dispatch(BarcodeGeneratorActions.setInputText({ text }));
   }
   onFormatChange(format: string): void {
     this.store.dispatch(BarcodeGeneratorActions.setOutputFormat({ format }));
   }
   onProcess(): void {
-    this.store.dispatch(BarcodeGeneratorActions.startProcessing());
+    this.state$.pipe(take(1)).subscribe(state => {
+      if (!state.inputText) return;
+      
+      this.store.dispatch(BarcodeGeneratorActions.startProcessing());
+      if (this._previewUrl) URL.revokeObjectURL(this._previewUrl);
+      this._previewUrl = null;
+
+      this.bridge.process<any, { blob: Blob; text: string }>(
+        () => new Worker(new URL('./barcode-generator.worker', import.meta.url), { type: 'module' }),
+        { inputText: state.inputText, outputFormat: state.outputFormat, height: state.height, displayValue: state.displayValue }
+      ).subscribe({
+        next: (msg) => {
+          if (msg.type === 'progress') {
+            this.store.dispatch(BarcodeGeneratorActions.updateProgress({ progress: msg.value ?? 0 }));
+          } else if (msg.type === 'complete' && msg.data) {
+            const blob = msg.data.blob;
+            this.store.dispatch(BarcodeGeneratorActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1048576 }));
+          } else if (msg.type === 'error') {
+            this.store.dispatch(BarcodeGeneratorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Generation failed', retryable: true }));
+          }
+        },
+        error: (err) => {
+          this.store.dispatch(BarcodeGeneratorActions.processingFailure({ errorCode: 'WORKER_CRASHED', message: String(err), retryable: true }));
+        }
+      });
+    });
+  }
+  onDownload(): void {
+    this.store.dispatch(BarcodeGeneratorActions.downloadOutput());
   }
   ngOnDestroy(): void {
+    if (this._previewUrl) URL.revokeObjectURL(this._previewUrl);
     this.store.dispatch(BarcodeGeneratorActions.resetState());
   }
 }

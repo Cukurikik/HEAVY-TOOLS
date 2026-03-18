@@ -107,7 +107,7 @@ export class AudioExtractorComponent implements OnDestroy {
   isLoading$ = this.store.select(selectAudioExtractorIsLoading);
   canProcess$ = this.store.select(selectAudioExtractorCanProcess);
 
-  outputFormat = 'mp3';
+  outputFormat: 'mp3' | 'wav' | 'aac' = 'mp3';
 
   audioFormats = [
     { value: 'mp3', label: 'MP3', icon: '🎵', desc: 'Universal' },
@@ -126,7 +126,9 @@ export class AudioExtractorComponent implements OnDestroy {
     }
   }
 
-  onFormatChange(fmt: string) { this.outputFormat = fmt; }
+  onFormatChange(fmt: 'mp3' | 'wav' | 'aac') { 
+    this.outputFormat = fmt; 
+  }
 
   onProcess() {
     this.store.dispatch(AudioExtractorActions.startProcessing());

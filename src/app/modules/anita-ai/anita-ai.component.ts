@@ -127,7 +127,7 @@ import { AnitaMessage } from './types/anita.types';
               </button>
             </div>
             <div class="text-[10px] text-center mt-2 text-text-muted uppercase tracking-widest">
-              Powered by Gemini 3.1 Pro · Hybrid AI Engine
+              Powered by Alibaba Cloud Qwen · Hybrid AI Engine
             </div>
           </div>
         </div>

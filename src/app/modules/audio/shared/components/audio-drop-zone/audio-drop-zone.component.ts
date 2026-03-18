@@ -29,29 +29,27 @@ export class AudioDropZoneComponent {
   @Input() multiple = false;
   @Input() maxSizeMB = 500;
   @Output() filesSelected = new EventEmitter<File[]>();
-  @Output() validationError = new EventEmitter<AudioErrorCode>();
+  
   isDragOver = false;
 
-  onDragOver(e: DragEvent): void { e.preventDefault(); e.stopPropagation(); this.isDragOver = true; }
-
-  onDrop(e: DragEvent): void {
-    e.preventDefault(); e.stopPropagation(); this.isDragOver = false;
-    const files = Array.from(e.dataTransfer?.files || []);
-    this.validateAndEmit(files);
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.filesSelected.emit(Array.from(input.files));
+    }
   }
 
-  onFileSelect(e: Event): void {
-    const input = e.target as HTMLInputElement;
-    const files = Array.from(input.files || []);
-    this.validateAndEmit(files);
-    input.value = '';
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+    
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.filesSelected.emit(Array.from(event.dataTransfer.files));
+    }
   }
 
-  private validateAndEmit(files: File[]): void {
-    const valid = files.filter(f => {
-      if (f.size > this.maxSizeMB * 1024 * 1024) { this.validationError.emit('FILE_TOO_LARGE'); return false; }
-      return true;
-    });
-    if (valid.length > 0) this.filesSelected.emit(this.multiple ? valid : [valid[0]]);
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = true;
   }
 }

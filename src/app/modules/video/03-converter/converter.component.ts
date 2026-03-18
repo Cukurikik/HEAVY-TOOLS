@@ -1,18 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
-import { VideoPreviewComponent } from '../shared/components/video-preview/video-preview.component';
-import { ProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
-import { ExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
-import { ConverterActions, selectConverterState, selectConverterIsLoading, selectConverterCanProcess, ConverterState } from './converter.store';
+import { ConverterActions, selectConverterState, selectConverterIsLoading, selectConverterCanProcess } from './converter.store';
 import { FFmpegService } from '../shared/engine/ffmpeg.service';
 import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
 @Component({
   selector: 'app-converter',
   standalone: true,
-  imports: [CommonModule, FileDropZoneComponent, VideoPreviewComponent, ProgressRingComponent, ExportPanelComponent],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -25,7 +21,17 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="space-y-4">
-          <app-file-drop-zone accept="video/*" label="Drop video file here or click to browse" (filesSelected)="onFileSelected($event)" />
+          <div class="relative border-2 border-dashed border-white/20 rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer group bg-[#12121a]/30 hover:bg-[#1a1a24]/50"
+               (click)="fileInput.click()">
+            <input #fileInput type="file" class="hidden" accept="video/*" (change)="onFileSelected($event)">
+            <div class="space-y-3">
+              <div class="w-16 h-16 mx-auto rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                <span class="text-3xl">🎬</span>
+              </div>
+              <p class="text-white/70 text-sm">Drop video file here or <span class="text-cyan-400 underline">browse</span></p>
+              <p class="text-white/30 text-xs">MP4, AVI, MOV, WMV, FLV, WebM — Max 500MB</p>
+            </div>
+          </div>
 
           @if ((state$ | async)?.videoMeta; as meta) {
             <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-4">
@@ -61,7 +67,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                       [class.border-white/10]="(state$ | async)?.targetFormat !== fmt.value"
                       [class.hover:bg-white/10]="(state$ | async)?.targetFormat !== fmt.value"
                     >
-                      <span class="text-lg">{{ fmt.icon }}</span><br/>{{ fmt.label }}
+                      <span class="text-lg">{{ fmt.icon }}</span><br>{{ fmt.label }}
                     </button>
                   }
                 </div>
@@ -80,7 +86,9 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                       [class.text-black]="(state$ | async)?.qualityPreset === preset.value"
                       [class.bg-white/5]="(state$ | async)?.qualityPreset !== preset.value"
                       [class.text-white/50]="(state$ | async)?.qualityPreset !== preset.value"
-                    >{{ preset.icon }} {{ preset.label }}</button>
+                    >
+                      {{ preset.icon }} {{ preset.label }}
+                    </button>
                   }
                 </div>
               </div>
@@ -89,98 +97,108 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
               <button [disabled]="(canProcess$ | async) === false || (isLoading$ | async)" (click)="onProcess()"
                 class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-[0_0_30px_rgba(0,245,255,0.4)] disabled:opacity-40 disabled:cursor-not-allowed">
                 @if (isLoading$ | async) {
-                  <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  Converting...
-                } @else { 🔄 Convert Video }
+                  <div class="w-5 h-5 border-t-2 border-cyan-400 border-solid rounded-full animate-spin"></div>
+                  Processing...
+                } @else {
+                  ⚡ Convert to {{ (state$ | async)?.targetFormat?.toUpperCase() }}
+                }
               </button>
-            </div>
-          }
-
-          @if ((state$ | async)?.status === 'error') {
-            <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400">
-              ⚠️ {{ (state$ | async)?.errorMessage }}
             </div>
           }
         </div>
 
         <div class="space-y-4">
           @if ((state$ | async)?.inputFile) {
-            <app-video-preview [file]="(state$ | async)?.inputFile ?? null" [showControls]="true" />
-          }
-          @if ((state$ | async)?.status === 'processing') {
-            <div class="flex justify-center p-8">
-              <app-progress-ring [progress]="(state$ | async)?.progress ?? 0" label="Converting..." [size]="120" />
+            <div class="rounded-2xl overflow-hidden border border-white/10 aspect-video flex items-center justify-center bg-black/20">
+              <video #videoPlayer controls class="max-w-full max-h-80 mx-auto" [src]="inputFileUrl()">
+                Your browser does not support the video tag.
+              </video>
             </div>
           }
-          @if ((state$ | async)?.status === 'done') {
-            <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null"
-              [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              [availableFormats]="[(state$ | async)?.targetFormat ?? 'mp4']"
-              defaultFilename="omni_converted" />
+
+          @if (outputFileUrl()) {
+            <div class="rounded-2xl overflow-hidden border border-white/10 aspect-video flex items-center justify-center bg-black/20">
+              <video controls class="max-w-full max-h-80 mx-auto" [src]="outputFileUrl()">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <button (click)="onDownload()"
+              class="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-gradient-to-r from-emerald-500 to-teal-500 text-black hover:shadow-[0_0_30px_rgba(0,245,255,0.4)]">
+              ⬇ Download {{ (state$ | async)?.targetFormat?.toUpperCase() }}
+            </button>
           }
         </div>
       </div>
     </div>
-  ` })
+  `
+})
 export class ConverterComponent implements OnDestroy {
   private store = inject(Store);
-  private ffmpeg = inject(FFmpegService);
-  private bridge = inject(WorkerBridgeService);
-
+  private ffmpegService = inject(FFmpegService);
+  private workerBridge = inject(WorkerBridgeService);
+  
   state$ = this.store.select(selectConverterState);
   isLoading$ = this.store.select(selectConverterIsLoading);
   canProcess$ = this.store.select(selectConverterCanProcess);
-
+  
   formats = [
-    { value: 'mp4' as const, label: 'MP4', icon: '🎬' },
-    { value: 'webm' as const, label: 'WebM', icon: '🌐' },
-    { value: 'mov' as const, label: 'MOV', icon: '🍎' },
-    { value: 'gif' as const, label: 'GIF', icon: '🎞️' },
+    { value: 'mp4', label: 'MP4', icon: '🎬' },
+    { value: 'webm', label: 'WEBM', icon: '🌐' },
+    { value: 'mov', label: 'MOV', icon: '🎥' },
+    { value: 'gif', label: 'GIF', icon: '🎡' }
   ];
-
+  
   presets = [
-    { value: 'fast' as const, label: 'Fast', icon: '⚡' },
-    { value: 'balanced' as const, label: 'Balanced', icon: '⚖️' },
-    { value: 'best' as const, label: 'Best', icon: '💎' },
+    { value: 'fast', label: 'Fast', icon: '⚡' },
+    { value: 'balanced', label: 'Balanced', icon: '⚖️' },
+    { value: 'high', label: 'High Quality', icon: '💎' }
   ];
 
-  async onFileSelected(files: File[]) {
-    const file = files[0];
-    this.store.dispatch(ConverterActions.loadFile({ file }));
-    try {
-      const meta = await this.ffmpeg.getMetadata(file);
-      this.store.dispatch(ConverterActions.loadMetaSuccess({ meta }));
-    } catch {
-      this.store.dispatch(ConverterActions.loadMetaFailure({ errorCode: 'FILE_CORRUPTED', message: 'Could not read video metadata.' }));
+  inputFileUrl = signal<string | null>(null);
+  outputFileUrl = signal<string | null>(null);
+
+  constructor() {
+    this.state$.subscribe(state => {
+      if (state.inputFile && !this.inputFileUrl()) {
+        this.inputFileUrl.set(URL.createObjectURL(state.inputFile));
+      } else if (!state.inputFile && this.inputFileUrl()) {
+        URL.revokeObjectURL(this.inputFileUrl()!);
+        this.inputFileUrl.set(null);
+      }
+      if (state.outputBlob && !this.outputFileUrl()) {
+        this.outputFileUrl.set(URL.createObjectURL(state.outputBlob));
+      } else if (!state.outputBlob && this.outputFileUrl()) {
+        URL.revokeObjectURL(this.outputFileUrl()!);
+        this.outputFileUrl.set(null);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Cleanup resources if needed
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.store.dispatch(ConverterActions.loadFile({ file }));
     }
   }
 
   onFormatChange(format: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as ConverterState['targetFormat'] } }));
+    this.store.dispatch(ConverterActions.updateConfig({ config: { targetFormat: format as any } }));
   }
 
   onPresetChange(preset: string) {
-    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as ConverterState['qualityPreset'] } }));
+    this.store.dispatch(ConverterActions.updateConfig({ config: { qualityPreset: preset as any } }));
   }
 
   onProcess() {
     this.store.dispatch(ConverterActions.startProcessing());
-    this.state$.subscribe(state => {
-      if (!state.inputFile) return;
-      this.bridge.process<unknown, Blob>(
-        () => new Worker(new URL('./converter.worker', import.meta.url), { type: 'module' }),
-        { file: state.inputFile, targetFormat: state.targetFormat, qualityPreset: state.qualityPreset }
-      ).subscribe(msg => {
-        if (msg.type === 'progress') this.store.dispatch(ConverterActions.updateProgress({ progress: msg.value ?? 0 }));
-        else if (msg.type === 'complete' && msg.data) {
-          const blob = msg.data as Blob;
-          this.store.dispatch(ConverterActions.processingSuccess({ outputBlob: blob, outputSizeMB: blob.size / 1_048_576 }));
-        } else if (msg.type === 'error') {
-          this.store.dispatch(ConverterActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Conversion failed' }));
-        }
-      });
-    }).unsubscribe();
   }
 
-  ngOnDestroy() { this.store.dispatch(ConverterActions.resetState()); }
+  onDownload() {
+    this.store.dispatch(ConverterActions.downloadOutput());
+  }
 }

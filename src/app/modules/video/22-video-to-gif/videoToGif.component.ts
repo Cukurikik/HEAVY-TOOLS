@@ -70,7 +70,9 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                       [class.bg-green-500]="scale === s"
                       [class.text-black]="scale === s"
                       [class.bg-white/5]="scale !== s"
-                      [class.text-white/50]="scale !== s">{{ s }}px</button>
+                      [class.text-white/50]="scale !== s">
+                      {{ s }}px
+                    </button>
                   }
                 </div>
               </div>
@@ -107,7 +109,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
           @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              [availableFormats]="['gif']" defaultFilename="omni_animation" />
+              [availableFormats]="['gif']" defaultFilename="omni_gif" />
           }
         </div>
       </div>
@@ -122,9 +124,9 @@ export class VideoToGifComponent implements OnDestroy {
   isLoading$ = this.store.select(selectVideoToGifIsLoading);
   canProcess$ = this.store.select(selectVideoToGifCanProcess);
 
-  fps = 10;
-  scale = 480;
-  scalePresets = [240, 320, 480, 640];
+  fps = 15;
+  scale = 640;
+  scalePresets = [320, 640, 960, 1280];
 
   async onFileSelected(files: File[]) {
     const file = files[0];
@@ -138,11 +140,12 @@ export class VideoToGifComponent implements OnDestroy {
   }
 
   onFpsChange(value: number) { this.fps = value; }
+
   onScaleChange(value: number) { this.scale = value; }
 
-  estimateGifSize(duration: number): number {
-    // Rough: ~0.5 MB per second at 480px 10fps
-    return duration * this.fps * (this.scale / 480) * 0.05;
+  estimateGifSize(duration: number) {
+    // Rough estimation: higher fps and scale increase file size
+    return (duration * this.fps * (this.scale / 100) * 0.15);
   }
 
   onProcess() {

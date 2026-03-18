@@ -19,10 +19,10 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "define": {
-              "GEMINI_API_KEY": "'YOUR_GEMINI_API_KEY'"
-            },
+            "outputPath": "dist/app",
+            "index": "src/index.html",
             "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -33,11 +33,25 @@
             "styles": [
               "src/styles.css"
             ],
+            "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "debug",
+              "agent-base",
+              "node-domexception",
+              "p-retry",
+              "google-auth-library",
+              "pako",
+              "web-streams-polyfill/dist/ponyfill.es2018.js",
+              "https-proxy-agent/dist/index.js",
+              "fetch-blob/from.js",
+              "@google/genai/dist/node/index.mjs",
+              "pdf-lib/es/core/PDFContext.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -49,8 +63,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumError": "4kB",
+                  "maximumWarning": "8kB"
                 }
               ],
               "outputHashing": "all"

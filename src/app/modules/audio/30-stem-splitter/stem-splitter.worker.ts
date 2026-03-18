@@ -1,10 +1,31 @@
+// ============================================================
+// FEATURE 30 — STEM SPLITTER — Web Worker (AI)
+// ============================================================
 /// <reference lib="webworker" />
 
-addEventListener('message', (_event: MessageEvent) => {
+addEventListener('message', async (event: MessageEvent) => {
+  const { config } = event.data;
+  
   try {
-    self.postMessage({type:'progress',value:25});self.postMessage({type:'progress',value:50});self.postMessage({type:'progress',value:75});self.postMessage({type:'complete',data:_event.data.config.inputData});
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Unknown worker error';
-    self.postMessage({ type: 'error', message: msg, errorCode: 'WORKER_CRASHED' });
+    postMessage({ type: 'progress', value: 10 });
+    
+    // This worker will eventually load ONNX Runtime Web
+    // and run the Spleeter model.
+    // Currently initializing engine...
+    
+    postMessage({ type: 'progress', value: 30 });
+    
+    // Mocking the split process for now but with proper structure
+    const result = {
+      vocals: new Blob([], { type: 'audio/wav' }),
+      drums: new Blob([], { type: 'audio/wav' }),
+      bass: new Blob([], { type: 'audio/wav' }),
+      other: new Blob([], { type: 'audio/wav' })
+    };
+    
+    postMessage({ type: 'progress', value: 80 });
+    postMessage({ type: 'complete', data: result });
+  } catch (err) {
+    postMessage({ type: 'error', errorCode: 'AI_MODEL_FAILED', message: String(err) });
   }
 });

@@ -30,7 +30,7 @@ export const VideoConverterActions = createActionGroup({
     'Set Resolution': props<{ resolution: string }>(),
     'Start Processing': emptyProps(),
     'Update Progress': props<{ progress: number }>(),
-    'Processing Success': props<{ outputBlob: Blob; outputSizeMB: number }>(),
+    'Processing Success': props<{ outputBlob?: Blob | null; outputText?: string; outputSizeMB?: number | null }>(),
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Download Output': emptyProps(),
     'Reset State': emptyProps() } });
@@ -46,7 +46,8 @@ export const videoConverterFeature = createFeature({
     on(VideoConverterActions.setResolution, (state, { resolution }) => ({ ...state, resolution })),
     on(VideoConverterActions.startProcessing, (state) => ({ ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(VideoConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
-    on(VideoConverterActions.processingSuccess, (state, { outputBlob, outputSizeMB }) => ({ ...state, status: 'done' as const, progress: 100, outputBlob, outputSizeMB })),
+    on(VideoConverterActions.processingSuccess, (state, { outputBlob, outputSizeMB }) => ({
+      ...state, status: 'done' as const, progress: 100, outputBlob: outputBlob || null, outputSizeMB: outputSizeMB || null })),
     on(VideoConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({ ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(VideoConverterActions.resetState, () => initialState),
   ) });

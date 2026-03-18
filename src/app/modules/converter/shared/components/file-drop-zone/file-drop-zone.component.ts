@@ -1,99 +1,88 @@
-// ============================================================
-// FILE DROP ZONE COMPONENT — Shared drag-and-drop file input
-// File: src/app/modules/converter/shared/components/file-drop-zone/file-drop-zone.component.ts
-// ============================================================
-
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-converter-file-drop-zone',
+  selector: 'app-file-drop-zone',
   standalone: true,
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div
-      class="relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300
-             hover:border-cyan-400/60 hover:bg-cyan-400/5 group"
-      [class.border-cyan-400]="isDragging"
-      [class.bg-cyan-400/10]="isDragging"
-      [class.border-white/20]="!isDragging"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-      (click)="fileInput.click()" (keydown.enter)="fileInput.click()" tabindex="0">
-
-      <input
-        #fileInput
-        type="file"
-        class="hidden"
-        [accept]="accept"
+    <div 
+      class="relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer group"
+      [class.border-cyan-500]="isDragOver" 
+      [class.bg-cyan-500/5]="isDragOver"
+      [class.border-white/20]="!isDragOver" 
+      [class.hover:border-white/40]="!isDragOver"
+      (click)="fileInput.click()" 
+      (keydown.enter)="fileInput.click()" 
+      tabindex="0" 
+      (drop)="onDrop($event)" 
+      (dragover)="onDragOver($event)" 
+      (dragleave)="isDragOver = false"
+    >
+      <input 
+        #fileInput 
+        type="file" 
+        class="hidden" 
+        [accept]="accept" 
         [multiple]="multiple"
-        (change)="onFileChange($event)" />
-
+        (change)="onFileSelect($event)"
+      >
       <div class="space-y-3">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/5 flex items-center justify-center
-                    group-hover:bg-cyan-400/10 transition-colors duration-300">
-          <span class="text-3xl">📁</span>
+        <div class="w-16 h-16 mx-auto rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+          <span class="text-3xl">{{ icon }}</span>
         </div>
-        <p class="text-white/70 text-sm font-medium">{{ label }}</p>
-        <p class="text-white/30 text-xs">Max {{ maxSizeMB }} MB per file</p>
+        <p class="text-white/70 text-sm">
+          {{ label }} <span class="text-cyan-400 underline">browse</span>
+        </p>
+        <p class="text-white/30 text-xs">
+          {{ supportedFormatsText }} — Max {{ maxSizeMB }}MB
+        </p>
       </div>
     </div>
-  ` })
-export class ConverterFileDropZoneComponent {
+  `,
+  styles: []
+})
+export class FileDropZoneComponent {
   @Input() accept = '*/*';
   @Input() multiple = false;
-  @Input() maxSizeMB = 500;
   @Input() label = 'Drop files here or click to browse';
-
+  @Input() icon = '📁';
+  @Input() maxSizeMB = 500;
+  @Input() supportedFormats: string[] = [];
   @Output() filesSelected = new EventEmitter<File[]>();
-  @Output() validationError = new EventEmitter<string>();
 
-  isDragging = false;
+  isDragOver = false;
 
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = true;
+  get supportedFormatsText(): string {
+    return this.supportedFormats.length > 0 
+      ? this.supportedFormats.join(', ').toUpperCase()
+      : 'All formats supported';
   }
 
-  onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-  }
-
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragging = false;
-    const files = event.dataTransfer?.files;
-    if (files) {
-      this.processFiles(Array.from(files));
-    }
-  }
-
-  onFileChange(event: Event): void {
+  onFileSelect(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.processFiles(Array.from(input.files));
-      input.value = '';
+    if (input.files && input.files.length > 0) {
+      this.handleFiles(input.files);
     }
   }
 
-  private processFiles(files: File[]): void {
-    const maxBytes = this.maxSizeMB * 1024 * 1024;
-    const valid: File[] = [];
-    for (const file of files) {
-      if (file.size > maxBytes) {
-        this.validationError.emit(`File "${file.name}" exceeds ${this.maxSizeMB} MB limit`);
-        continue;
-      }
-      valid.push(file);
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.handleFiles(event.dataTransfer.files);
     }
-    if (valid.length > 0) {
-      this.filesSelected.emit(valid);
-    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  private handleFiles(fileList: FileList) {
+    const files = Array.from(fileList);
+    this.filesSelected.emit(files);
   }
 }

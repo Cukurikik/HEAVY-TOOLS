@@ -20,8 +20,8 @@ export { ConverterLibreOfficeService } from './engine/libreoffice.service';
 export { ConverterWorkerBridgeService } from './engine/worker-bridge.service';
 
 // Shared Components
-export { ConverterFileDropZoneComponent } from './components/file-drop-zone/file-drop-zone.component';
-export { ConverterFormatSelectorComponent, type FormatOption } from './components/format-selector/format-selector.component';
-export { ConverterPreviewPanelComponent } from './components/preview-panel/preview-panel.component';
+export { FileDropZoneComponent } from './components/file-drop-zone/file-drop-zone.component';
+export { ConverterFormatSelectorComponent } from './components/format-selector/format-selector.component';
 export { ConverterProgressRingComponent } from './components/progress-ring/progress-ring.component';
 export { ConverterExportPanelComponent } from './components/export-panel/export-panel.component';
+export { ConverterPreviewPanelComponent } from './components/preview-panel/preview-panel.component';

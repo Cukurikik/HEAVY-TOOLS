@@ -39,7 +39,7 @@ export const CadConverterActions = createActionGroup({
     'Set Output Format': props<{ format: string }>(),
     'Start Processing': emptyProps(),
     'Update Progress': props<{ progress: number }>(),
-    'Processing Success': props<{ outputBlob: Blob | null; outputText: string; outputSizeMB: number }>(),
+    'Processing Success': props<{ outputBlob?: Blob | null; outputText?: string; outputSizeMB?: number | null }>(),
     'Processing Failure': props<{ errorCode: ConverterErrorCode; message: string; retryable: boolean }>(),
     'Copy To Clipboard': emptyProps(),
     'Download Output': emptyProps(),
@@ -57,7 +57,7 @@ export const cadConverterFeature = createFeature({
       ...state, status: 'processing' as const, progress: 0, outputBlob: null, outputText: '', outputSizeMB: null, errorCode: null, errorMessage: null })),
     on(CadConverterActions.updateProgress, (state, { progress }) => ({ ...state, progress })),
     on(CadConverterActions.processingSuccess, (state, { outputBlob, outputText, outputSizeMB }) => ({
-      ...state, status: 'done' as const, progress: 100, outputBlob, outputText, outputSizeMB })),
+      ...state, status: 'done' as const, progress: 100, outputBlob: outputBlob || null, outputText: outputText || '', outputSizeMB: outputSizeMB || null })),
     on(CadConverterActions.processingFailure, (state, { errorCode, message, retryable }) => ({
       ...state, status: 'error' as const, errorCode, errorMessage: message, retryable })),
     on(CadConverterActions.resetState, () => initialState),

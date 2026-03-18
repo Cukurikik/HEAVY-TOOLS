@@ -5,11 +5,13 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { ConverterFileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
+import { FileDropZoneComponent } from '../shared/components/file-drop-zone/file-drop-zone.component';
 import { ConverterFormatSelectorComponent, FormatOption } from '../shared/components/format-selector/format-selector.component';
 import { ConverterProgressRingComponent } from '../shared/components/progress-ring/progress-ring.component';
 import { ConverterExportPanelComponent } from '../shared/components/export-panel/export-panel.component';
 import { ImageConverterActions, selectImageConverterState } from './image-converter.store';
+import { ConverterWorkerBridgeService } from '../shared/engine/worker-bridge.service';
+import { take } from 'rxjs';
 
 const OUTPUT_FORMATS: FormatOption[] = [
   { value: 'jpeg', label: 'JPEG', icon: '🖼️' },
@@ -24,7 +26,13 @@ const OUTPUT_FORMATS: FormatOption[] = [
 @Component({
   selector: 'app-image-converter',
   standalone: true,
-  imports: [CommonModule, ConverterFileDropZoneComponent, ConverterFormatSelectorComponent, ConverterProgressRingComponent, ConverterExportPanelComponent],
+  imports: [
+    CommonModule,
+    FileDropZoneComponent,
+    ConverterFormatSelectorComponent,
+    ConverterProgressRingComponent,
+    ConverterExportPanelComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen bg-[#0a0a0f] p-6 space-y-6">
@@ -37,9 +45,9 @@ const OUTPUT_FORMATS: FormatOption[] = [
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="space-y-4">
-          <app-converter-file-drop-zone
+          <app-file-drop-zone
             accept="image/*"
-            [multiple]="true"
+            [multiple]="false"
             [maxSizeMB]="50"
             label="Drop images here or click to browse"
             (filesSelected)="onFilesSelected($event)" />
@@ -97,7 +105,8 @@ const OUTPUT_FORMATS: FormatOption[] = [
             <app-converter-export-panel
               [outputBlob]="(state$ | async)?.outputBlob ?? null"
               [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              filename="exia_image_converted" />
+              [filename]="'converted.' + (state$ | async)?.outputFormat"
+              (download)="onDownload()" />
           }
         </div>
       </div>
@@ -105,6 +114,8 @@ const OUTPUT_FORMATS: FormatOption[] = [
   ` })
 export class ImageConverterComponent implements OnDestroy {
   store = inject(Store);
+  private bridge = inject(ConverterWorkerBridgeService);
+  
   state$ = this.store.select(selectImageConverterState);
   outputFormats = OUTPUT_FORMATS;
   actions = ImageConverterActions;
@@ -118,9 +129,56 @@ export class ImageConverterComponent implements OnDestroy {
   onQualityChange(quality: number): void {
     this.store.dispatch(ImageConverterActions.setQuality({ quality }));
   }
+  
   onProcess(): void {
-    this.store.dispatch(ImageConverterActions.startProcessing());
+    this.state$.pipe(take(1)).subscribe(state => {
+      if (!state.inputFiles.length) return;
+      
+      this.store.dispatch(ImageConverterActions.startProcessing());
+      
+      this.bridge.process<any, Blob>(
+        () => new Worker(new URL('./image-converter.worker', import.meta.url), { type: 'module' }),
+        { 
+          file: state.inputFiles[0], 
+          outputFormat: state.outputFormat, 
+          quality: state.quality,
+          colorSpace: state.colorSpace,
+          preserveExif: state.preserveExif,
+          lossless: state.lossless
+        }
+      ).subscribe({
+        next: (msg) => {
+          if (msg.type === 'progress') {
+            this.store.dispatch(ImageConverterActions.updateProgress({ progress: msg.value ?? 0 }));
+          } else if (msg.type === 'complete' && msg.data) {
+            const blob = msg.data as Blob;
+            this.store.dispatch(ImageConverterActions.processingSuccess({ 
+              outputBlob: blob, 
+              outputSizeMB: blob.size / 1048576 
+            }));
+          } else if (msg.type === 'error') {
+            this.store.dispatch(ImageConverterActions.processingFailure({ 
+              errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', 
+              message: msg.message ?? 'Conversion failed',
+              retryable: true
+            }));
+          }
+        },
+        error: (err) => {
+          this.store.dispatch(ImageConverterActions.processingFailure({ 
+            errorCode: 'WORKER_CRASHED', 
+            message: String(err),
+            retryable: true
+          }));
+        }
+      });
+    });
   }
+
+  onDownload(): void {
+    this.store.dispatch(ImageConverterActions.downloadOutput());
+  }
+
   ngOnDestroy(): void {
     this.store.dispatch(ImageConverterActions.resetState());
   }
