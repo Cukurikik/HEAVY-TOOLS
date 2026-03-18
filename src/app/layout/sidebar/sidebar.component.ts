@@ -14,13 +14,14 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard',    icon: 'grid_view',   route: '/',          badge: null },
-  { label: 'Video Engine', icon: 'movie',       route: '/video',     badge: '30+' },
-  { label: 'Audio Studio', icon: 'music_note',  route: '/audio',     badge: '20+' },
-  { label: 'Image Matrix', icon: 'image',       route: '/image',     badge: '10+' },
-  { label: 'ANITA AI',     icon: 'psychology',  route: '/anita-ai',  badge: 'AI' },
-  { label: 'Converter',    icon: 'sync',        route: '/converter', badge: 'NEW' },
-  { label: 'Settings',     icon: 'settings',    route: '/settings',  badge: null },
+  { label: 'Dashboard',    icon: 'grid_view',       route: '/',          badge: null },
+  { label: 'Video Engine', icon: 'movie',           route: '/video',     badge: '30+' },
+  { label: 'Audio Studio', icon: 'music_note',      route: '/audio',     badge: '30+' },
+  { label: 'Image Matrix', icon: 'image',           route: '/image',     badge: '10+' },
+  { label: 'PDF Engine',   icon: 'picture_as_pdf',  route: '/pdf',       badge: '30+' },
+  { label: 'ANITA AI',     icon: 'psychology',      route: '/anita-ai',  badge: 'AI' },
+  { label: 'Converter',    icon: 'sync',            route: '/converter', badge: '30+' },
+  { label: 'Settings',     icon: 'settings',        route: '/settings',  badge: null },
 ];
 
 @Component({
