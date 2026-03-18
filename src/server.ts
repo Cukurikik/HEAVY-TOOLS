@@ -7,10 +7,25 @@ import {
 import express from 'express';
 import {join} from 'node:path';
 
+import { networkInterfaces } from 'node:os';
+
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+
+const localIps = ['localhost', '127.0.0.1'];
+const nets = networkInterfaces();
+for (const name of Object.keys(nets)) {
+  for (const net of nets[name] || []) {
+    if (net.family === 'IPv4' || net.family === 'IPv6') {
+      localIps.push(net.address);
+    }
+  }
+}
+
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: localIps
+});
 
 /**
  * Example Express Rest API endpoints can be defined here.
