@@ -21,6 +21,8 @@ export interface CurrencyConverterState {
 }
 
 const initialState: CurrencyConverterState = {
+  fromCurrency: 'USD',
+  toCurrency: 'EUR',
   inputFile: null,
   inputText: '',
   outputFormat: 'USD',

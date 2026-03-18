@@ -20,6 +20,7 @@ export interface IcoConverterState {
 }
 
 const initialState: IcoConverterState = {
+  sizes: [16, 32, 48],
   inputFile: null,
   inputText: '',
   outputFormat: 'ico',

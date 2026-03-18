@@ -20,6 +20,7 @@ export interface SvgConverterState {
 }
 
 const initialState: SvgConverterState = {
+  scale: 1,
   inputFile: null,
   inputText: '',
   outputFormat: 'png',

@@ -5,6 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface SubtitleConverterState {
+  fps: number;
   inputFile: File | null;
   inputText: string;
   outputFormat: string;
@@ -19,6 +20,7 @@ export interface SubtitleConverterState {
 }
 
 const initialState: SubtitleConverterState = {
+  fps: 24,
   inputFile: null,
   inputText: '',
   outputFormat: 'srt',

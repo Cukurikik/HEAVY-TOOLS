@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WorkerBridgeService } from '../../engine/worker-bridge.service';
 import type { ExportConfig } from '../../types/video.types';
@@ -39,9 +39,9 @@ import type { ExportConfig } from '../../types/video.types';
   `
 })
 export class ExportPanelComponent {
-  @Input({ required: true }) outputBlob = signal<Blob | null>(null);
-  @Input() outputSizeMB = signal<number | null>(null);
-  @Input() formats = signal<string[]>(['mp4', 'webm', 'mov', 'avi']);
+  outputBlob = input.required<Blob | null>();
+  outputSizeMB = input<number | null>(null);
+  formats = input<string[]>(['mp4', 'webm', 'mov', 'avi']);
   @Output() download = new EventEmitter<{ format: string; blob: Blob }>();
 
   private worker = inject(WorkerBridgeService);

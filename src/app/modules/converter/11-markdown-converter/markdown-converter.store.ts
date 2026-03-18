@@ -21,6 +21,8 @@ export interface MarkdownConverterState {
 }
 
 const initialState: MarkdownConverterState = {
+  flavor: 'gfm',
+  sanitize: true,
   inputFile: null,
   inputText: '',
   outputFormat: 'html',

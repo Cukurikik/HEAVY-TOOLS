@@ -118,7 +118,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
           @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              [availableFormats]="['png']" defaultFilename="omni_thumb" />
+              [formats]="['png']" defaultFilename="omni_thumb" />
           }
         </div>
       </div>

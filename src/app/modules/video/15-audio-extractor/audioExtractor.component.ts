@@ -49,7 +49,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
                 <span class="text-xs text-white/40 uppercase tracking-wider" style="display: block;">Output Format</span>
                 <div class="grid grid-cols-3 gap-3">
                   @for (fmt of audioFormats; track fmt.value) {
-                    <button (click)="onFormatChange(fmt.value)"
+                    <button (click)="onFormatChange($any(fmt.value))"
                       class="py-4 rounded-xl text-center transition-all duration-200 border"
                       [class.bg-amber-500]="outputFormat === fmt.value"
                       [class.text-black]="outputFormat === fmt.value"
@@ -92,7 +92,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
           @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              [availableFormats]="[outputFormat]" defaultFilename="omni_audio" />
+              [formats]="[outputFormat]" defaultFilename="omni_audio" />
           }
         </div>
       </div>

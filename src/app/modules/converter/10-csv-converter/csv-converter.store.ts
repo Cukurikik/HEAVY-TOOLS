@@ -21,6 +21,8 @@ export interface CsvConverterState {
 }
 
 const initialState: CsvConverterState = {
+  delimiter: ',',
+  hasHeaders: true,
   inputFile: null,
   inputText: '',
   outputFormat: 'json',

@@ -5,6 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface ColorConverterState {
+  format: string;
   inputFile: File | null;
   inputText: string;
   outputFormat: string;
@@ -19,6 +20,7 @@ export interface ColorConverterState {
 }
 
 const initialState: ColorConverterState = {
+  format: 'hex',
   inputFile: null,
   inputText: '',
   outputFormat: 'hex',

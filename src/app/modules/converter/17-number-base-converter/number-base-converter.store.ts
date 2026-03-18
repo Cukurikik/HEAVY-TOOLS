@@ -21,6 +21,8 @@ export interface NumberBaseConverterState {
 }
 
 const initialState: NumberBaseConverterState = {
+  fromBase: 10,
+  toBase: 16,
   inputFile: null,
   inputText: '',
   outputFormat: 'binary',

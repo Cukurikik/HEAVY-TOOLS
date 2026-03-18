@@ -109,7 +109,7 @@ import { WorkerBridgeService } from '../shared/engine/worker-bridge.service';
           }
           @if ((state$ | async)?.status === 'done') {
             <app-export-panel [outputBlob]="(state$ | async)?.outputBlob ?? null" [outputSizeMB]="(state$ | async)?.outputSizeMB ?? null"
-              [availableFormats]="['gif']" defaultFilename="omni_gif" />
+              [formats]="['gif']" defaultFilename="omni_gif" />
           }
         </div>
       </div>

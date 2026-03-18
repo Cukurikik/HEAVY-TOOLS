@@ -20,6 +20,7 @@ export interface Base64EncoderState {
 }
 
 const initialState: Base64EncoderState = {
+  wrapLines: false,
   inputFile: null,
   inputText: '',
   outputFormat: 'base64',

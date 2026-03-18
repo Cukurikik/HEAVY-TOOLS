@@ -20,6 +20,7 @@ export interface AudioConverterState {
 }
 
 const initialState: AudioConverterState = {
+  bitrate: '192k',
   inputFile: null,
   inputText: '',
   outputFormat: 'mp3',

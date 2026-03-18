@@ -21,6 +21,8 @@ export interface RawImageConverterState {
 }
 
 const initialState: RawImageConverterState = {
+  exposure: 0,
+  contrast: 1,
   inputFile: null,
   inputText: '',
   outputFormat: 'jpeg',

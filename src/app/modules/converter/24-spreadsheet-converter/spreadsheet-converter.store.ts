@@ -5,6 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface SpreadsheetConverterState {
+  sheetName: string;
   inputFile: File | null;
   inputText: string;
   outputFormat: string;
@@ -19,6 +20,7 @@ export interface SpreadsheetConverterState {
 }
 
 const initialState: SpreadsheetConverterState = {
+  sheetName: 'Sheet1',
   inputFile: null,
   inputText: '',
   outputFormat: 'xlsx',

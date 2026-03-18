@@ -21,6 +21,8 @@ export interface EncodingConverterState {
 }
 
 const initialState: EncodingConverterState = {
+  fromEncoding: 'UTF-8',
+  toEncoding: 'Base64',
   inputFile: null,
   inputText: '',
   outputFormat: 'utf8',

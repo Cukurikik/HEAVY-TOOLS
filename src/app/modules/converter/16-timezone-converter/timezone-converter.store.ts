@@ -21,6 +21,8 @@ export interface TimezoneConverterState {
 }
 
 const initialState: TimezoneConverterState = {
+  fromZone: 'UTC',
+  toZone: 'America/New_York',
   inputFile: null,
   inputText: '',
   outputFormat: 'UTC',

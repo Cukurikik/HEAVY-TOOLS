@@ -21,6 +21,8 @@ export interface UnitConverterState {
 }
 
 const initialState: UnitConverterState = {
+  fromUnit: 'm',
+  toUnit: 'ft',
   inputFile: null,
   inputText: '',
   outputFormat: 'length',

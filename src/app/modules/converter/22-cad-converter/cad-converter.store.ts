@@ -5,6 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface CadConverterState {
+  unit: string;
   inputFile: File | null;
   inputText: string;
   outputFormat: string;
@@ -19,6 +20,7 @@ export interface CadConverterState {
 }
 
 const initialState: CadConverterState = {
+  unit: 'mm',
   inputFile: null,
   inputText: '',
   outputFormat: 'dxf',

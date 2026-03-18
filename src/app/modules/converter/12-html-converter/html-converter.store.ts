@@ -21,6 +21,8 @@ export interface HtmlConverterState {
 }
 
 const initialState: HtmlConverterState = {
+  minify: false,
+  removeComments: false,
   inputFile: null,
   inputText: '',
   outputFormat: 'pdf',

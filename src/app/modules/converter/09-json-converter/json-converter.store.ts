@@ -21,6 +21,8 @@ export interface JsonConverterState {
 }
 
 const initialState: JsonConverterState = {
+  beautify: true,
+  indent: 2,
   inputFile: null,
   inputText: '',
   outputFormat: 'json',

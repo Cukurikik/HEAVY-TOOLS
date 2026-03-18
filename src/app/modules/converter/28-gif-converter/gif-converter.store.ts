@@ -21,6 +21,8 @@ export interface GifConverterState {
 }
 
 const initialState: GifConverterState = {
+  fps: 15,
+  scale: -1,
   inputFile: null,
   inputText: '',
   outputFormat: 'gif',

@@ -21,6 +21,8 @@ export interface BarcodeGeneratorState {
 }
 
 const initialState: BarcodeGeneratorState = {
+  height: 100,
+  displayValue: true,
   inputFile: null,
   inputText: '',
   outputFormat: 'png',

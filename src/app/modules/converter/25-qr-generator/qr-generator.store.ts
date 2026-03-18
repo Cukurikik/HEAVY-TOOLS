@@ -23,6 +23,10 @@ export interface QrGeneratorState {
 }
 
 const initialState: QrGeneratorState = {
+  size: 256,
+  eccLevel: 'M',
+  color: '#000000',
+  bgColor: '#ffffff',
   inputFile: null,
   inputText: '',
   outputFormat: 'png',

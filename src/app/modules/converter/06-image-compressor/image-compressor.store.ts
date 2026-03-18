@@ -21,6 +21,8 @@ export interface ImageCompressorState {
 }
 
 const initialState: ImageCompressorState = {
+  quality: 80,
+  maxSizeMB: 5,
   inputFile: null,
   inputText: '',
   outputFormat: 'jpeg',

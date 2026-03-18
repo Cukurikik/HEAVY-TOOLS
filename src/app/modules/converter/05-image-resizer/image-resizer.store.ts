@@ -22,6 +22,9 @@ export interface ImageResizerState {
 }
 
 const initialState: ImageResizerState = {
+  width: 1920,
+  height: 1080,
+  maintainAspectRatio: true,
   inputFile: null,
   inputText: '',
   outputFormat: 'original',

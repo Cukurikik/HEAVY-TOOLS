@@ -20,6 +20,7 @@ export interface ArchiveConverterState {
 }
 
 const initialState: ArchiveConverterState = {
+  compressionLevel: 5,
   inputFile: null,
   inputText: '',
   outputFormat: 'zip',
