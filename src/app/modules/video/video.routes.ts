@@ -14,211 +14,451 @@ export const VIDEO_ROUTES: Routes = [
   },
   {
     path: 'trimmer',
-    loadComponent: () => import('./01-trimmer').then(m => m.TrimmerComponent),
-    providers: [provideState(import('./01-trimmer').then(m => m.trimmerFeature))],
+    loadChildren: () => Promise.all([
+      import('./01-trimmer'),
+      import('./01-trimmer')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.TrimmerComponent,
+        providers: [provideState(s.trimmerFeature)]
+      }
+    ]),
     title: 'Video Trimmer — Omni-Tool',
     data: { category: 'basic' }
   },
   {
     path: 'merger',
-    loadComponent: () => import('./02-merger').then(m => m.MergerComponent),
-    providers: [provideState(import('./02-merger').then(m => m.mergerFeature))],
+    loadChildren: () => Promise.all([
+      import('./02-merger'),
+      import('./02-merger')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.MergerComponent,
+        providers: [provideState(s.mergerFeature)]
+      }
+    ]),
     title: 'Video Merger — Omni-Tool',
     data: { category: 'basic' }
   },
   {
     path: 'converter',
-    loadComponent: () => import('./03-converter').then(m => m.ConverterComponent),
-    providers: [provideState(import('./03-converter').then(m => m.converterFeature))],
+    loadChildren: () => Promise.all([
+      import('./03-converter'),
+      import('./03-converter')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.ConverterComponent,
+        providers: [provideState(s.converterFeature)]
+      }
+    ]),
     title: 'Format Converter — Omni-Tool',
     data: { category: 'basic' }
   },
   {
     path: 'compressor',
-    loadComponent: () => import('./04-compressor').then(m => m.CompressorComponent),
-    providers: [provideState(import('./04-compressor').then(m => m.compressorFeature))],
+    loadChildren: () => Promise.all([
+      import('./04-compressor'),
+      import('./04-compressor')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.CompressorComponent,
+        providers: [provideState(s.compressorFeature)]
+      }
+    ]),
     title: 'Video Compressor — Omni-Tool',
     data: { category: 'basic' }
   },
   {
     path: 'stabilizer',
-    loadComponent: () => import('./05-stabilizer').then(m => m.StabilizerComponent),
-    providers: [provideState(import('./05-stabilizer').then(m => m.stabilizerFeature))],
+    loadChildren: () => Promise.all([
+      import('./05-stabilizer'),
+      import('./05-stabilizer')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.StabilizerComponent,
+        providers: [provideState(s.stabilizerFeature)]
+      }
+    ]),
     title: 'Video Stabilizer — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'reverser',
-    loadComponent: () => import('./06-reverser').then(m => m.ReverserComponent),
-    providers: [provideState(import('./06-reverser').then(m => m.reverserFeature))],
+    loadChildren: () => Promise.all([
+      import('./06-reverser'),
+      import('./06-reverser')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.ReverserComponent,
+        providers: [provideState(s.reverserFeature)]
+      }
+    ]),
     title: 'Video Reverser — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'speed',
-    loadComponent: () => import('./07-speed-controller').then(m => m.SpeedControllerComponent),
-    providers: [provideState(import('./07-speed-controller').then(m => m.speedControllerFeature))],
+    loadChildren: () => Promise.all([
+      import('./07-speed-controller'),
+      import('./07-speed-controller')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.SpeedControllerComponent,
+        providers: [provideState(s.speedControllerFeature)]
+      }
+    ]),
     title: 'Speed Controller — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'looper',
-    loadComponent: () => import('./08-looper').then(m => m.LooperComponent),
-    providers: [provideState(import('./08-looper').then(m => m.looperFeature))],
+    loadChildren: () => Promise.all([
+      import('./08-looper'),
+      import('./08-looper')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.LooperComponent,
+        providers: [provideState(s.looperFeature)]
+      }
+    ]),
     title: 'Video Looper — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'flip-rotate',
-    loadComponent: () => import('./09-flip-rotate').then(m => m.FlipRotateComponent),
-    providers: [provideState(import('./09-flip-rotate').then(m => m.flipRotateFeature))],
+    loadChildren: () => Promise.all([
+      import('./09-flip-rotate'),
+      import('./09-flip-rotate')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.FlipRotateComponent,
+        providers: [provideState(s.flipRotateFeature)]
+      }
+    ]),
     title: 'Flip & Rotate — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'crop-resize',
-    loadComponent: () => import('./10-crop-resize').then(m => m.CropResizeComponent),
-    providers: [provideState(import('./10-crop-resize').then(m => m.cropResizeFeature))],
+    loadChildren: () => Promise.all([
+      import('./10-crop-resize'),
+      import('./10-crop-resize')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.CropResizeComponent,
+        providers: [provideState(s.cropResizeFeature)]
+      }
+    ]),
     title: 'Smart Crop & Resize — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'color-grading',
-    loadComponent: () => import('./11-color-grading').then(m => m.ColorGradingComponent),
-    providers: [provideState(import('./11-color-grading').then(m => m.colorGradingFeature))],
+    loadChildren: () => Promise.all([
+      import('./11-color-grading'),
+      import('./11-color-grading')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.ColorGradingComponent,
+        providers: [provideState(s.colorGradingFeature)]
+      }
+    ]),
     title: 'Color Grading — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'subtitles',
-    loadComponent: () => import('./12-subtitle-burner').then(m => m.SubtitleBurnerComponent),
-    providers: [provideState(import('./12-subtitle-burner').then(m => m.subtitleBurnerFeature))],
+    loadChildren: () => Promise.all([
+      import('./12-subtitle-burner'),
+      import('./12-subtitle-burner')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.SubtitleBurnerComponent,
+        providers: [provideState(s.subtitleBurnerFeature)]
+      }
+    ]),
     title: 'Subtitle Burner — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'thumbnail',
-    loadComponent: () => import('./13-thumbnail-generator').then(m => m.ThumbnailGeneratorComponent),
-    providers: [provideState(import('./13-thumbnail-generator').then(m => m.thumbnailGeneratorFeature))],
+    loadChildren: () => Promise.all([
+      import('./13-thumbnail-generator'),
+      import('./13-thumbnail-generator')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.ThumbnailGeneratorComponent,
+        providers: [provideState(s.thumbnailGeneratorFeature)]
+      }
+    ]),
     title: 'Thumbnail Generator — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'watermark',
-    loadComponent: () => import('./14-watermark').then(m => m.WatermarkComponent),
-    providers: [provideState(import('./14-watermark').then(m => m.watermarkFeature))],
+    loadChildren: () => Promise.all([
+      import('./14-watermark'),
+      import('./14-watermark')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.WatermarkComponent,
+        providers: [provideState(s.watermarkFeature)]
+      }
+    ]),
     title: 'Watermark Adder — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'extract-audio',
-    loadComponent: () => import('./15-audio-extractor').then(m => m.AudioExtractorComponent),
-    providers: [provideState(import('./15-audio-extractor').then(m => m.audioExtractorFeature))],
+    loadChildren: () => Promise.all([
+      import('./15-audio-extractor'),
+      import('./15-audio-extractor')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.AudioExtractorComponent,
+        providers: [provideState(s.audioExtractorFeature)]
+      }
+    ]),
     title: 'Audio Extractor — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'replace-audio',
-    loadComponent: () => import('./16-audio-replacer').then(m => m.AudioReplacerComponent),
-    providers: [provideState(import('./16-audio-replacer').then(m => m.audioReplacerFeature))],
+    loadChildren: () => Promise.all([
+      import('./16-audio-replacer'),
+      import('./16-audio-replacer')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.AudioReplacerComponent,
+        providers: [provideState(s.audioReplacerFeature)]
+      }
+    ]),
     title: 'Audio Replacer — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'denoiser',
-    loadComponent: () => import('./17-denoiser').then(m => m.DenoiserComponent),
-    providers: [provideState(import('./17-denoiser').then(m => m.denoiserFeature))],
+    loadChildren: () => Promise.all([
+      import('./17-denoiser'),
+      import('./17-denoiser')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.DenoiserComponent,
+        providers: [provideState(s.denoiserFeature)]
+      }
+    ]),
     title: 'Video Denoiser — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'interpolate',
-    loadComponent: () => import('./18-interpolator').then(m => m.InterpolatorComponent),
-    providers: [provideState(import('./18-interpolator').then(m => m.interpolatorFeature))],
+    loadChildren: () => Promise.all([
+      import('./18-interpolator'),
+      import('./18-interpolator')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.InterpolatorComponent,
+        providers: [provideState(s.interpolatorFeature)]
+      }
+    ]),
     title: 'Frame Interpolator — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'metadata',
-    loadComponent: () => import('./19-metadata-editor').then(m => m.MetadataEditorComponent),
-    providers: [provideState(import('./19-metadata-editor').then(m => m.metadataEditorFeature))],
+    loadChildren: () => Promise.all([
+      import('./19-metadata-editor'),
+      import('./19-metadata-editor')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.MetadataEditorComponent,
+        providers: [provideState(s.metadataEditorFeature)]
+      }
+    ]),
     title: 'Metadata Editor — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'splitter',
-    loadComponent: () => import('./20-splitter').then(m => m.SplitterComponent),
-    providers: [provideState(import('./20-splitter').then(m => m.splitterFeature))],
+    loadChildren: () => Promise.all([
+      import('./20-splitter'),
+      import('./20-splitter')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.SplitterComponent,
+        providers: [provideState(s.splitterFeature)]
+      }
+    ]),
     title: 'Video Splitter — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'screen-recorder',
-    loadComponent: () => import('./21-screen-recorder').then(m => m.ScreenRecorderComponent),
-    providers: [provideState(import('./21-screen-recorder').then(m => m.screenRecorderFeature))],
+    loadChildren: () => Promise.all([
+      import('./21-screen-recorder'),
+      import('./21-screen-recorder')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.ScreenRecorderComponent,
+        providers: [provideState(s.screenRecorderFeature)]
+      }
+    ]),
     title: 'Screen Recorder — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'to-gif',
-    loadComponent: () => import('./22-video-to-gif').then(m => m.VideoToGifComponent),
-    providers: [provideState(import('./22-video-to-gif').then(m => m.videoToGifFeature))],
+    loadChildren: () => Promise.all([
+      import('./22-video-to-gif'),
+      import('./22-video-to-gif')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.VideoToGifComponent,
+        providers: [provideState(s.videoToGifFeature)]
+      }
+    ]),
     title: 'Video to GIF — Omni-Tool',
     data: { category: 'basic' }
   },
   {
     path: 'pip',
-    loadComponent: () => import('./23-pip').then(m => m.PipComponent),
-    providers: [provideState(import('./23-pip').then(m => m.pipFeature))],
+    loadChildren: () => Promise.all([
+      import('./23-pip'),
+      import('./23-pip')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.PipComponent,
+        providers: [provideState(s.pipFeature)]
+      }
+    ]),
     title: 'Picture-in-Picture — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'blur',
-    loadComponent: () => import('./24-blur').then(m => m.BlurComponent),
-    providers: [provideState(import('./24-blur').then(m => m.blurFeature))],
+    loadChildren: () => Promise.all([
+      import('./24-blur'),
+      import('./24-blur')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.BlurComponent,
+        providers: [provideState(s.blurFeature)]
+      }
+    ]),
     title: 'Video Blur — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'transitions',
-    loadComponent: () => import('./25-transitions').then(m => m.TransitionsComponent),
-    providers: [provideState(import('./25-transitions').then(m => m.transitionsFeature))],
+    loadChildren: () => Promise.all([
+      import('./25-transitions'),
+      import('./25-transitions')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.TransitionsComponent,
+        providers: [provideState(s.transitionsFeature)]
+      }
+    ]),
     title: 'Video Transitions — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'compare',
-    loadComponent: () => import('./26-compare').then(m => m.CompareComponent),
-    providers: [provideState(import('./26-compare').then(m => m.compareFeature))],
+    loadChildren: () => Promise.all([
+      import('./26-compare'),
+      import('./26-compare')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.CompareComponent,
+        providers: [provideState(s.compareFeature)]
+      }
+    ]),
     title: 'Video Compare — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'slideshow',
-    loadComponent: () => import('./27-slideshow').then(m => m.SlideshowComponent),
-    providers: [provideState(import('./27-slideshow').then(m => m.slideshowFeature))],
+    loadChildren: () => Promise.all([
+      import('./27-slideshow'),
+      import('./27-slideshow')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.SlideshowComponent,
+        providers: [provideState(s.slideshowFeature)]
+      }
+    ]),
     title: 'Slideshow Maker — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'batch',
-    loadComponent: () => import('./28-batch').then(m => m.BatchComponent),
-    providers: [provideState(import('./28-batch').then(m => m.batchFeature))],
+    loadChildren: () => Promise.all([
+      import('./28-batch'),
+      import('./28-batch')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.BatchComponent,
+        providers: [provideState(s.batchFeature)]
+      }
+    ]),
     title: 'Batch Processor — Omni-Tool',
     data: { category: 'pro' }
   },
   {
     path: 'analyser',
-    loadComponent: () => import('./29-analyser').then(m => m.AnalyserComponent),
-    providers: [provideState(import('./29-analyser').then(m => m.analyserFeature))],
+    loadChildren: () => Promise.all([
+      import('./29-analyser'),
+      import('./29-analyser')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.AnalyserComponent,
+        providers: [provideState(s.analyserFeature)]
+      }
+    ]),
     title: 'Video Analyser — Omni-Tool',
     data: { category: 'advanced' }
   },
   {
     path: 'upscaler',
-    loadComponent: () => import('./30-upscaler').then(m => m.UpscalerComponent),
-    providers: [provideState(import('./30-upscaler').then(m => m.upscalerFeature))],
+    loadChildren: () => Promise.all([
+      import('./30-upscaler'),
+      import('./30-upscaler')
+    ]).then(([c, s]) => [
+      {
+        path: '',
+        component: c.UpscalerComponent,
+        providers: [provideState(s.upscalerFeature)]
+      }
+    ]),
     title: 'AI Video Upscaler — Omni-Tool',
     data: { category: 'ai' }
   }
