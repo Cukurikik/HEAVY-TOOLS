@@ -1,0 +1,5 @@
+"use client";
+import{useAudioStore}from"../../store/useAudioStore";
+import{Slider}from"@/components/ui/slider";
+import{Label}from"@/components/ui/label";
+export function ReverbOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-5"><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Delay (ms)</Label><span className="text-teal-400 font-black">{(task.options?.delay as number)||60}</span></div><Slider defaultValue={[60]} min={10} max={500} step={10} onValueChange={(v)=>setOptions({delay:v[0]})}/></div><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Decay</Label><span className="text-teal-400 font-black">{(task.options?.decay as number)||0.4}</span></div><Slider defaultValue={[0.4]} min={0.1} max={0.9} step={0.05} onValueChange={(v)=>setOptions({decay:v[0]})}/></div></div>);}

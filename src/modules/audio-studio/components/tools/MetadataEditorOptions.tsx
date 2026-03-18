@@ -1,0 +1,5 @@
+"use client";
+import{useAudioStore}from"../../store/useAudioStore";
+import{Input}from"@/components/ui/input";
+import{Label}from"@/components/ui/label";
+export function MetadataEditorOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-4"><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Title</Label><Input type="text" placeholder="Song title..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({title:e.target.value})}/></div><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Artist</Label><Input type="text" placeholder="Artist..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({artist:e.target.value})}/></div><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Album</Label><Input type="text" placeholder="Album..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({album:e.target.value})}/></div></div>);}

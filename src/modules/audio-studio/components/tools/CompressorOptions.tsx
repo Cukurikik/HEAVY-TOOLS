@@ -1,0 +1,5 @@
+"use client";
+import{useAudioStore}from"../../store/useAudioStore";
+import{Slider}from"@/components/ui/slider";
+import{Label}from"@/components/ui/label";
+export function CompressorOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-5"><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Threshold (dB)</Label><span className="text-orange-400 font-black">{(task.options?.threshold as number)||-20}</span></div><Slider defaultValue={[-20]} min={-50} max={0} step={1} onValueChange={(v)=>setOptions({threshold:v[0]})}/></div><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Ratio</Label><span className="text-orange-400 font-black">{(task.options?.ratio as number)||4}:1</span></div><Slider defaultValue={[4]} min={1} max={20} step={0.5} onValueChange={(v)=>setOptions({ratio:v[0]})}/></div></div>);}

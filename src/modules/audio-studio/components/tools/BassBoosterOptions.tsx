@@ -1,0 +1,5 @@
+"use client";
+import{useAudioStore}from"../../store/useAudioStore";
+import{Slider}from"@/components/ui/slider";
+import{Label}from"@/components/ui/label";
+export function BassBoosterOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-5"><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Gain (dB)</Label><span className="text-stone-400 font-black">{(task.options?.gain as number)||10}</span></div><Slider defaultValue={[10]} min={1} max={20} step={1} onValueChange={(v)=>setOptions({gain:v[0]})}/></div><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Frequency</Label><span className="text-stone-400 font-black">{(task.options?.frequency as number)||100} Hz</span></div><Slider defaultValue={[100]} min={40} max={200} step={5} onValueChange={(v)=>setOptions({frequency:v[0]})}/></div></div>);}

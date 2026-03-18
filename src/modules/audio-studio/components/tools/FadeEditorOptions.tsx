@@ -1,0 +1,5 @@
+"use client";
+import{useAudioStore}from"../../store/useAudioStore";
+import{Slider}from"@/components/ui/slider";
+import{Label}from"@/components/ui/label";
+export function FadeEditorOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-5"><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Fade In (sec)</Label><span className="text-orange-400 font-black">{(task.options?.fadeIn as number)||2}s</span></div><Slider defaultValue={[2]} min={0} max={10} step={0.5} onValueChange={(v)=>setOptions({fadeIn:v[0]})}/></div><div className="space-y-3"><div className="flex items-center justify-between"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Fade Out (sec)</Label><span className="text-orange-400 font-black">{(task.options?.fadeOut as number)||3}s</span></div><Slider defaultValue={[3]} min={0} max={10} step={0.5} onValueChange={(v)=>setOptions({fadeOut:v[0]})}/></div></div>);}
