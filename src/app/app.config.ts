@@ -3,7 +3,7 @@ import {
   provideZoneChangeDetection
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withFetch} from '@angular/common/http';
 import {provideStore} from '@ngrx/store';
 import {provideEffects} from '@ngrx/effects';
 
@@ -29,7 +29,7 @@ import {colorGradingFeature} from './modules/video/11-color-grading/colorGrading
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideHttpClient(), // Adding HttpClient support
+    provideHttpClient(withFetch()), // Adding HttpClient support
     provideRouter(routes),
     provideStore({ 
       ...reducers, 
