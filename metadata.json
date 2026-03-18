@@ -1,5 +1,9 @@
 {
-  "name": "HEAVY-TOOLS",
-  "description": "A comprehensive hybrid-online enterprise suite for video, audio, and image processing.",
-  "requestFramePermissions": ["camera", "microphone"]
+  "name": "Omni-Tool Next.js",
+  "description": "Hybrid-Online Enterprise Suite migrated to Next.js",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
 }

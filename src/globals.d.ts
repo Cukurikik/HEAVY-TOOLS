@@ -1,1 +1,0 @@
-declare const Gemini_API_KEY: string;
