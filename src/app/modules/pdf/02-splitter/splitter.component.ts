@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
 import { 
     PdfDropZoneComponent, 
     PdfPreviewComponent, 
@@ -101,7 +102,7 @@ export class SplitterComponent implements OnDestroy {
   
   onProcess() {
      this.store.dispatch(SplitterActions.startProcessing());
-     this.state$.subscribe(state => {
+     this.state$.pipe(take(1)).subscribe(state => {
         if (!state.inputFile) return;
         this.bridge.process<unknown, Blob>(
           () => new Worker(new URL('./splitter.worker', import.meta.url), { type: 'module' }),
@@ -117,7 +118,7 @@ export class SplitterComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {
