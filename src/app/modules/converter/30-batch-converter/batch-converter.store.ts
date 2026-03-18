@@ -5,7 +5,7 @@ import { createActionGroup, createFeature, createReducer, emptyProps, on, props 
 import { ProcessingStatus, ConverterErrorCode } from '../shared/types/converter.types';
 
 export interface BatchConverterState {
-  inputFile: File | null;
+  inputFiles: File[];
   inputText: string;
   outputFormat: string;
   outputBlob: Blob | null;
@@ -19,7 +19,7 @@ export interface BatchConverterState {
 }
 
 const initialState: BatchConverterState = {
-  inputFile: null,
+  inputFiles: [],
   inputText: '',
   outputFormat: 'auto',
   outputBlob: null,
@@ -34,7 +34,7 @@ const initialState: BatchConverterState = {
 export const BatchConverterActions = createActionGroup({
   source: 'Batch Converter',
   events: {
-    'Load File': props<{ file: File }>(),
+    'Load Files': props<{ files: File[] }>(),
     'Set Input Text': props<{ text: string }>(),
     'Set Output Format': props<{ format: string }>(),
     'Start Processing': emptyProps(),
@@ -49,8 +49,8 @@ export const batchConverterFeature = createFeature({
   name: 'batchConverter',
   reducer: createReducer(
     initialState,
-    on(BatchConverterActions.loadFile, (state, { file }) => ({
-      ...state, inputFile: file, status: 'idle' as const, errorCode: null, errorMessage: null })),
+    on(BatchConverterActions.loadFiles, (state, { files }) => ({
+      ...state, inputFiles: [...state.inputFiles, ...files], status: 'idle' as const, errorCode: null, errorMessage: null })),
     on(BatchConverterActions.setInputText, (state, { text }) => ({ ...state, inputText: text })),
     on(BatchConverterActions.setOutputFormat, (state, { format }) => ({ ...state, outputFormat: format })),
     on(BatchConverterActions.startProcessing, (state) => ({
@@ -65,7 +65,7 @@ export const batchConverterFeature = createFeature({
 
 export const {
   selectBatchConverterState: selectBatchConverterState,
-  selectInputFile: selectBatchConverterInputFile,
+  selectInputFiles: selectBatchConverterInputFiles,
   selectOutputFormat: selectBatchConverterOutputFormat,
   selectStatus: selectBatchConverterStatus,
   selectProgress: selectBatchConverterProgress,
