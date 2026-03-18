@@ -117,7 +117,7 @@ export class ConverterComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

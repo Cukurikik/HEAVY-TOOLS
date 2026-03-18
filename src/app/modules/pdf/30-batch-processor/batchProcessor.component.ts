@@ -117,7 +117,7 @@ export class BatchProcessorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

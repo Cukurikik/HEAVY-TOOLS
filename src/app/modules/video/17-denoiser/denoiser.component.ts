@@ -118,7 +118,7 @@ export class DenoiserComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) { const b = msg.data as Blob; this.store.dispatch(DenoiserActions.processingSuccess({ outputBlob: b, outputSizeMB: b.size / 1_048_576 })); }
         else if (msg.type === 'error') { this.store.dispatch(DenoiserActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Denoising failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(DenoiserActions.resetState()); }
 }

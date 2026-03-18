@@ -117,7 +117,7 @@ export class WatermarkComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

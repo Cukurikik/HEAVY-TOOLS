@@ -117,7 +117,7 @@ export class ThumbnailGeneratorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

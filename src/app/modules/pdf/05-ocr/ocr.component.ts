@@ -117,7 +117,7 @@ export class OcrComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

@@ -167,7 +167,7 @@ export class LooperComponent implements OnDestroy {
           this.store.dispatch(LooperActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Loop creation failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(LooperActions.resetState()); }

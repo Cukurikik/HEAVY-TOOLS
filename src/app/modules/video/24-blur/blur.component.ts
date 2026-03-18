@@ -107,7 +107,7 @@ export class BlurComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) { const b = msg.data as Blob; this.store.dispatch(BlurActions.processingSuccess({ outputBlob: b, outputSizeMB: b.size / 1_048_576 })); }
         else if (msg.type === 'error') { this.store.dispatch(BlurActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Blur failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(BlurActions.resetState()); }
 }

@@ -117,7 +117,7 @@ export class PasswordProtectorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

@@ -90,7 +90,7 @@ export class TransitionsComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) { const b = msg.data as Blob; this.store.dispatch(TransitionsActions.processingSuccess({ outputBlob: b, outputSizeMB: b.size / 1_048_576 })); }
         else if (msg.type === 'error') { this.store.dispatch(TransitionsActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Transition failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(TransitionsActions.resetState()); }
 }

@@ -117,7 +117,7 @@ export class MetadataEditorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

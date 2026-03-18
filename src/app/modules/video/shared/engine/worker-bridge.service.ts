@@ -26,10 +26,10 @@ export class WorkerBridgeService {
     timeoutId = setTimeout(() => {
       if (!done) {
         cleanup();
-        subject.next({ type: 'error', errorCode: 'FFMPEG_TIMEOUT', message: 'Operation timed out after 15 seconds.' });
+        subject.next({ type: 'error', errorCode: 'FFMPEG_TIMEOUT', message: 'Operation timed out after 5 minutes.' });
         subject.complete();
       }
-    }, 15_000);
+    }, 300_000);
 
     worker.onmessage = (event: MessageEvent<WorkerMessage<TOutput>>) => {
       const msg = event.data;

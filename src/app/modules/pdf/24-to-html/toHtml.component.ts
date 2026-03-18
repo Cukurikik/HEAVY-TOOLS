@@ -117,7 +117,7 @@ export class ToHtmlComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

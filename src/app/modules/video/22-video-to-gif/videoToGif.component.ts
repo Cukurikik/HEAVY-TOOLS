@@ -164,7 +164,7 @@ export class VideoToGifComponent implements OnDestroy {
           this.store.dispatch(VideoToGifActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'GIF conversion failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(VideoToGifActions.resetState()); }

@@ -117,7 +117,7 @@ export class ImageExtractorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

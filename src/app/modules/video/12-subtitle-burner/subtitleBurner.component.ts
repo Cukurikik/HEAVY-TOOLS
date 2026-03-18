@@ -161,7 +161,7 @@ export class SubtitleBurnerComponent implements OnDestroy {
           this.store.dispatch(SubtitleBurnerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Burning failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(SubtitleBurnerActions.resetState()); }

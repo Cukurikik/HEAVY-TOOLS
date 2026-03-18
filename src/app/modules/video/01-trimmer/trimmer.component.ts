@@ -134,7 +134,7 @@ export class TrimmerComponent implements OnDestroy {
           this.store.dispatch(TrimmerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Processing failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(TrimmerActions.resetState()); }

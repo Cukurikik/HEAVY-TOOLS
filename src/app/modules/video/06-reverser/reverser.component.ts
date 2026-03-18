@@ -165,7 +165,7 @@ export class ReverserComponent implements OnDestroy {
           this.store.dispatch(ReverserActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Reversal failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(ReverserActions.resetState()); }

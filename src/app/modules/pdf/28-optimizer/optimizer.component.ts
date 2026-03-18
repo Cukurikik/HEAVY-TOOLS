@@ -117,7 +117,7 @@ export class OptimizerComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

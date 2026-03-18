@@ -107,7 +107,7 @@ export class SplitterComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) { const b = msg.data as Blob; this.store.dispatch(SplitterActions.processingSuccess({ outputBlob: b, outputSizeMB: b.size / 1_048_576 })); }
         else if (msg.type === 'error') { this.store.dispatch(SplitterActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Splitting failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(SplitterActions.resetState()); }
 }

@@ -117,7 +117,7 @@ export class BookmarkEditorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

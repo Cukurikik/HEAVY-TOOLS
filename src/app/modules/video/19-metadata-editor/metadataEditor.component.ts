@@ -93,7 +93,7 @@ export class MetadataEditorComponent implements OnDestroy {
         else if (msg.type === 'complete' && msg.data) { const b = msg.data as Blob; this.store.dispatch(MetadataEditorActions.processingSuccess({ outputBlob: b, outputSizeMB: b.size / 1_048_576 })); }
         else if (msg.type === 'error') { this.store.dispatch(MetadataEditorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Metadata save failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(MetadataEditorActions.resetState()); }
 }

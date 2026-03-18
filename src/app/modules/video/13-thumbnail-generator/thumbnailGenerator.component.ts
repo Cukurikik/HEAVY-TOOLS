@@ -163,7 +163,7 @@ export class ThumbnailGeneratorComponent implements OnDestroy {
           this.store.dispatch(ThumbnailGeneratorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Thumbnail generation failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(ThumbnailGeneratorActions.resetState()); }

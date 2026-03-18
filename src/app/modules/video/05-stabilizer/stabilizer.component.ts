@@ -189,7 +189,7 @@ export class StabilizerComponent implements OnDestroy {
           this.store.dispatch(StabilizerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Stabilization failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(StabilizerActions.resetState()); }

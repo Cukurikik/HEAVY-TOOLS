@@ -117,7 +117,7 @@ export class TextExtractorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

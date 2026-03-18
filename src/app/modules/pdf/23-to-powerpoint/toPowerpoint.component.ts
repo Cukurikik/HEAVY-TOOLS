@@ -117,7 +117,7 @@ export class ToPowerpointComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

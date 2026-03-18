@@ -117,7 +117,7 @@ export class PageReordererComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

@@ -117,7 +117,7 @@ export class UnlockerComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

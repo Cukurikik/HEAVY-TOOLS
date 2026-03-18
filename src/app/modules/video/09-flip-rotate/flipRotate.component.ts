@@ -190,7 +190,7 @@ export class FlipRotateComponent implements OnDestroy {
           this.store.dispatch(FlipRotateActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Transform failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(FlipRotateActions.resetState()); }

@@ -117,7 +117,7 @@ export class CropResizeComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

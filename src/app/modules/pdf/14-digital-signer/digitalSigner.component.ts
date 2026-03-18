@@ -117,7 +117,7 @@ export class DigitalSignerComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

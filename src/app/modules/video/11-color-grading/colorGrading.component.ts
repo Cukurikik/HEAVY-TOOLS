@@ -196,7 +196,7 @@ export class ColorGradingComponent implements OnDestroy {
           this.store.dispatch(ColorGradingActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Grading failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(ColorGradingActions.resetState()); }

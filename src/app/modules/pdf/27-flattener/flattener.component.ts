@@ -117,7 +117,7 @@ export class FlattenerComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

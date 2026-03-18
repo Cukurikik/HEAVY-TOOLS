@@ -185,7 +185,7 @@ export class CropResizeComponent implements OnDestroy {
           this.store.dispatch(CropResizeActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Resize failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(CropResizeActions.resetState()); }

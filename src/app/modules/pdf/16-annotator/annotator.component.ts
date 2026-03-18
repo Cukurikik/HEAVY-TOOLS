@@ -117,7 +117,7 @@ export class AnnotatorComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

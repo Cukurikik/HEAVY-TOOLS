@@ -117,7 +117,7 @@ export class ToImageBatchComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {

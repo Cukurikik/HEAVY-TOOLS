@@ -184,7 +184,7 @@ export class CompressorComponent implements OnDestroy {
           this.store.dispatch(CompressorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Compression failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(CompressorActions.resetState()); }

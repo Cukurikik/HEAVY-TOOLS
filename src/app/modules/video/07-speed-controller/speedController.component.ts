@@ -182,7 +182,7 @@ export class SpeedControllerComponent implements OnDestroy {
           this.store.dispatch(SpeedControllerActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Speed change failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(SpeedControllerActions.resetState()); }

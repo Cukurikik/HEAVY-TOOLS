@@ -100,7 +100,7 @@ export class AnalyserComponent implements OnDestroy {
         }
         else if (msg.type === 'error') { this.store.dispatch(AnalyserActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Analysis failed' })); }
       });
-    }).unsubscribe();
+    });
   }
   ngOnDestroy() { this.store.dispatch(AnalyserActions.resetState()); }
 }

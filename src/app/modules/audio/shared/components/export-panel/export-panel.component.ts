@@ -1,17 +1,17 @@
 import type { ExportFormat } from '../../types/audio.types';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { AudioWorkerBridgeService } from '../../engine/worker-bridge.service';
 
 @Component({
   selector: 'app-audio-export-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-[#12121a] rounded-xl p-4 border border-white/5 space-y-4">
       <div class="flex items-center justify-between">
-        <span class="text-sm text-white/70 font-medium">Export Format</span>
+        <span class="text-sm text-white/70 font-medium">✅ Processing Complete!</span>
         @if (outputSizeMB) {
           <span class="text-xs text-white/40">{{ outputSizeMB.toFixed(1) }} MB</span>
         }
@@ -26,11 +26,11 @@ import { FormsModule } from '@angular/forms';
           </button>
         }
       </div>
-      <button class="w-full py-3 rounded-xl font-bold text-sm transition-all"
+      <button class="w-full py-3 rounded-xl font-bold text-sm transition-all hover:shadow-glow"
               [class.bg-gradient-to-r]="!disabled" [class.from-cyan-500]="!disabled"
-              [class.to-purple-500]="!disabled" [class.text-white]="!disabled"
+              [class.to-purple-500]="!disabled" [class.text-black]="!disabled"
               [class.bg-white/10]="disabled" [class.text-white/30]="disabled"
-              [disabled]="disabled" (click)="download.emit()">
+              [disabled]="disabled" (click)="onDownload()">
         {{ disabled ? 'Process First' : '⬇ Download ' + selectedFormat().toUpperCase() }}
       </button>
     </div>
@@ -39,12 +39,21 @@ import { FormsModule } from '@angular/forms';
 export class AudioExportPanelComponent {
   @Input() disabled = true;
   @Input() outputSizeMB: number | null = null;
+  @Input() outputBlob: Blob | null = null;
+  @Input() defaultFilename = 'omni_audio';
   @Input() formats: ExportFormat[] = ['wav', 'mp3', 'aac', 'ogg', 'flac', 'opus', 'm4a'];
-  @Output() download = new EventEmitter<void>();
 
+  private worker = inject(AudioWorkerBridgeService);
   selectedFormat = signal<ExportFormat>('mp3');
 
   selectFormat(format: ExportFormat) {
     this.selectedFormat.set(format);
+  }
+
+  onDownload() {
+    if (this.outputBlob) {
+      const filename = `${this.defaultFilename}.${this.selectedFormat()}`;
+      this.worker.downloadBlob(this.outputBlob, filename);
+    }
   }
 }

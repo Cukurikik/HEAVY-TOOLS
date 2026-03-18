@@ -146,7 +146,7 @@ export class AudioExtractorComponent implements OnDestroy {
           this.store.dispatch(AudioExtractorActions.processingFailure({ errorCode: msg.errorCode ?? 'UNKNOWN_ERROR', message: msg.message ?? 'Audio extraction failed' }));
         }
       });
-    }).unsubscribe();
+    });
   }
 
   ngOnDestroy() { this.store.dispatch(AudioExtractorActions.resetState()); }

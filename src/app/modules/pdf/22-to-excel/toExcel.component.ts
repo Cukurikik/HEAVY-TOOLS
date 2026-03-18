@@ -117,7 +117,7 @@ export class ToExcelComponent implements OnDestroy {
               }
            }
         });
-     }).unsubscribe();
+     });
   }
   
   ngOnDestroy() {
