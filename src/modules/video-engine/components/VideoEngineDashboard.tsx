@@ -1,172 +1,82 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Upload, Play, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useVideoStore } from "../store/useVideoStore";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { VIDEO_TOOLS } from "../constants/tools";
+import Link from "next/link";
 
 export function VideoEngineDashboard() {
-  const { task, setFile, setOperation, processVideo, reset } = useVideoStore();
-  const [dragActive, setDragActive] = useState(false);
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Upload Section */}
+    <div className="space-y-16 py-12">
+      {/* Header Section */}
+      <div className="text-center space-y-4 max-w-3xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest mb-4"
         >
-          <h2 className="text-xl font-semibold text-white mb-4">1. Select Video</h2>
-          <div
-            className={cn(
-              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-              dragActive ? "border-indigo-500 bg-indigo-500/10" : "border-slate-700 hover:border-slate-500",
-              task.file ? "border-emerald-500 bg-emerald-500/10" : ""
-            )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => document.getElementById("video-upload")?.click()}
-          >
-            <input
-              id="video-upload"
-              type="file"
-              accept="video/*"
-              className="hidden"
-              onChange={handleChange}
-            />
-            {task.file ? (
-              <div className="flex flex-col items-center space-y-2">
-                <CheckCircle className="w-10 h-10 text-emerald-400" />
-                <p className="text-emerald-300 font-medium">{task.file.name}</p>
-                <p className="text-sm text-emerald-400/70">
-                  {(task.file.size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center space-y-2">
-                <Upload className="w-10 h-10 text-slate-400" />
-                <p className="text-slate-300 font-medium">Drag & drop your video here</p>
-                <p className="text-sm text-slate-500">or click to browse files</p>
-              </div>
-            )}
-          </div>
+          Omni-Tool Video Suite
         </motion.div>
-
-        {/* Tools Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl md:text-7xl font-black text-white tracking-tighter"
         >
-          <h2 className="text-xl font-semibold text-white mb-4">2. Select Operation</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {(["trim", "merge", "convert", "stabilize"] as const).map((op) => (
-              <button
-                key={op}
-                onClick={() => setOperation(op)}
-                className={cn(
-                  "p-4 rounded-xl border text-left transition-all",
-                  task.operation === op
-                    ? "border-indigo-500 bg-indigo-500/20 text-indigo-300"
-                    : "border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:border-slate-600"
-                )}
-              >
-                <span className="capitalize font-medium">{op}</span>
-              </button>
-            ))}
-          </div>
-        </motion.div>
+          VIDEO <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">TITAN</span> ENGINE
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-slate-400 text-lg md:text-xl leading-relaxed"
+        >
+          30+ Professional tools for video manipulation, conversion, and enhancement. 
+          Powered by FFmpeg WASM for secure, client-side processing.
+        </motion.p>
       </div>
 
-      {/* Action Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col items-center"
-      >
-        <button
-          onClick={processVideo}
-          disabled={!task.file || task.operation === "idle" || task.status === "processing"}
-          className={cn(
-            "flex items-center space-x-2 px-8 py-4 rounded-full font-bold text-lg transition-all",
-            !task.file || task.operation === "idle"
-              ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-              : task.status === "processing"
-              ? "bg-indigo-600 text-white cursor-wait"
-              : task.status === "success"
-              ? "bg-emerald-600 text-white"
-              : "bg-indigo-500 hover:bg-indigo-400 text-white hover:scale-105 active:scale-95"
-          )}
-        >
-          {task.status === "processing" ? (
-            <>
-              <Loader2 className="w-6 h-6 animate-spin" />
-              <span>Processing... {task.progress}%</span>
-            </>
-          ) : task.status === "success" ? (
-            <>
-              <CheckCircle className="w-6 h-6" />
-              <span>Completed!</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-6 h-6" />
-              <span>Start Processing</span>
-            </>
-          )}
-        </button>
-
-        {task.status === "processing" && (
-          <div className="w-full max-w-md mt-6 bg-slate-800 rounded-full h-2 overflow-hidden">
-            <motion.div
-              className="bg-indigo-500 h-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${task.progress}%` }}
-              transition={{ duration: 0.2 }}
-            />
-          </div>
-        )}
-
-        {task.status === "success" && (
-          <button
-            onClick={reset}
-            className="mt-4 text-slate-400 hover:text-white underline text-sm"
+      {/* Tools Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
+        {VIDEO_TOOLS.map((tool, index) => (
+          <motion.div
+            key={tool.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.03, type: "spring", stiffness: 100 }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
           >
-            Process another video
-          </button>
-        )}
-      </motion.div>
+            <Link
+              href={`/video/${tool.id}`}
+              className="group relative block p-8 h-full rounded-3xl bg-slate-900/40 border border-white/5 hover:border-indigo-500/50 hover:bg-slate-800/40 transition-all backdrop-blur-xl overflow-hidden shadow-2xl"
+            >
+              {/* Glow Effect */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 blur-[80px] group-hover:bg-indigo-500/20 transition-all duration-500" />
+              
+              <div className={`relative p-4 rounded-2xl bg-slate-800/80 w-fit mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg ${tool.color}`}>
+                <tool.icon className="w-8 h-8" />
+              </div>
+              
+              <div className="relative space-y-3">
+                <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors duration-300">
+                  {tool.name}
+                </h3>
+                <p className="text-sm text-slate-400 leading-relaxed font-medium">
+                  {tool.desc}
+                </p>
+              </div>
+
+              {/* Action Indicator */}
+              <div className="absolute bottom-6 right-8 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0">
+                <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }
