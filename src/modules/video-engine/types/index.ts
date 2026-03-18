@@ -1,43 +1,44 @@
-export type VideoOperation = 
+export type VideoOperation =
+  | "trimmer"
+  | "merger"
   | "converter"
   | "compressor"
-  | "cutter"
-  | "merger"
-  | "subtitle"
-  | "remove-audio"
-  | "extract-audio"
-  | "watermark"
-  | "speed"
+  | "flipper"
+  | "rotator"
+  | "stabilizer"
   | "reverse"
-  | "rotate"
-  | "crop"
-  | "resize"
-  | "frame-extractor"
-  | "gif-generator"
-  | "thumbnail"
-  | "live-stream"
+  | "speed-control"
+  | "loop-engine"
+  | "pro-editor"
+  | "thumbnail-extractor"
+  | "subtitle-burner"
+  | "watermark"
+  | "noise-reducer"
+  | "color-grader"
+  | "resolution-upscaler"
+  | "frame-interpolator"
+  | "gif-converter"
+  | "hdr-tonemapper"
+  | "black-white"
+  | "slow-motion"
+  | "timelapse"
   | "screen-recorder"
-  | "webcam-recorder"
-  | "filters"
-  | "upscaling"
-  | "noise-reduction"
-  | "stabilization"
-  | "auto-subtitle"
-  | "scene-detection"
-  | "metadata"
-  | "encryption"
-  | "downloader"
-  | "hls-generator"
-  | "batch"
+  | "metadata-editor"
+  | "batch-processor"
+  | "chapter-marker"
+  | "audio-extractor"
+  | "video-splitter"
+  | "aspect-ratio"
   | "idle";
 
 export interface VideoTask {
   id: string;
   file: File | null;
+  files: File[];
   operation: VideoOperation;
   status: "idle" | "processing" | "success" | "error";
   progress: number;
   resultUrl?: string;
   error?: string;
-  options?: any;
+  options: Record<string, unknown>;
 }

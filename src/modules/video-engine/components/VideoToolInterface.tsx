@@ -1,17 +1,19 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Upload, 
-  Play, 
-  CheckCircle, 
-  Loader2, 
-  Download, 
-  RefreshCcw, 
+import {
+  Upload,
+  Play,
+  CheckCircle,
+  Loader2,
+  Download,
+  RefreshCcw,
   FileVideo,
   Settings2,
-  ChevronLeft
+  ChevronLeft,
+  Plus,
+  X,
 } from "lucide-react";
 import { useVideoStore } from "../store/useVideoStore";
 import { cn } from "@/lib/utils";
@@ -23,12 +25,26 @@ interface VideoToolInterfaceProps {
   title: string;
   description: string;
   options?: React.ReactNode;
+  isScreenRecorder?: boolean;
+  isMultiFile?: boolean;
 }
 
-export function VideoToolInterface({ toolId, title, description, options }: VideoToolInterfaceProps) {
-  const { task, setFile, setOperation, processVideo, reset } = useVideoStore();
+export function VideoToolInterface({
+  toolId,
+  title,
+  description,
+  options,
+  isScreenRecorder = false,
+  isMultiFile = false,
+}: VideoToolInterfaceProps) {
+  const { task, setFile, addFiles, setOperation, processVideo, reset } = useVideoStore();
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const videoPreviewUrl = useMemo(() => {
+    if (task.file) return URL.createObjectURL(task.file);
+    return null;
+  }, [task.file]);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -44,40 +60,57 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+    const files = Array.from(e.dataTransfer.files);
+    if (isMultiFile) {
+      addFiles(files);
+      setOperation(toolId);
+    } else if (files[0]) {
+      setFile(files[0]);
       setOperation(toolId);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (isMultiFile) {
+      addFiles(files);
+      setOperation(toolId);
+    } else if (files[0]) {
+      setFile(files[0]);
       setOperation(toolId);
     }
   };
+
+  const handleProcess = () => {
+    if (isScreenRecorder) {
+      setOperation(toolId);
+    }
+    processVideo();
+  };
+
+  const canProcess = isScreenRecorder || (task.file && task.status !== "processing");
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-32">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center space-x-6">
-          <Link 
+          <Link
             href="/video"
             className="group p-4 rounded-2xl bg-slate-900/80 border border-white/5 text-slate-400 hover:text-white hover:bg-slate-800 transition-all backdrop-blur-xl shadow-xl"
           >
             <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
           </Link>
           <div className="space-y-1">
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="text-4xl font-black text-white tracking-tight"
             >
               {title}
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
@@ -88,7 +121,7 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
           </div>
         </div>
 
-        {task.file && (
+        {(task.file || task.files.length > 0) && (
           <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -104,71 +137,90 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left Column: Upload & Preview */}
         <div className="lg:col-span-8 space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={cn(
-              "relative aspect-video rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl",
-              dragActive ? "border-indigo-500 bg-indigo-500/10 scale-[1.02]" : "border-white/10 hover:border-white/20",
-              task.file ? "border-emerald-500/20" : ""
-            )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => !task.file && fileInputRef.current?.click()}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*"
-              className="hidden"
-              onChange={handleChange}
-            />
+          {/* Screen Recorder doesn't need upload */}
+          {!isScreenRecorder ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={cn(
+                "relative aspect-video rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl",
+                dragActive
+                  ? "border-indigo-500 bg-indigo-500/10 scale-[1.02]"
+                  : "border-white/10 hover:border-white/20",
+                task.file ? "border-emerald-500/20" : ""
+              )}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+              onClick={() => !task.file && fileInputRef.current?.click()}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="video/*"
+                multiple={isMultiFile}
+                className="hidden"
+                onChange={handleChange}
+              />
 
-            <AnimatePresence mode="wait">
-              {!task.file ? (
-                <motion.div
-                  key="upload"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.1 }}
-                  className="flex flex-col items-center space-y-6 p-12 text-center cursor-pointer group"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full group-hover:bg-indigo-500/40 transition-all" />
-                    <div className="relative w-24 h-24 rounded-3xl bg-slate-800/80 border border-white/5 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                      <Upload className="w-10 h-10" />
+              <AnimatePresence mode="wait">
+                {!task.file ? (
+                  <motion.div
+                    key="upload"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.1 }}
+                    className="flex flex-col items-center space-y-6 p-12 text-center cursor-pointer group"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full group-hover:bg-indigo-500/40 transition-all" />
+                      <div className="relative w-24 h-24 rounded-3xl bg-slate-800/80 border border-white/5 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                        <Upload className="w-10 h-10" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-2xl font-bold text-white">Drop your video here</p>
-                    <p className="text-slate-500 font-medium">MP4, MKV, AVI or MOV up to 500MB</p>
-                  </div>
-                  <div className="px-8 py-3 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
-                    Select File
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="preview"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full h-full flex flex-col group"
-                >
-                  <div className="flex-1 flex items-center justify-center bg-black/60 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
-                    <FileVideo className="w-32 h-32 text-indigo-400 opacity-10 group-hover:scale-110 transition-transform duration-1000" />
-                    
-                    {/* File Info Overlay */}
-                    <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
+                    <div className="space-y-2">
+                      <p className="text-2xl font-bold text-white">
+                        {isMultiFile ? "Drop your videos here" : "Drop your video here"}
+                      </p>
+                      <p className="text-slate-500 font-medium">
+                        MP4, MKV, AVI or MOV up to 500MB
+                      </p>
+                    </div>
+                    <div className="px-8 py-3 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                      {isMultiFile ? "Select Files" : "Select File"}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="preview"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="w-full h-full flex flex-col"
+                  >
+                    {/* Video Preview Player */}
+                    {videoPreviewUrl ? (
+                      <video
+                        src={videoPreviewUrl}
+                        controls
+                        className="w-full h-full object-contain bg-black"
+                        preload="metadata"
+                      />
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center bg-black/60 relative overflow-hidden">
+                        <FileVideo className="w-32 h-32 text-indigo-400 opacity-10" />
+                      </div>
+                    )}
+
+                    {/* File Info Bar */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
                       <div className="flex items-center space-x-4">
-                        <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-xl backdrop-blur-xl">
-                          <FileVideo className="w-8 h-8" />
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-xl backdrop-blur-xl">
+                          <FileVideo className="w-7 h-7" />
                         </div>
-                        <div className="space-y-0.5">
-                          <p className="text-lg font-bold text-white truncate max-w-[300px]">
+                        <div className="space-y-0.5 flex-1 min-w-0">
+                          <p className="text-lg font-bold text-white truncate">
                             {task.file.name}
                           </p>
                           <p className="text-sm text-emerald-400/80 font-bold uppercase tracking-widest">
@@ -177,11 +229,77 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                         </div>
                       </div>
                     </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ) : (
+            /* Screen Recorder Preview Area */
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative aspect-video rounded-[2.5rem] border-2 border-dashed border-red-500/20 transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl"
+            >
+              <div className="flex flex-col items-center space-y-6 p-12 text-center">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-red-500/20 blur-2xl rounded-full animate-pulse" />
+                  <div className="relative w-24 h-24 rounded-3xl bg-slate-800/80 border border-red-500/20 flex items-center justify-center text-red-400">
+                    <Monitor className="w-10 h-10" />
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-white">Screen Recorder</p>
+                  <p className="text-slate-500 font-medium">
+                    Click START ENGINE to begin capturing your screen
+                  </p>
+                </div>
+                {task.status === "processing" && (
+                  <div className="flex items-center space-x-2 text-red-400 animate-pulse">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <span className="font-bold text-sm uppercase tracking-widest">Recording...</span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Multi-file list */}
+          {isMultiFile && task.files.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 rounded-[2rem] bg-slate-900/40 border border-white/5 backdrop-blur-2xl shadow-2xl space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-white font-black text-sm uppercase tracking-widest">
+                  {task.files.length} Files Loaded
+                </h3>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold hover:bg-indigo-500/20 transition-all"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>Add More</span>
+                </button>
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {task.files.map((f, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between p-3 rounded-xl bg-slate-800/50 border border-white/5"
+                  >
+                    <div className="flex items-center space-x-3 min-w-0">
+                      <FileVideo className="w-5 h-5 text-indigo-400 shrink-0" />
+                      <span className="text-white text-sm font-medium truncate">{f.name}</span>
+                    </div>
+                    <span className="text-slate-500 text-xs font-bold shrink-0 ml-2">
+                      {(f.size / (1024 * 1024)).toFixed(1)} MB
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Status Cards */}
           <div className="grid grid-cols-1 gap-6">
@@ -201,7 +319,9 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-white">Processing Engine</h3>
-                        <p className="text-indigo-400/60 text-sm font-medium">Executing FFmpeg commands...</p>
+                        <p className="text-indigo-400/60 text-sm font-medium">
+                          {isScreenRecorder ? "Recording screen..." : "Executing FFmpeg commands..."}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -209,7 +329,7 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                     </div>
                   </div>
                   <div className="relative w-full h-4 bg-slate-800 rounded-full overflow-hidden p-1">
-                    <motion.div 
+                    <motion.div
                       className="h-full bg-gradient-to-r from-indigo-600 to-purple-500 rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)]"
                       initial={{ width: 0 }}
                       animate={{ width: `${task.progress}%` }}
@@ -235,15 +355,17 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black text-white">MISSION SUCCESS!</h3>
-                      <p className="text-emerald-400/80 font-medium">Your file has been transmuted successfully.</p>
+                      <h3 className="text-2xl font-black text-white">MISI SELESAI!</h3>
+                      <p className="text-emerald-400/80 font-medium">
+                        File telah berhasil diproses.
+                      </p>
                     </div>
                   </div>
-                  <motion.a 
+                  <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    href={task.resultUrl} 
-                    download={`processed_${task.file?.name || 'video.mp4'}`}
+                    href={task.resultUrl}
+                    download={`processed_${task.file?.name || "output.mp4"}`}
                     className="w-full md:w-auto flex items-center justify-center space-x-3 px-10 py-5 bg-white text-slate-950 rounded-2xl font-black text-lg shadow-2xl shadow-emerald-500/20 transition-all"
                   >
                     <Download className="w-6 h-6" />
@@ -259,12 +381,14 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                   animate={{ opacity: 1, y: 0 }}
                   className="p-8 rounded-[2rem] bg-red-500/10 border border-red-500/20 shadow-2xl backdrop-blur-xl flex items-center space-x-6"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-red-500 flex items-center justify-center text-white shadow-xl">
-                    <RefreshCcw className="w-10 h-10" />
+                  <div className="w-16 h-16 rounded-2xl bg-red-500 flex items-center justify-center text-white shadow-xl shrink-0">
+                    <X className="w-10 h-10" />
                   </div>
                   <div>
                     <h3 className="text-2xl font-black text-white">ENGINE FAILURE</h3>
-                    <p className="text-red-400/80 font-medium">{task.error || "An unexpected error occurred during processing."}</p>
+                    <p className="text-red-400/80 font-medium">
+                      {task.error || "An unexpected error occurred during processing."}
+                    </p>
                   </div>
                 </motion.div>
               )}
@@ -274,7 +398,7 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
 
         {/* Right Column: Options & Action */}
         <div className="lg:col-span-4 space-y-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/5 backdrop-blur-2xl shadow-2xl space-y-8"
@@ -288,7 +412,7 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
                 Advanced
               </div>
             </div>
-            
+
             <div className="space-y-6">
               {options || (
                 <div className="p-6 rounded-2xl bg-slate-800/30 border border-white/5 text-slate-500 text-sm text-center italic font-medium">
@@ -298,13 +422,13 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
             </div>
 
             <motion.button
-              whileHover={task.file && task.status !== "processing" ? { scale: 1.02, y: -4 } : {}}
-              whileTap={task.file && task.status !== "processing" ? { scale: 0.98 } : {}}
-              onClick={processVideo}
-              disabled={!task.file || task.status === "processing"}
+              whileHover={canProcess && task.status !== "processing" ? { scale: 1.02, y: -4 } : {}}
+              whileTap={canProcess && task.status !== "processing" ? { scale: 0.98 } : {}}
+              onClick={handleProcess}
+              disabled={!canProcess || task.status === "processing"}
               className={cn(
                 "w-full flex items-center justify-center space-x-4 py-6 rounded-[1.5rem] font-black text-xl transition-all shadow-2xl",
-                !task.file || task.status === "processing"
+                !canProcess || task.status === "processing"
                   ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                   : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-indigo-500/25"
               )}
@@ -319,20 +443,46 @@ export function VideoToolInterface({ toolId, title, description, options }: Vide
           </motion.div>
 
           {/* Info Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-emerald-500/10 relative overflow-hidden group"
           >
             <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-emerald-500/10 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all duration-1000" />
-            <h3 className="text-emerald-400 font-black text-sm mb-3 uppercase tracking-widest">Security Protocol</h3>
+            <h3 className="text-emerald-400 font-black text-sm mb-3 uppercase tracking-widest">
+              Security Protocol
+            </h3>
             <p className="text-sm text-emerald-300/60 leading-relaxed font-medium">
-              Processing executes via <span className="text-emerald-400 font-bold">Client-Side WASM</span>. Your data remains local, encrypted by browser sandbox isolation. No server-side uploads required.
+              Processing executes via{" "}
+              <span className="text-emerald-400 font-bold">Client-Side WASM</span>. Your data
+              remains local, encrypted by browser sandbox isolation. No server-side uploads required.
             </p>
           </motion.div>
         </div>
       </div>
     </div>
+  );
+}
+
+// Monitor icon for screen recorder
+function Monitor(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <rect width="20" height="14" x="2" y="3" rx="2" />
+      <line x1="8" x2="16" y1="21" y2="21" />
+      <line x1="12" x2="12" y1="17" y2="21" />
+    </svg>
   );
 }
