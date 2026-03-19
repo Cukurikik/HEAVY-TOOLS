@@ -6,6 +6,8 @@ import { useConverterStore } from "../store/useConverterStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+
 export function ConverterDashboard() {
   const { task, setFile, setOperation, processConversion, reset } = useConverterStore();
   const [dragActive, setDragActive] = useState(false);
@@ -25,7 +27,10 @@ export function ConverterDashboard() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+      const file = e.dataTransfer.files[0];
+      if (file.size <= MAX_SIZE) {
+        setFile(file);
+      }
     }
   };
 
