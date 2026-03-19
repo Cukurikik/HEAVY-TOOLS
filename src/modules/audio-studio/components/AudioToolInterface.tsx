@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Upload, Play, CheckCircle, Loader2, Download,
-  RefreshCcw, Music, Settings2, ChevronLeft, Plus, X,
+  RefreshCcw, Music, Settings2, ChevronLeft, Plus, X, Pause
 } from "lucide-react";
 import { useAudioStore } from "../store/useAudioStore";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { AudioOperation } from "../types";
+import WaveSurfer from "wavesurfer.js";
 
 interface AudioToolInterfaceProps {
   toolId: AudioOperation;
@@ -28,11 +29,69 @@ export function AudioToolInterface({
   const { task, setFile, addFiles, setOperation, processAudio, reset } = useAudioStore();
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const waveformRef = useRef<HTMLDivElement>(null);
+  const wavesurfer = useRef<WaveSurfer | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState("0:00");
+  const [currentTime, setCurrentTime] = useState("0:00");
 
   const audioPreviewUrl = useMemo(() => {
     if (task.file) return URL.createObjectURL(task.file);
     return null;
   }, [task.file]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  useEffect(() => {
+    if (!audioPreviewUrl) {
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+        wavesurfer.current = null;
+      }
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      if (!waveformRef.current) return;
+      if (!wavesurfer.current) {
+        wavesurfer.current = WaveSurfer.create({
+          container: waveformRef.current,
+          waveColor: '#8b5cf6',
+          progressColor: '#c4b5fd',
+          cursorColor: '#f8fafc',
+          barWidth: 2,
+          barGap: 2,
+          barRadius: 2,
+          height: 64,
+          normalize: true,
+        });
+
+        wavesurfer.current.on('audioprocess', () => {
+          if (wavesurfer.current) setCurrentTime(formatTime(wavesurfer.current.getCurrentTime()));
+        });
+        wavesurfer.current.on('ready', () => {
+          if (wavesurfer.current) setDuration(formatTime(wavesurfer.current.getDuration()));
+        });
+        wavesurfer.current.on('finish', () => setIsPlaying(false));
+      }
+      wavesurfer.current.load(audioPreviewUrl);
+      setIsPlaying(false);
+      setCurrentTime("0:00");
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [audioPreviewUrl]);
+
+  const togglePlayMode = () => {
+    if (wavesurfer.current) {
+      wavesurfer.current.playPause();
+      setIsPlaying(wavesurfer.current.isPlaying());
+    }
+  };
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -116,7 +175,16 @@ export function AudioToolInterface({
                 ) : (
                   <motion.div key="preview" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full p-8 space-y-6">
                     {audioPreviewUrl && (
-                      <audio src={audioPreviewUrl} controls className="w-full" preload="metadata" />
+                      <div className="w-full bg-slate-800/50 p-4 sm:p-6 rounded-[1.5rem] border border-white/5 space-y-4 shadow-inner" onClick={(e) => e.stopPropagation()}>
+                        <div ref={waveformRef} className="w-full cursor-pointer" />
+                        <div className="flex items-center justify-between text-violet-400 font-mono text-xs sm:text-sm font-bold">
+                          <span>{currentTime}</span>
+                          <button onClick={(e) => { e.stopPropagation(); togglePlayMode(); }} className="group/play w-12 h-12 flex items-center justify-center bg-violet-500 hover:bg-violet-400 text-white rounded-full shadow-[0_0_20px_rgba(139,92,246,0.5)] transition-all hover:scale-110 active:scale-95 text-center">
+                            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
+                          </button>
+                          <span>{duration}</span>
+                        </div>
+                      </div>
                     )}
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-xl">
