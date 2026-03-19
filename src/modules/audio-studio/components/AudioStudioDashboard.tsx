@@ -4,10 +4,42 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { AUDIO_TOOLS } from "../constants/tools";
 import * as Icons from "lucide-react";
+import { useState } from "react";
+import { useAudioStore } from "../store/useAudioStore";
 
 export function AudioStudioDashboard() {
+  const { task, setFile, setOperation, processAudio, reset } = useAudioStore();
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0]);
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div
+      className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4 rounded-xl transition-colors ${dragActive ? 'bg-violet-900/20 border-2 border-violet-500 border-dashed' : ''}`}
+      onDragEnter={handleDrag}
+      onDragLeave={handleDrag}
+      onDragOver={handleDrag}
+      onDrop={handleDrop}
+      data-testid="dashboard-container"
+    >
       {AUDIO_TOOLS.map((tool, i) => {
         const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[tool.icon] || Icons.Music;
         return (
