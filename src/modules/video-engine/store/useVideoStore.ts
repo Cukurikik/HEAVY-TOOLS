@@ -457,8 +457,21 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
           args = ["-i", inputName, "-c", "copy", outputName];
       }
 
+      let ffmpegLogs = "";
+      const logCallback = ({ message }: { message: string }) => {
+        ffmpegLogs += message + "\n";
+      };
+      ffmpeg.on("log", logCallback);
+
       if (args.length > 0) {
-        await ffmpeg.exec(args);
+        const ret = await ffmpeg.exec(args);
+        ffmpeg.off("log", logCallback);
+        if (ret !== 0) {
+          console.error("FFmpeg Video Logs:", ffmpegLogs);
+          throw new Error(`FFmpeg failed with code ${ret}.`);
+        }
+      } else {
+        ffmpeg.off("log", logCallback);
       }
 
       // Handle splitter — read first segment

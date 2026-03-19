@@ -80,6 +80,8 @@ export function AudioToolInterface({
           wavesurfer.current.on('ready', () => {
             if (wavesurfer.current) setDuration(formatTime(wavesurfer.current.getDuration()));
           });
+          wavesurfer.current.on('play', () => setIsPlaying(true));
+          wavesurfer.current.on('pause', () => setIsPlaying(false));
           wavesurfer.current.on('finish', () => setIsPlaying(false));
         }
         wavesurfer.current.load(audioPreviewUrl);
@@ -90,13 +92,18 @@ export function AudioToolInterface({
 
     initWaveSurfer();
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+        wavesurfer.current = null;
+      }
+    };
   }, [audioPreviewUrl]);
 
-  const togglePlayMode = () => {
+  const togglePlayMode = async () => {
     if (wavesurfer.current) {
-      wavesurfer.current.playPause();
-      setIsPlaying(wavesurfer.current.isPlaying());
+      await wavesurfer.current.playPause();
     }
   };
 

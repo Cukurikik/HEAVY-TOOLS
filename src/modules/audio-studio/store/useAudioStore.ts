@@ -133,11 +133,11 @@ export const useAudioStore = create<AudioStore>()(
             case "trimmer": {
               const start = (opts.start as string) || "00:00:00";
               const end = (opts.end as string) || "00:00:10";
-              args = ["-i", inputName, "-ss", start, "-to", end, "-c", "copy", outputName];
+              args = ["-i", inputName, "-ss", start, "-to", end, outputName];
               break;
             }
             case "merger": {
-              args = ["-i", inputName, "-c", "copy", outputName];
+              args = ["-i", inputName, outputName];
               break;
             }
             case "converter": {
@@ -236,7 +236,7 @@ export const useAudioStore = create<AudioStore>()(
               if (title) mArgs.push("-metadata", `title=${title}`);
               if (artist) mArgs.push("-metadata", `artist=${artist}`);
               if (album) mArgs.push("-metadata", `album=${album}`);
-              mArgs.push("-c", "copy", outputName);
+              mArgs.push(outputName);
               args = mArgs;
               break;
             }
@@ -249,7 +249,7 @@ export const useAudioStore = create<AudioStore>()(
             case "audio-splitter": {
               const segDur = (opts.segmentDuration as number) || 30;
               outputName = "segment_%03d.mp3";
-              args = ["-i", inputName, "-f", "segment", "-segment_time", segDur.toString(), "-c", "copy", outputName];
+              args = ["-i", inputName, "-f", "segment", "-segment_time", segDur.toString(), outputName];
               outputName = "segment_000.mp3";
               break;
             }
@@ -291,8 +291,21 @@ export const useAudioStore = create<AudioStore>()(
             }
           }
 
+          let ffmpegLogs = "";
+          const logCallback = ({ message }: { message: string }) => {
+            ffmpegLogs += message + "\n";
+          };
+          ffmpeg.on("log", logCallback);
+
           if (args.length > 0) {
-            await ffmpeg.exec(args);
+            const ret = await ffmpeg.exec(args);
+            ffmpeg.off("log", logCallback);
+            if (ret !== 0) {
+              console.error("FFmpeg Logs:", ffmpegLogs);
+              throw new Error(`FFmpeg failed with code ${ret}.`);
+            }
+          } else {
+            ffmpeg.off("log", logCallback);
           }
 
           const data = await ffmpeg.readFile(outputName);
