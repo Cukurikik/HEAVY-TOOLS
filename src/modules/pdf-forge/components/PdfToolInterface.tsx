@@ -1,8 +1,9 @@
 'use client';
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Download, Loader2, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
 import { usePdfStore } from '../store/usePdfStore';
+import { FileDropzone } from '@/components/ui/file-dropzone/FileDropzone';
 
 interface PdfToolInterfaceProps {
   title: string;
@@ -14,18 +15,12 @@ interface PdfToolInterfaceProps {
 
 export default function PdfToolInterface({ title, description, gradient, acceptMultiple = false, children }: PdfToolInterfaceProps) {
   const { task, setFiles, processPdf, reset } = usePdfStore();
-  const [dragOver, setDragOver] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = useCallback((fileList: FileList | null) => {
-    if (!fileList) return;
-    const pdfs = Array.from(fileList);
-    if (pdfs.length > 0) setFiles(pdfs);
+  const handleFileSelect = useCallback((files: File[]) => {
+    if (files && files.length > 0) {
+      setFiles(files);
+    }
   }, [setFiles]);
-
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault(); setDragOver(false); handleFiles(e.dataTransfer.files);
-  }, [handleFiles]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 p-6">
@@ -38,21 +33,18 @@ export default function PdfToolInterface({ title, description, gradient, acceptM
 
         {/* Upload Zone */}
         {task.files.length === 0 ? (
-          <motion.div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={onDrop}
-            onClick={() => inputRef.current?.click()}
-            className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all ${
-              dragOver ? 'border-blue-400 bg-blue-500/10' : 'border-gray-700 hover:border-gray-500 bg-gray-900/50'
-            }`}
+          <FileDropzone
+            onFileSelect={handleFileSelect}
+            accept=".pdf,image/*"
+            multiple={acceptMultiple}
+            className="border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all border-gray-700 hover:border-gray-500 bg-gray-900/50"
+            activeClassName="border-blue-400 bg-blue-500/10"
+            inactiveClassName="border-gray-700 hover:border-gray-500 bg-gray-900/50"
           >
             <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <p className="text-gray-300 text-lg">Drop PDF file{acceptMultiple ? 's' : ''} here</p>
             <p className="text-gray-500 text-sm mt-2">or click to browse</p>
-            <input ref={inputRef} type="file" accept=".pdf,image/*" multiple={acceptMultiple} className="hidden"
-              onChange={(e) => handleFiles(e.target.files)} />
-          </motion.div>
+          </FileDropzone>
         ) : (
           <div className="space-y-4">
             {/* File List */}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FileDropzone } from "@/components/ui/file-dropzone/FileDropzone";
 import {
   Upload,
   Play,
@@ -38,7 +39,6 @@ export function VideoToolInterface({
   isMultiFile = false,
 }: VideoToolInterfaceProps) {
   const { task, setFile, addFiles, setOperation, processVideo, reset } = useVideoStore();
-  const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const videoPreviewUrl = useMemo(() => {
@@ -46,33 +46,7 @@ export function VideoToolInterface({
     return null;
   }, [task.file]);
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
-    if (isMultiFile) {
-      addFiles(files);
-      setOperation(toolId);
-    } else if (files[0]) {
-      setFile(files[0]);
-      setOperation(toolId);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const files = e.target.files ? Array.from(e.target.files) : [];
+  const handleFileSelect = (files: File[]) => {
     if (isMultiFile) {
       addFiles(files);
       setOperation(toolId);
@@ -142,28 +116,19 @@ export function VideoToolInterface({
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={cn(
-                "relative aspect-video rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl",
-                dragActive
-                  ? "border-indigo-500 bg-indigo-500/10 scale-[1.02]"
-                  : "border-white/10 hover:border-white/20",
-                task.file ? "border-emerald-500/20" : ""
-              )}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              onClick={() => !task.file && fileInputRef.current?.click()}
             >
-              <input
-                ref={fileInputRef}
-                type="file"
+              <FileDropzone
+                onFileSelect={handleFileSelect}
                 accept="video/*"
                 multiple={isMultiFile}
-                className="hidden"
-                onChange={handleChange}
-              />
-
+                inputRef={fileInputRef}
+                className={cn(
+                  "relative aspect-video rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl"
+                )}
+                activeClassName="border-indigo-500 bg-indigo-500/10 scale-[1.02]"
+                inactiveClassName={task.file ? "border-emerald-500/20" : "border-white/10 hover:border-white/20"}
+                onClick={() => !task.file && fileInputRef.current?.click()}
+              >
               <AnimatePresence mode="wait">
                 {!task.file ? (
                   <motion.div
@@ -232,6 +197,7 @@ export function VideoToolInterface({
                   </motion.div>
                 )}
               </AnimatePresence>
+              </FileDropzone>
             </motion.div>
           ) : (
             /* Screen Recorder Preview Area */

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FileDropzone } from "@/components/ui/file-dropzone/FileDropzone";
 import {
   Upload, Play, CheckCircle, Loader2, Download,
   RefreshCcw, Music, Settings2, ChevronLeft, Plus, X, Pause
@@ -26,7 +27,6 @@ export function AudioToolInterface({
   isRecorder = false, isMultiFile = false, isAnalyzer = false,
 }: AudioToolInterfaceProps) {
   const { task, setFile, addFiles, setOperation, processAudio, reset } = useAudioStore();
-  const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurfer = useRef<any>(null);
@@ -107,23 +107,7 @@ export function AudioToolInterface({
     }
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(e.type === "dragenter" || e.type === "dragover");
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
-    if (isMultiFile) { addFiles(files); } else if (files[0]) { setFile(files[0]); }
-    setOperation(toolId);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
+  const handleFileSelect = (files: File[]) => {
     if (isMultiFile) { addFiles(files); } else if (files[0]) { setFile(files[0]); }
     setOperation(toolId);
   };
@@ -159,16 +143,19 @@ export function AudioToolInterface({
         {/* Left Column: Upload & Preview */}
         <div className="lg:col-span-8 space-y-8">
           {!isRecorder ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className={cn(
-                "relative rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl min-h-[320px]",
-                dragActive ? "border-violet-500 bg-violet-500/10 scale-[1.02]" : "border-white/10 hover:border-white/20",
-                task.file ? "border-emerald-500/20" : ""
-              )}
-              onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}
-              onClick={() => !task.file && fileInputRef.current?.click()}
-            >
-              <input ref={fileInputRef} type="file" accept="audio/*" multiple={isMultiFile} className="hidden" onChange={handleChange} />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <FileDropzone
+                onFileSelect={handleFileSelect}
+                accept="audio/*"
+                multiple={isMultiFile}
+                inputRef={fileInputRef}
+                className={cn(
+                  "relative rounded-[2.5rem] border-2 border-dashed transition-all overflow-hidden flex flex-col items-center justify-center bg-slate-900/40 backdrop-blur-2xl shadow-2xl min-h-[320px]"
+                )}
+                activeClassName="border-violet-500 bg-violet-500/10 scale-[1.02]"
+                inactiveClassName={task.file ? "border-emerald-500/20" : "border-white/10 hover:border-white/20"}
+                onClick={() => !task.file && fileInputRef.current?.click()}
+              >
               <AnimatePresence mode="wait">
                 {!task.file ? (
                   <motion.div key="upload" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center space-y-6 p-12 text-center cursor-pointer group">
@@ -212,6 +199,7 @@ export function AudioToolInterface({
                   </motion.div>
                 )}
               </AnimatePresence>
+              </FileDropzone>
             </motion.div>
           ) : (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}

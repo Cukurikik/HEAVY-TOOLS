@@ -4,35 +4,14 @@ import { motion } from "framer-motion";
 import { Upload, Play, CheckCircle, Loader2, Image as ImageIcon } from "lucide-react";
 import { useImageStore } from "../store/useImageStore";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { FileDropzone } from "@/components/ui/file-dropzone/FileDropzone";
 
 export function ImageMatrixDashboard() {
   const { task, setFile, setOperation, processImage, reset } = useImageStore();
-  const [dragActive, setDragActive] = useState(false);
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+  const handleFileSelect = (files: File[]) => {
+    if (files && files[0]) {
+      setFile(files[0]);
     }
   };
 
@@ -46,25 +25,15 @@ export function ImageMatrixDashboard() {
           className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
         >
           <h2 className="text-xl font-semibold text-white mb-4">1. Select Image</h2>
-          <div
+          <FileDropzone
+            onFileSelect={handleFileSelect}
+            accept="image/*"
             className={cn(
-              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-              dragActive ? "border-pink-500 bg-pink-500/10" : "border-slate-700 hover:border-slate-500",
-              task.file ? "border-emerald-500 bg-emerald-500/10" : ""
+              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer"
             )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => document.getElementById("image-upload")?.click()}
+            activeClassName="border-pink-500 bg-pink-500/10"
+            inactiveClassName={task.file ? "border-emerald-500 bg-emerald-500/10" : "border-slate-700 hover:border-slate-500"}
           >
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleChange}
-            />
             {task.file ? (
               <div className="flex flex-col items-center space-y-2">
                 <CheckCircle className="w-10 h-10 text-emerald-400" />
@@ -80,7 +49,7 @@ export function ImageMatrixDashboard() {
                 <p className="text-sm text-slate-500">or click to browse files</p>
               </div>
             )}
-          </div>
+          </FileDropzone>
         </motion.div>
 
         {/* Tools Section */}
