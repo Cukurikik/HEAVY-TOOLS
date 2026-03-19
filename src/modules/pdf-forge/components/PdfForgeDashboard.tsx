@@ -1,172 +1,40 @@
-"use client";
+'use client';
+import React from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import * as Icons from 'lucide-react';
+import { PDF_TOOLS } from '../constants/tools';
 
-import { motion } from "framer-motion";
-import { Upload, Play, CheckCircle, Loader2, FileText } from "lucide-react";
-import { usePdfStore } from "../store/usePdfStore";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-
-export function PdfForgeDashboard() {
-  const { task, setFile, setOperation, processPdf, reset } = usePdfStore();
-  const [dragActive, setDragActive] = useState(false);
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
+export default function PdfForgeDashboard() {
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Upload Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4">1. Select PDF</h2>
-          <div
-            className={cn(
-              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-              dragActive ? "border-red-500 bg-red-500/10" : "border-slate-700 hover:border-slate-500",
-              task.file ? "border-emerald-500 bg-emerald-500/10" : ""
-            )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => document.getElementById("pdf-upload")?.click()}
-          >
-            <input
-              id="pdf-upload"
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              onChange={handleChange}
-            />
-            {task.file ? (
-              <div className="flex flex-col items-center space-y-2">
-                <CheckCircle className="w-10 h-10 text-emerald-400" />
-                <p className="text-emerald-300 font-medium">{task.file.name}</p>
-                <p className="text-sm text-emerald-400/70">
-                  {(task.file.size / (1024 * 1024)).toFixed(2)} MB
-                </p>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {PDF_TOOLS.map((tool, i) => {
+        const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[tool.icon] || Icons.FileText;
+        return (
+          <motion.div key={tool.id}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.03 }}>
+            <Link href={tool.route} className="block group">
+              <div className="bg-gray-900/60 border border-gray-800 rounded-2xl p-6 hover:border-gray-600 transition-all hover:shadow-xl hover:shadow-black/20 hover:-translate-y-1">
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <IconComponent className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-white font-semibold text-lg">{tool.name}</h3>
+                <p className="text-gray-400 text-sm mt-2 line-clamp-2">{tool.description}</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    tool.execution === 'client' ? 'bg-green-500/20 text-green-400' :
+                    tool.execution === 'server' ? 'bg-amber-500/20 text-amber-400' :
+                    'bg-purple-500/20 text-purple-400'
+                  }`}>
+                    {tool.execution === 'client' ? '⚡ Client' : tool.execution === 'server' ? '🖥️ Server' : '🔄 Hybrid'}
+                  </span>
+                </div>
               </div>
-            ) : (
-              <div className="flex flex-col items-center space-y-2">
-                <FileText className="w-10 h-10 text-slate-400" />
-                <p className="text-slate-300 font-medium">Drag & drop your PDF here</p>
-                <p className="text-sm text-slate-500">or click to browse files</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Tools Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4">2. Select Operation</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {(["merge", "split", "compress", "sign"] as const).map((op) => (
-              <button
-                key={op}
-                onClick={() => setOperation(op)}
-                className={cn(
-                  "p-4 rounded-xl border text-left transition-all",
-                  task.operation === op
-                    ? "border-red-500 bg-red-500/20 text-red-300"
-                    : "border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:border-slate-600"
-                )}
-              >
-                <span className="capitalize font-medium">{op}</span>
-              </button>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Action Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col items-center"
-      >
-        <button
-          onClick={processPdf}
-          disabled={!task.file || task.operation === "idle" || task.status === "processing"}
-          className={cn(
-            "flex items-center space-x-2 px-8 py-4 rounded-full font-bold text-lg transition-all",
-            !task.file || task.operation === "idle"
-              ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-              : task.status === "processing"
-              ? "bg-red-600 text-white cursor-wait"
-              : task.status === "success"
-              ? "bg-emerald-600 text-white"
-              : "bg-red-500 hover:bg-red-400 text-white hover:scale-105 active:scale-95"
-          )}
-        >
-          {task.status === "processing" ? (
-            <>
-              <Loader2 className="w-6 h-6 animate-spin" />
-              <span>Processing... {task.progress}%</span>
-            </>
-          ) : task.status === "success" ? (
-            <>
-              <CheckCircle className="w-6 h-6" />
-              <span>Completed!</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-6 h-6" />
-              <span>Start Processing</span>
-            </>
-          )}
-        </button>
-
-        {task.status === "processing" && (
-          <div className="w-full max-w-md mt-6 bg-slate-800 rounded-full h-2 overflow-hidden">
-            <motion.div
-              className="bg-red-500 h-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${task.progress}%` }}
-              transition={{ duration: 0.2 }}
-            />
-          </div>
-        )}
-
-        {task.status === "success" && (
-          <button
-            onClick={reset}
-            className="mt-4 text-slate-400 hover:text-white underline text-sm"
-          >
-            Process another PDF
-          </button>
-        )}
-      </motion.div>
+            </Link>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
