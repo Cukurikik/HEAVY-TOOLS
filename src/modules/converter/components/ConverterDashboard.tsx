@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Upload, Play, CheckCircle, Loader2, FileArchive } from "lucide-react";
+import { Play, CheckCircle, Loader2, FileArchive } from "lucide-react";
 import { useConverterStore } from "../store/useConverterStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
