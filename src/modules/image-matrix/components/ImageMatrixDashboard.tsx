@@ -6,6 +6,8 @@ import { useImageStore } from "../store/useImageStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
 export function ImageMatrixDashboard() {
   const { task, setFile, setOperation, processImage, reset } = useImageStore();
   const [dragActive, setDragActive] = useState(false);
@@ -25,14 +27,24 @@ export function ImageMatrixDashboard() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith("image/") && file.size <= MAX_SIZE) {
+        setFile(file);
+      } else {
+        alert("Please upload an image smaller than 5MB.");
+      }
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.type.startsWith("image/") && file.size <= MAX_SIZE) {
+        setFile(file);
+      } else {
+        alert("Please upload an image smaller than 5MB.");
+      }
     }
   };
 
