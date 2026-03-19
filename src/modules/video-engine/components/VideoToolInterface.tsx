@@ -56,11 +56,13 @@ export function VideoToolInterface({
     }
   };
 
+  const MAX_SIZE = 100 * 1024 * 1024; // 100MB for video
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("video/") && f.size <= MAX_SIZE);
+    if (files.length === 0) return;
     if (isMultiFile) {
       addFiles(files);
       setOperation(toolId);

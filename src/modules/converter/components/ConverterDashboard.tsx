@@ -20,12 +20,16 @@ export function ConverterDashboard() {
     }
   };
 
+  const MAX_SIZE = 100 * 1024 * 1024; // 100MB
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+      const file = e.dataTransfer.files[0];
+      if (file.size <= MAX_SIZE) {
+        setFile(file);
+      }
     }
   };
 

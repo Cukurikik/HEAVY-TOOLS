@@ -113,11 +113,13 @@ export function AudioToolInterface({
     setDragActive(e.type === "dragenter" || e.type === "dragover");
   };
 
+  const MAX_SIZE = 50 * 1024 * 1024; // 50MB
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("audio/") && f.size <= MAX_SIZE);
+    if (files.length === 0) return;
     if (isMultiFile) { addFiles(files); } else if (files[0]) { setFile(files[0]); }
     setOperation(toolId);
   };
