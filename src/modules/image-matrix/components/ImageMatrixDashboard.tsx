@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Upload, Play, CheckCircle, Loader2, Image as ImageIcon } from "lucide-react";
+import { Play, CheckCircle, Loader2, Image as ImageIcon } from "lucide-react";
 import { useImageStore } from "../store/useImageStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
