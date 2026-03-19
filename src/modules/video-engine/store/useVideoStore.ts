@@ -475,12 +475,12 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
         task: { ...state.task, status: "success", progress: 100, resultUrl: url },
       }));
     } catch (error) {
-      console.error("FFmpeg Error:", error);
+      console.error("FFmpeg Error occurred during processing.", error);
       set((state) => ({
         task: {
           ...state.task,
           status: "error",
-          error: error instanceof Error ? error.message : "Processing failed. Please try a different file or settings.",
+          error: "Processing failed securely. Please try a different file or settings.",
         },
       }));
     }

@@ -77,8 +77,9 @@ export const useAudioStore = create<AudioStore>()(
             await new Promise((r) => setTimeout(r, duration * 1000));
             recorder.stop();
           } catch (error) {
+            console.error("Audio Recording Error occurred.", error);
             set((s) => ({
-              task: { ...s.task, status: "error", error: error instanceof Error ? error.message : "Recording failed" },
+              task: { ...s.task, status: "error", error: "Recording failed securely. Please check your microphone permissions and try again." },
             }));
           }
           return;
@@ -104,8 +105,9 @@ export const useAudioStore = create<AudioStore>()(
             const url = URL.createObjectURL(wavBlob);
             set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
           } catch (error) {
+            console.error("Audio Analysis Error occurred.", error);
             set((s) => ({
-              task: { ...s.task, status: "error", error: error instanceof Error ? error.message : "Analysis failed" },
+              task: { ...s.task, status: "error", error: "Analysis failed securely. Please try again." },
             }));
           }
           return;
@@ -303,12 +305,12 @@ export const useAudioStore = create<AudioStore>()(
             task: { ...s.task, status: "success", progress: 100, resultUrl: url },
           }));
         } catch (error) {
-          console.error("Audio Processing Error:", error);
+          console.error("Audio Processing Error occurred.", error);
           set((s) => ({
             task: {
               ...s.task,
               status: "error",
-              error: error instanceof Error ? error.message : "Processing failed",
+              error: "Processing failed securely. Please check your input and try again.",
             },
           }));
         }
