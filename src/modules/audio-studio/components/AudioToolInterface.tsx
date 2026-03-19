@@ -39,6 +39,8 @@ export function AudioToolInterface({
     return null;
   }, [task.file]);
 
+  const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -117,13 +119,17 @@ export function AudioToolInterface({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files).filter(
+      (f) => f.type.startsWith("audio/") && f.size <= MAX_SIZE
+    );
     if (isMultiFile) { addFiles(files); } else if (files[0]) { setFile(files[0]); }
     setOperation(toolId);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
+    const files = e.target.files ? Array.from(e.target.files).filter(
+      (f) => f.type.startsWith("audio/") && f.size <= MAX_SIZE
+    ) : [];
     if (isMultiFile) { addFiles(files); } else if (files[0]) { setFile(files[0]); }
     setOperation(toolId);
   };
