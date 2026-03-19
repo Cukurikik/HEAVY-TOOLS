@@ -41,6 +41,8 @@ export function VideoToolInterface({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const MAX_SIZE = 500 * 1024 * 1024; // 500MB
+
   const videoPreviewUrl = useMemo(() => {
     if (task.file) return URL.createObjectURL(task.file);
     return null;
@@ -60,10 +62,14 @@ export function VideoToolInterface({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    const files = Array.from(e.dataTransfer.files);
+    const files = Array.from(e.dataTransfer.files).filter(
+      (f) => f.type.startsWith("video/") && f.size <= MAX_SIZE
+    );
     if (isMultiFile) {
-      addFiles(files);
-      setOperation(toolId);
+      if (files.length > 0) {
+        addFiles(files);
+        setOperation(toolId);
+      }
     } else if (files[0]) {
       setFile(files[0]);
       setOperation(toolId);
@@ -72,10 +78,14 @@ export function VideoToolInterface({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const files = e.target.files ? Array.from(e.target.files) : [];
+    const files = (e.target.files ? Array.from(e.target.files) : []).filter(
+      (f) => f.type.startsWith("video/") && f.size <= MAX_SIZE
+    );
     if (isMultiFile) {
-      addFiles(files);
-      setOperation(toolId);
+      if (files.length > 0) {
+        addFiles(files);
+        setOperation(toolId);
+      }
     } else if (files[0]) {
       setFile(files[0]);
       setOperation(toolId);
