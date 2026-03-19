@@ -6,6 +6,8 @@ import { useConverterStore } from "../store/useConverterStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const TARGET_FORMATS = ["video", "audio", "image", "document"] as const;
+
 export function ConverterDashboard() {
   const { task, setFile, setOperation, processConversion, reset } = useConverterStore();
   const [dragActive, setDragActive] = useState(false);
@@ -90,7 +92,7 @@ export function ConverterDashboard() {
         >
           <h2 className="text-xl font-semibold text-white mb-4">2. Select Target Format</h2>
           <div className="grid grid-cols-2 gap-4">
-            {(["video", "audio", "image", "document"] as const).map((op) => (
+            {TARGET_FORMATS.map((op) => (
               <button
                 key={op}
                 onClick={() => setOperation(op)}
