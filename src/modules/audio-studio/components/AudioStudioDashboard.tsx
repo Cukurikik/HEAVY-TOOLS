@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { AUDIO_TOOLS } from "../constants/tools";
-import * as Icons from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function AudioStudioDashboard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {AUDIO_TOOLS.map((tool, i) => {
-        const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[tool.icon] || Icons.Music;
+        const IconComponent = tool.icon;
         return (
           <motion.div
             key={tool.id}
@@ -29,7 +29,7 @@ export function AudioStudioDashboard() {
               <p className="text-sm text-slate-500 font-medium leading-relaxed">{tool.desc}</p>
               <div className="mt-4 flex items-center text-violet-400 text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                 <span>Open Tool</span>
-                <Icons.ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           </motion.div>
