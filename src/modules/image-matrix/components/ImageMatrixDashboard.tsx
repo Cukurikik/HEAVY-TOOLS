@@ -6,6 +6,8 @@ import { useImageStore } from "../store/useImageStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const OPERATIONS = ["filter", "upscale", "convert", "compress"] as const;
+
 export function ImageMatrixDashboard() {
   const { task, setFile, setOperation, processImage, reset } = useImageStore();
   const [dragActive, setDragActive] = useState(false);
@@ -91,7 +93,7 @@ export function ImageMatrixDashboard() {
         >
           <h2 className="text-xl font-semibold text-white mb-4">2. Select Operation</h2>
           <div className="grid grid-cols-2 gap-4">
-            {(["filter", "upscale", "convert", "compress"] as const).map((op) => (
+            {OPERATIONS.map((op) => (
               <button
                 key={op}
                 onClick={() => setOperation(op)}

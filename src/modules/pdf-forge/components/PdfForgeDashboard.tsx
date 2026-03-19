@@ -2,14 +2,30 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import * as Icons from 'lucide-react';
+import {
+  ArrowUpDown, Binary, Bookmark, ClipboardEdit, Crop, EyeOff, FileOutput,
+  FileStack, FileText, GitCompare, Globe, Grid3X3, Highlighter, Image as ImageIcon,
+  ImagePlus, Info, Layers, Lock, Minimize2, PenTool, Presentation,
+  RefreshCw, RotateCw, ScanText, Scissors, ShieldCheck, Stamp, Table,
+  Unlock, Wrench
+} from 'lucide-react';
 import { PDF_TOOLS } from '../constants/tools';
+
+const OPERATIONS = ["merge", "split", "compress", "sign"] as const;
+
+const Icons: Record<string, React.ComponentType<{ className?: string }>> = {
+  ArrowUpDown, Binary, Bookmark, ClipboardEdit, Crop, EyeOff, FileOutput,
+  FileStack, FileText, GitCompare, Globe, Grid3X3, Highlighter, Image: ImageIcon,
+  ImagePlus, Info, Layers, Lock, Minimize2, PenTool, Presentation,
+  RefreshCw, RotateCw, ScanText, Scissors, ShieldCheck, Stamp, Table,
+  Unlock, Wrench
+};
 
 export default function PdfForgeDashboard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {PDF_TOOLS.map((tool, i) => {
-        const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[tool.icon] || Icons.FileText;
+        const IconComponent = Icons[tool.icon] || Icons.FileText;
         return (
           <motion.div key={tool.id}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
