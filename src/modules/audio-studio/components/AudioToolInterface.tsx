@@ -10,7 +10,6 @@ import { useAudioStore } from "../store/useAudioStore";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { AudioOperation } from "../types";
-import WaveSurfer from "wavesurfer.js";
 
 interface AudioToolInterfaceProps {
   toolId: AudioOperation;
@@ -30,7 +29,7 @@ export function AudioToolInterface({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
-  const wavesurfer = useRef<WaveSurfer | null>(null);
+  const wavesurfer = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState("0:00");
   const [currentTime, setCurrentTime] = useState("0:00");
@@ -47,41 +46,49 @@ export function AudioToolInterface({
   };
 
   useEffect(() => {
-    if (!audioPreviewUrl) {
-      if (wavesurfer.current) {
-        wavesurfer.current.destroy();
-        wavesurfer.current = null;
-      }
-      return;
-    }
+    let timer: NodeJS.Timeout;
 
-    const timer = setTimeout(() => {
-      if (!waveformRef.current) return;
-      if (!wavesurfer.current) {
-        wavesurfer.current = WaveSurfer.create({
-          container: waveformRef.current,
-          waveColor: '#8b5cf6',
-          progressColor: '#c4b5fd',
-          cursorColor: '#f8fafc',
-          barWidth: 2,
-          barGap: 2,
-          barRadius: 2,
-          height: 64,
-          normalize: true,
-        });
-
-        wavesurfer.current.on('audioprocess', () => {
-          if (wavesurfer.current) setCurrentTime(formatTime(wavesurfer.current.getCurrentTime()));
-        });
-        wavesurfer.current.on('ready', () => {
-          if (wavesurfer.current) setDuration(formatTime(wavesurfer.current.getDuration()));
-        });
-        wavesurfer.current.on('finish', () => setIsPlaying(false));
+    const initWaveSurfer = async () => {
+      if (!audioPreviewUrl) {
+        if (wavesurfer.current) {
+          wavesurfer.current.destroy();
+          wavesurfer.current = null;
+        }
+        return;
       }
-      wavesurfer.current.load(audioPreviewUrl);
-      setIsPlaying(false);
-      setCurrentTime("0:00");
-    }, 100);
+
+      const WaveSurfer = (await import("wavesurfer.js")).default;
+
+      timer = setTimeout(() => {
+        if (!waveformRef.current) return;
+        if (!wavesurfer.current) {
+          wavesurfer.current = WaveSurfer.create({
+            container: waveformRef.current,
+            waveColor: '#8b5cf6',
+            progressColor: '#c4b5fd',
+            cursorColor: '#f8fafc',
+            barWidth: 2,
+            barGap: 2,
+            barRadius: 2,
+            height: 64,
+            normalize: true,
+          });
+
+          wavesurfer.current.on('audioprocess', () => {
+            if (wavesurfer.current) setCurrentTime(formatTime(wavesurfer.current.getCurrentTime()));
+          });
+          wavesurfer.current.on('ready', () => {
+            if (wavesurfer.current) setDuration(formatTime(wavesurfer.current.getDuration()));
+          });
+          wavesurfer.current.on('finish', () => setIsPlaying(false));
+        }
+        wavesurfer.current.load(audioPreviewUrl);
+        setIsPlaying(false);
+        setCurrentTime("0:00");
+      }, 100);
+    };
+
+    initWaveSurfer();
 
     return () => clearTimeout(timer);
   }, [audioPreviewUrl]);
