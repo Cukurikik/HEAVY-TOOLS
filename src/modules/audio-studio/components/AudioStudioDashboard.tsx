@@ -6,6 +6,9 @@ import { useAudioStore } from "../store/useAudioStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const ALLOWED_TYPE = "audio/";
+
 export function AudioStudioDashboard() {
   const { task, setFile, setOperation, processAudio, reset } = useAudioStore();
   const [dragActive, setDragActive] = useState(false);
@@ -24,15 +27,17 @@ export function AudioStudioDashboard() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith(ALLOWED_TYPE) && file.size <= MAX_FILE_SIZE) {
+      setFile(file);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith(ALLOWED_TYPE) && file.size <= MAX_FILE_SIZE) {
+      setFile(file);
     }
   };
 
