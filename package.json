@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest",
+    "genkit:ui": "genkit start -- cross-env PORT=3000 next dev"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -16,6 +17,8 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
+    "@genkit-ai/google-genai": "^1.30.1",
+    "@genkit-ai/googleai": "^1.28.0",
     "@google/genai": "^1.27.0",
     "@pdf-lib/fontkit": "^1.1.1",
     "@radix-ui/react-select": "^2.2.6",
@@ -26,6 +29,7 @@
     "clsx": "^2.1.1",
     "diff-match-patch": "^1.0.5",
     "framer-motion": "^11.0.0",
+    "genkit": "^1.30.1",
     "gsap": "^3.14.2",
     "konva": "^10.2.3",
     "lucide-react": "^0.359.0",

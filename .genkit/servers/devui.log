@@ -1,0 +1,5 @@
+Telemetry API running on http://localhost:4033
+[1m[31mError[39m[22m: Error reading tools config Unexpected token 'T', "Telemetry "... is not valid JSON
+[32m[1mProject root:[22m[39m C:\Users\IKYY\Downloads\HEAVY-TOOLS
+[32m[1mGenkit Developer UI:[22m[39m http://localhost:4000
+[1m[31mError[39m[22m: Error reading tools config Unexpected token 'T', "Telemetry "... is not valid JSON

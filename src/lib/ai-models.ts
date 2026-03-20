@@ -220,42 +220,24 @@ export const DASHSCOPE_MODELS: AIModel[] = [
     parameters: { max_tokens: 4096, temperature: 0.3, top_p: 0.8 }
   },
 
-  // Image Generation Models - Standard API
+  // Image Generation Models - Google Gemini API
   {
-    id: "qwen-image-2.0-pro",
-    name: "Qwen-Image-2.0-Pro",
-    description: "Advanced image generation with multiple reference images",
-    category: "image",
-    capabilities: ["image-generation", "reference-based", "multi-image"],
-    apiType: "standard",
-    parameters: { temperature: 0.7, top_p: 0.8 }
-  },
-  {
-    id: "qwen-image-max",
-    name: "Qwen-Image-Max",
-    description: "High-quality image generation with detailed prompts",
+    id: "imagen-3.0-generate-001",
+    name: "Imagen 3 Pro",
+    description: "State-of-the-art image generation from Google",
     category: "image",
     capabilities: ["image-generation", "high-resolution", "detailed-prompts"],
     apiType: "standard",
     parameters: { temperature: 0.7, top_p: 0.8 }
   },
 
-  // Video Generation Models - Standard API
+  // Video Generation Models - Google Gemini API
   {
-    id: "wan2.6-r2v-flash",
-    name: "Wan2.6-R2V-Flash",
-    description: "Reference video to video generation",
+    id: "veo-2.0-generate-001",
+    name: "Veo 2.0 (Gemini)",
+    description: "State-of-the-art video generation by Google",
     category: "video",
-    capabilities: ["video-generation", "reference-video", "motion-transfer"],
-    apiType: "standard",
-    parameters: { temperature: 0.7, top_p: 0.8 }
-  },
-  {
-    id: "wan2.6-t2i",
-    name: "Wan2.6-T2I",
-    description: "Text to image generation with enhanced quality",
-    category: "image",
-    capabilities: ["image-generation", "text-to-image", "enhanced-quality"],
+    capabilities: ["video-generation", "high-quality"],
     apiType: "standard",
     parameters: { temperature: 0.7, top_p: 0.8 }
   },

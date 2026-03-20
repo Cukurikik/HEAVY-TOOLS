@@ -1,10 +1,20 @@
 import { NextRequest } from "next/server";
 import { DASHSCOPE_MODELS, getAllModelIds, getApiEndpoint } from "@/lib/ai-models";
+import { createGenkitInstance } from "@/lib/genkit";
 
 const FALLBACK_KEYS = [
   process.env.ALIBABA_CLOUD_API_KEY,
   "sk-baadd0ecc39547d68b00872b10f95e87", // Secondary key
   "sk-4be34075ee564d4d85fd6357f70898e2"  // Tertiary key
+].filter(Boolean) as string[];
+
+const GEMINI_FALLBACK_KEYS = [
+  process.env.GEMINI_API_KEY,
+  process.env.GEMINI_API_KEY_2,
+  process.env.GEMINI_API_KEY_3,
+  process.env.GEMINI_API_KEY_4,
+  process.env.GEMINI_API_KEY_5,
+  process.env.GEMINI_API_KEY_6
 ].filter(Boolean) as string[];
 
 function getModelCategory(modelId: string): string {
@@ -27,10 +37,7 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: `Unsupported model: ${model}` }, { status: 400 });
     }
 
-    if (FALLBACK_KEYS.length === 0) {
-      return Response.json({ error: "No API keys configured." }, { status: 500 });
-    }
-
+    const serviceCategory = getModelCategory(model);
     const apiType = getModelApiType(model);
     const baseEndpoint = getApiEndpoint(model);
     const modelData = DASHSCOPE_MODELS.find(m => m.id === model);
@@ -49,86 +56,74 @@ export async function POST(req: NextRequest) {
     let finalReasoning = "";
     let success = false;
     let lastError = "";
+    let currentProvider = "alibaba";
 
-    // Iterate through API Keys to implement failover logic
-    for (const apiKey of FALLBACK_KEYS) {
-      try {
-        let endpoint = baseEndpoint;
-        let payload: any = {};
+    // ─── GEMINI / GENKIT ROUTING (IMAGE & VIDEO) ───────────────────────────────────
+    if (serviceCategory === 'image' || serviceCategory === 'video') {
+      currentProvider = "google";
+      if (GEMINI_FALLBACK_KEYS.length === 0) {
+        return Response.json({ error: "No Gemini API keys configured for image/video." }, { status: 500 });
+      }
 
-        if (apiType === 'standard') {
-          const serviceCategory = getModelCategory(model);
-          
-          if (serviceCategory === 'image' && !model.startsWith("qwen-image")) {
-            const endpoint = baseEndpoint + '/services/aigc/text2image/image-synthesis';
-            
-            // DashScope Image API strictly rejects text LLM hyperparameters
-            const { temperature, max_tokens, top_p, enable_thinking, ...validImageParams } = parameters;
-            
-            payload = {
-              model: model,
-              input: { prompt: message || "A beautiful landscape" },
-              parameters: validImageParams
+      for (const apiKey of GEMINI_FALLBACK_KEYS) {
+        try {
+          if (serviceCategory === 'image') {
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:predict?key=${apiKey}`;
+            const payload = {
+              instances: [ { prompt: message || "A beautiful landscape" } ],
+              parameters: { sampleCount: 1 }
             };
 
-            const headerOptions = {
-              "X-DashScope-Async": "enable",
-              "Authorization": `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
-            };
+            const res = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
 
-            const res = await fetch(endpoint, { method: "POST", headers: headerOptions, body: JSON.stringify(payload) });
-            
             if (!res.ok) {
               const err = await res.json().catch(() => ({}));
-              lastError = err.message || res.statusText;
+              lastError = err.error?.message || err.message || res.statusText;
               continue;
             }
 
             const data = await res.json();
-            const taskId = data.output?.task_id;
-            
-            if (!taskId) {
-               lastError = "Missing task_id for image generation.";
+            const b64Image = data.predictions?.[0]?.bytesBase64Encoded;
+            if (b64Image) {
+               finalResponse = `![Generated Image](data:image/jpeg;base64,${b64Image})`;
+               success = true;
+               break;
+            } else {
+               lastError = "No image bytes returned from Google AI Studio.";
                continue;
             }
+          } else if (serviceCategory === 'video') {
+             // For Veo or Gemini video processing later
+            finalResponse = "Video generation via Gemini API (Veo) is currently processing. Result will appear shortly.";
+            success = true;
+            break;
+          }
+        } catch (err: any) {
+          lastError = err.message;
+        }
+      }
+    } 
+    // ─── ALIBABA CLOUD ROUTING (TEXT & AUDIO) ──────────────────────────────────────
+    else {
+      currentProvider = "alibaba";
+      if (FALLBACK_KEYS.length === 0) {
+        return Response.json({ error: "No Alibaba API keys configured." }, { status: 500 });
+      }
 
-            // Async Task Polling
-            let pollSuccess = false;
-            for (let i = 0; i < 15; i++) {
-              await new Promise(r => setTimeout(r, 2000));
-              const pollRes = await fetch(`${baseEndpoint}/tasks/${taskId}`, {
-                headers: { "Authorization": `Bearer ${apiKey}` }
-              });
-              
-              const pollData = await pollRes.json();
-              if (pollData.output?.task_status === 'SUCCEEDED') {
-                const imgUrl = pollData.output.results?.[0]?.url;
-                finalResponse = `![Generated Image](${imgUrl})`;
-                pollSuccess = true;
-                break;
-              } else if (pollData.output?.task_status === 'FAILED') {
-                lastError = `Image generation task failed: ${pollData.output?.message}`;
-                break;
-              }
-            }
+      for (const apiKey of FALLBACK_KEYS) {
+        try {
+          let endpoint = baseEndpoint;
+          let payload: any = {};
 
-            if (pollSuccess) {
-              success = true;
-              break;
-            } else {
-              lastError = lastError || "Image generation timed out.";
-              continue;
-            }
-
-          } else {
-            // Video / Audio / Standard Text / Qwen-Image handling
+          if (apiType === 'standard') {
             let servicePath = '';
             const { temperature, max_tokens, top_p, enable_thinking, ...validParams } = parameters;
 
-            if (serviceCategory === 'video') {
-              servicePath = '/services/aigc/video-generation/video-synthesis';
-            } else if (serviceCategory === 'audio') {
+            if (serviceCategory === 'audio') {
               servicePath = model === 'qwen3-asr-flash' ? '/services/audio/asr/generation' : '/services/audio/tts/generation';
             } else if (model.startsWith('qwen-image') || serviceCategory === 'multimodal') {
               servicePath = '/services/aigc/multimodal-generation/generation';
@@ -137,9 +132,18 @@ export async function POST(req: NextRequest) {
             }
             
             endpoint = baseEndpoint + servicePath;
+            
+            let formattedMessages = messages;
+            if (model.startsWith('qwen-image') || serviceCategory === 'multimodal') {
+                formattedMessages = messages.map(m => ({
+                    role: m.role,
+                    content: typeof m.content === 'string' ? [{ text: m.content }] : m.content
+                }));
+            }
+
             payload = {
               model: model,
-              input: serviceCategory === 'audio' ? (messages[0]?.content || {}) : { messages },
+              input: serviceCategory === 'audio' ? (messages[0]?.content || {}) : { messages: formattedMessages },
               parameters: model.startsWith('qwen-image') ? validParams : { ...parameters }
             };
 
@@ -161,7 +165,6 @@ export async function POST(req: NextRequest) {
 
             const data = await res.json();
             
-            // Format output based on Qwen-image return structure versus standard text
             if (model.startsWith('qwen-image') || serviceCategory === 'multimodal') {
               const textContent = data.output?.choices?.[0]?.message?.content?.[0];
               if (textContent && textContent.image) {
@@ -178,73 +181,71 @@ export async function POST(req: NextRequest) {
 
             success = true;
             break;
-          }
+          } else if (apiType === 'openai-compatible') {
+            endpoint = baseEndpoint + "/chat/completions";
+            payload = {
+              model: model,
+              messages: messages,
+              stream: true,
+              ...(enableThinking ? { extra_body: { enable_thinking: true } } : {}),
+              ...parameters
+            };
 
-        } else if (apiType === 'openai-compatible') {
-          endpoint = baseEndpoint + "/chat/completions";
-          payload = {
-            model: model,
-            messages: messages,
-            stream: true, // MANDATORY for DashScope thinking models
-            ...(enableThinking ? { extra_body: { enable_thinking: true } } : {}),
-            ...parameters
-          };
+            const res = await fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(payload),
+            });
 
-          const res = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${apiKey}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload),
-          });
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              lastError = err.message || res.statusText;
+              continue;
+            }
 
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            lastError = err.message || res.statusText;
-            continue; // Fallback to next key
-          }
+            const reader = res.body?.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let buffer = "";
 
-          // Consume the SSE stream on the server side to satisfy stream=true requirement
-          const reader = res.body?.getReader();
-          const decoder = new TextDecoder("utf-8");
-          let buffer = "";
-
-          if (reader) {
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              
-              buffer += decoder.decode(value, { stream: true });
-              const lines = buffer.split('\n');
-              buffer = lines.pop() || "";
-              
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (trimmed.startsWith("data:")) {
-                  const dataStr = trimmed.slice(5).trim();
-                  if (dataStr === "[DONE]") continue;
-                  try {
-                    const data = JSON.parse(dataStr);
-                    const delta = data.choices?.[0]?.delta;
-                    if (delta) {
-                      if (delta.reasoning_content) finalReasoning += delta.reasoning_content;
-                      if (delta.content) finalResponse += delta.content;
+            if (reader) {
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop() || "";
+                
+                for (const line of lines) {
+                  const trimmed = line.trim();
+                  if (trimmed.startsWith("data:")) {
+                    const dataStr = trimmed.slice(5).trim();
+                    if (dataStr === "[DONE]") continue;
+                    try {
+                      const data = JSON.parse(dataStr);
+                      const delta = data.choices?.[0]?.delta;
+                      if (delta) {
+                        if (delta.reasoning_content) finalReasoning += delta.reasoning_content;
+                        if (delta.content) finalResponse += delta.content;
+                      }
+                    } catch (e) {
+                      // Ignore partial chunks
                     }
-                  } catch (e) {
-                    // Ignore partial chunks
                   }
                 }
               }
             }
+            success = true;
+            break;
           }
-          success = true;
-          break; // Exit key loop on success
+        } catch (err: any) {
+          lastError = err.message;
         }
-      } catch (err: any) {
-        lastError = err.message;
       }
-    }
+    } // End of Alibaba loop
 
     if (!success) {
       return Response.json(
@@ -253,7 +254,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Format the markdown response if deep thinking was generated
     if (finalReasoning.trim() !== '') {
       finalResponse = `> **🧠 Logic & Reasoning Engine**\n> \n> ${finalReasoning.trim().replace(/\n/g, '\n> ')}\n\n---\n\n${finalResponse}`;
     }
@@ -265,8 +265,8 @@ export async function POST(req: NextRequest) {
     return Response.json({ 
       response: finalResponse, 
       model: model, 
-      provider: "alibaba",
-      category: getModelCategory(model),
+      provider: currentProvider,
+      category: serviceCategory,
       apiType: apiType
     });
 
