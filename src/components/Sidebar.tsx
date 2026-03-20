@@ -13,12 +13,14 @@ import {
   Settings, 
   ShieldCheck,
   Zap,
-  ChevronRight
+  ChevronRight,
+  Bot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Anita Assistant", href: "/assistant", icon: Bot },
   { name: "Video Engine", href: "/video", icon: Video },
   { name: "Audio Studio", href: "/audio", icon: Music },
   { name: "Image Matrix", href: "/image", icon: ImageIcon },

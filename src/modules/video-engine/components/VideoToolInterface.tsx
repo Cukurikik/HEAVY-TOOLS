@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Upload,
@@ -40,6 +40,14 @@ export function VideoToolInterface({
   const { task, setFile, addFiles, setOperation, processVideo, reset } = useVideoStore();
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync operation and reset state when navigating between tools
+  useEffect(() => {
+    setOperation(toolId);
+    return () => {
+      reset();
+    };
+  }, [toolId, setOperation, reset]);
 
   const MAX_SIZE = 500 * 1024 * 1024; // 500MB
 

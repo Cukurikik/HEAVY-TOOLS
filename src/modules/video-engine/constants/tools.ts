@@ -1,65 +1,274 @@
-import {
-  Scissors,
-  Layers,
-  Video,
-  Zap,
-  FlipHorizontal,
-  RotateCw,
-  Activity,
-  RotateCcw,
-  FastForward,
-  Repeat,
-  Settings2,
-  Camera,
-  Type,
-  Stamp,
-  Wind,
-  Palette,
-  ArrowUpCircle,
-  Film,
-  Image as ImageIcon,
-  Sun,
-  Eclipse,
-  Timer,
-  Clock,
-  Monitor,
-  Info,
-  Boxes,
-  Bookmark,
-  Music,
-  SplitSquareHorizontal,
-  Maximize,
-} from "lucide-react";
+import { VideoToolDefinition } from '../types';
 
-export const VIDEO_TOOLS = [
-  { id: "trimmer", name: "Video Trimmer", desc: "Potong video presisi frame menggunakan seek", icon: Scissors, color: "text-red-500" },
-  { id: "merger", name: "Video Merger", desc: "Gabungkan multiple video via concat protocol", icon: Layers, color: "text-emerald-500" },
-  { id: "converter", name: "Video Converter", desc: "Konversi format: MP4/WebM/MKV/MOV/AVI", icon: Video, color: "text-blue-500" },
-  { id: "compressor", name: "Video Compressor", desc: "Kompresi dengan kontrol CRF dan Bitrate", icon: Zap, color: "text-yellow-500" },
-  { id: "flipper", name: "Video Flipper", desc: "Flip horizontal/vertical via hflip/vflip", icon: FlipHorizontal, color: "text-cyan-500" },
-  { id: "rotator", name: "Video Rotator", desc: "Rotasi 90°/180°/270° dengan re-encoding", icon: RotateCw, color: "text-amber-500" },
-  { id: "stabilizer", name: "Video Stabilizer", desc: "Stabilisasi video dengan deshake filter", icon: Activity, color: "text-emerald-600" },
-  { id: "reverse", name: "Video Reverser", desc: "Balik video frame-by-frame", icon: RotateCcw, color: "text-purple-500" },
-  { id: "speed-control", name: "Speed Controller", desc: "Ubah kecepatan 0.25x – 4x via setpts", icon: FastForward, color: "text-cyan-600" },
-  { id: "loop-engine", name: "Loop Engine", desc: "Buat video loop dengan jumlah putaran kustom", icon: Repeat, color: "text-pink-500" },
-  { id: "pro-editor", name: "Pro Editor", desc: "Editor lengkap: CRF, Bitrate, Codec, Profile", icon: Settings2, color: "text-violet-500" },
-  { id: "thumbnail-extractor", name: "Thumbnail Extractor", desc: "Ekstrak frame sebagai gambar di timestamp", icon: Camera, color: "text-teal-500" },
-  { id: "subtitle-burner", name: "Subtitle Burner", desc: "Burn subtitle SRT/ASS ke dalam video", icon: Type, color: "text-indigo-500" },
-  { id: "watermark", name: "Watermark Tool", desc: "Tambah watermark teks dengan posisi kustom", icon: Stamp, color: "text-orange-500" },
-  { id: "noise-reducer", name: "Noise Reducer", desc: "Kurangi noise visual via hqdn3d filter", icon: Wind, color: "text-slate-400" },
-  { id: "color-grader", name: "Color Grader", desc: "Koreksi warna: brightness, contrast, saturation", icon: Palette, color: "text-rose-500" },
-  { id: "resolution-upscaler", name: "AI Upscaler", desc: "Upscale resolusi via bicubic interpolation", icon: ArrowUpCircle, color: "text-yellow-600" },
-  { id: "frame-interpolator", name: "Frame Interpolator", desc: "Tingkatkan FPS via minterpolate filter", icon: Film, color: "text-fuchsia-500" },
-  { id: "gif-converter", name: "GIF Converter", desc: "Konversi video ke GIF berkualitas tinggi", icon: ImageIcon, color: "text-lime-500" },
-  { id: "hdr-tonemapper", name: "HDR Tonemapper", desc: "Konversi HDR ke SDR via tonemap filter", icon: Sun, color: "text-orange-600" },
-  { id: "black-white", name: "Black & White", desc: "Konversi ke grayscale via hue=s=0 filter", icon: Eclipse, color: "text-gray-400" },
-  { id: "slow-motion", name: "Slow Motion", desc: "Slow motion hingga 0.1x dengan interpolation", icon: Timer, color: "text-blue-600" },
-  { id: "timelapse", name: "Timelapse Maker", desc: "Buat timelapse dengan skip-frame algorithm", icon: Clock, color: "text-green-500" },
-  { id: "screen-recorder", name: "Screen Recorder", desc: "Rekam layar via getDisplayMedia() API", icon: Monitor, color: "text-red-600" },
-  { id: "metadata-editor", name: "Metadata Editor", desc: "Edit title, author, copyright via FFmpeg", icon: Info, color: "text-blue-400" },
-  { id: "batch-processor", name: "Batch Processor", desc: "Proses multiple video sekaligus dengan antrian", icon: Boxes, color: "text-purple-400" },
-  { id: "chapter-marker", name: "Chapter Marker", desc: "Tambah chapter markers ke file MKV/MP4", icon: Bookmark, color: "text-amber-600" },
-  { id: "audio-extractor", name: "Audio Extractor", desc: "Ekstrak audio track tanpa re-encoding", icon: Music, color: "text-pink-600" },
-  { id: "video-splitter", name: "Video Splitter", desc: "Pecah video berdasarkan waktu/ukuran", icon: SplitSquareHorizontal, color: "text-sky-500" },
-  { id: "aspect-ratio", name: "Aspect Ratio Tool", desc: "Ubah aspect ratio dengan crop atau letterbox", icon: Maximize, color: "text-indigo-600" },
+export const VIDEO_TOOLS: VideoToolDefinition[] = [
+  {
+    id: 'trimmer',
+    name: 'Video Trimmer',
+    description: 'Potong video presisi frame menggunakan seek -ss',
+    icon: 'Scissors',
+    gradient: 'from-blue-500 to-cyan-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'merger',
+    name: 'Video Merger',
+    description: 'Gabungkan multiple video via concat protocol',
+    icon: 'Merge',
+    gradient: 'from-indigo-500 to-purple-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'converter',
+    name: 'Video Converter',
+    description: 'Konversi format: MP4/WebM/MKV/MOV/AVI',
+    icon: 'RefreshCw',
+    gradient: 'from-green-500 to-emerald-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'compressor',
+    name: 'Video Compressor',
+    description: 'Kompresi dengan kontrol CRF dan Bitrate penuh',
+    icon: 'Minimize2',
+    gradient: 'from-red-500 to-rose-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'flipper',
+    name: 'Video Flipper',
+    description: 'Flip horizontal/vertical via hflip/vflip filter',
+    icon: 'FlipHorizontal',
+    gradient: 'from-orange-500 to-amber-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'rotator',
+    name: 'Video Rotator',
+    description: 'Rotasi 90°/180°/270° dengan re-encoding libx264',
+    icon: 'RotateCw',
+    gradient: 'from-yellow-400 to-yellow-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'stabilizer',
+    name: 'Video Stabilizer',
+    description: 'Stabilisasi vidstabdetect + vidstabtransform',
+    icon: 'Camera',
+    gradient: 'from-teal-500 to-emerald-500',
+    engine: 'Server child_process',
+    execution: 'Server'
+  },
+  {
+    id: 'reverse',
+    name: 'Video Reverser',
+    description: 'Balik video frame-by-frame',
+    icon: 'History',
+    gradient: 'from-pink-500 to-rose-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'speed-control',
+    name: 'Speed Controller',
+    description: 'Ubah kecepatan 0.25x – 4x via setpts filter',
+    icon: 'FastForward',
+    gradient: 'from-sky-500 to-blue-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'loop-engine',
+    name: 'Loop Engine',
+    description: 'Buat video loop dengan jumlah putaran kustom',
+    icon: 'Repeat',
+    gradient: 'from-fuchsia-500 to-purple-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'pro-editor',
+    name: 'Pro Editor',
+    description: 'Editor lengkap: CRF, Bitrate, Codec, Profile',
+    icon: 'Sliders',
+    gradient: 'from-violet-600 to-indigo-700',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'thumbnail-extractor',
+    name: 'Thumbnail Extractor',
+    description: 'Ekstrak frame sebagai gambar di timestamp tertentu',
+    icon: 'Image',
+    gradient: 'from-amber-500 to-orange-500',
+    engine: 'Canvas API',
+    execution: 'Client'
+  },
+  {
+    id: 'subtitle-burner',
+    name: 'Subtitle Burner',
+    description: 'Burn subtitle SRT/ASS ke dalam video',
+    icon: 'Subtitles',
+    gradient: 'from-sky-500 to-indigo-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'watermark',
+    name: 'Watermark Tool',
+    description: 'Tambah watermark gambar/teks dengan posisi kustom',
+    icon: 'Stamp',
+    gradient: 'from-blue-600 to-indigo-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'noise-reducer',
+    name: 'Noise Reducer',
+    description: 'Kurangi noise visual via hqdn3d filter',
+    icon: 'Wand2',
+    gradient: 'from-violet-500 to-purple-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'color-grader',
+    name: 'Color Grader',
+    description: 'Koreksi warna: brightness, contrast, saturation, hue',
+    icon: 'Palette',
+    gradient: 'from-rose-400 to-pink-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'resolution-upscaler',
+    name: 'AI Upscaler',
+    description: 'Upscale resolusi via ESRGAN/WASM AI model',
+    icon: 'Sparkles',
+    gradient: 'from-amber-400 to-yellow-600',
+    engine: 'TensorFlow WebGPU',
+    execution: 'Client'
+  },
+  {
+    id: 'frame-interpolator',
+    name: 'Frame Interpolator',
+    description: 'Tingkatkan FPS via minterpolate filter',
+    icon: 'Layers',
+    gradient: 'from-cyan-500 to-blue-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'gif-converter',
+    name: 'GIF Converter',
+    description: 'Konversi video ke GIF berkualitas tinggi dengan palette',
+    icon: 'Film',
+    gradient: 'from-fuchsia-600 to-pink-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'hdr-tonemapper',
+    name: 'HDR Tonemapper',
+    description: 'Konversi HDR ke SDR via zscale + tonemap',
+    icon: 'Sun',
+    gradient: 'from-orange-500 to-red-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'black-white',
+    name: 'Black & White',
+    description: 'Konversi ke grayscale via hue=s=0 filter',
+    icon: 'Moon',
+    gradient: 'from-slate-400 to-zinc-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'slow-motion',
+    name: 'Slow Motion',
+    description: 'Slow motion up to 0.1x dengan frame interpolation',
+    icon: 'Turtle',
+    gradient: 'from-emerald-400 to-teal-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'timelapse',
+    name: 'Timelapse Maker',
+    description: 'Buat timelapse dengan skip-frame algorithm',
+    icon: 'Timer',
+    gradient: 'from-yellow-500 to-orange-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'screen-recorder',
+    name: 'Screen Recorder',
+    description: 'Rekam layar via getDisplayMedia() API',
+    icon: 'Monitor',
+    gradient: 'from-blue-400 to-indigo-500',
+    engine: 'MediaRecorder API',
+    execution: 'Client'
+  },
+  {
+    id: 'metadata-editor',
+    name: 'Metadata Editor',
+    description: 'Edit title, author, copyright via FFmpeg metadata',
+    icon: 'Tag',
+    gradient: 'from-purple-500 to-violet-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'batch-processor',
+    name: 'Batch Processor',
+    description: 'Proses multiple video sekaligus dengan antrian',
+    icon: 'ListChecks',
+    gradient: 'from-emerald-500 to-cyan-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'chapter-marker',
+    name: 'Chapter Marker',
+    description: 'Tambah chapter markers ke file MKV/MP4',
+    icon: 'Bookmark',
+    gradient: 'from-red-400 to-rose-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'audio-extractor',
+    name: 'Audio Extractor',
+    description: 'Ekstrak audio track dari video tanpa re-encoding',
+    icon: 'Music',
+    gradient: 'from-pink-400 to-rose-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'video-splitter',
+    name: 'Video Splitter',
+    description: 'Pecah video menjadi segmen berdasarkan waktu/ukuran',
+    icon: 'SplitSquareHorizontal',
+    gradient: 'from-indigo-400 to-blue-600',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  },
+  {
+    id: 'aspect-ratio',
+    name: 'Aspect Ratio Tool',
+    description: 'Ubah aspect ratio dengan crop atau letterbox',
+    icon: 'Maximize',
+    gradient: 'from-cyan-400 to-teal-500',
+    engine: 'FFmpeg WASM',
+    execution: 'Client'
+  }
 ];

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ChevronRight, Play, Music, Image as ImageIcon, Zap, Shield, Cpu } from "lucide-react";
+import { ChevronRight, Play, Music, ImageIcon, Zap, Shield, Cpu, Bot, Sparkles } from "lucide-react";
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-indigo-400 text-xs font-black uppercase tracking-[0.2em] shadow-2xl"
           >
-            Phase 19: UI/UX Masterpiece
+            Phase 19: AI-Powered Enterprise Suite
           </motion.div>
 
           {/* Hero Title */}
@@ -44,8 +44,8 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed"
             >
-              The ultimate hybrid-online suite for professional media manipulation. 
-              Local-first performance with cloud-optional synchronization.
+              The ultimate hybrid-online suite powered by Alibaba Cloud Qwen AI. 
+              13 advanced models for text, image, video, and audio processing with local-first performance.
             </motion.p>
           </div>
 
@@ -96,16 +96,37 @@ export default function Home() {
             />
           </div>
 
-          {/* Stats/Trust */}
+          {/* AI Assistant Showcase */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="flex flex-wrap justify-center gap-12 pt-20 border-t border-white/5 w-full"
+            className="w-full max-w-4xl"
+          >
+            <div className="bg-slate-900/40 border border-white/10 rounded-2xl p-6 backdrop-blur-xl">
+              <div className="flex items-center space-x-3 mb-4">
+                <Bot className="w-6 h-6 text-purple-400" />
+                <h3 className="text-white font-bold text-lg">Anita AI Assistant</h3>
+                <Sparkles className="w-4 h-4 text-yellow-400" />
+              </div>
+              <p className="text-slate-300 text-sm">
+                Powered by 13 Alibaba Cloud Qwen models: Text generation, Image creation, Video synthesis, 
+                Voice design, Speech recognition, and Real-time conversation across all your media tools.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Stats/Trust */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="flex flex-wrap justify-center gap-12 pt-12 border-t border-white/5 w-full"
           >
             <StatItem icon={<Zap className="w-5 h-5" />} label="Zero Latency" />
             <StatItem icon={<Shield className="w-5 h-5" />} label="Local Encryption" />
             <StatItem icon={<Cpu className="w-5 h-5" />} label="WebGPU Ready" />
+            <StatItem icon={<Bot className="w-5 h-5" />} label="13 AI Models" />
           </motion.div>
         </div>
       </div>
