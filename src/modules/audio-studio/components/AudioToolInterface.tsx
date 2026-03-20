@@ -149,7 +149,7 @@ export function AudioToolInterface({
           </div>
         </div>
         {(task.file || task.files.length > 0) && (
-          <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={reset} className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-bold text-sm">
+          <motion.button aria-label="Reset Tool" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={reset} className="flex items-center space-x-2 px-6 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all font-bold text-sm">
             <RefreshCcw className="w-4 h-4" /><span>Reset Tool</span>
           </motion.button>
         )}
@@ -193,7 +193,7 @@ export function AudioToolInterface({
                         <div ref={waveformRef} className="w-full cursor-pointer" />
                         <div className="flex items-center justify-between text-violet-400 font-mono text-xs sm:text-sm font-bold">
                           <span>{currentTime}</span>
-                          <button onClick={(e) => { e.stopPropagation(); togglePlayMode(); }} className="group/play w-12 h-12 flex items-center justify-center bg-violet-500 hover:bg-violet-400 text-white rounded-full shadow-[0_0_20px_rgba(139,92,246,0.5)] transition-all hover:scale-110 active:scale-95 text-center">
+                          <button aria-label={isPlaying ? "Pause audio" : "Play audio"} onClick={(e) => { e.stopPropagation(); togglePlayMode(); }} className="group/play w-12 h-12 flex items-center justify-center bg-violet-500 hover:bg-violet-400 text-white rounded-full shadow-[0_0_20px_rgba(139,92,246,0.5)] transition-all hover:scale-110 active:scale-95 text-center">
                             {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
                           </button>
                           <span>{duration}</span>
@@ -241,7 +241,7 @@ export function AudioToolInterface({
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6 rounded-[2rem] bg-slate-900/40 border border-white/5 backdrop-blur-2xl shadow-2xl space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-white font-black text-sm uppercase tracking-widest">{task.files.length} Files Loaded</h3>
-                <button onClick={() => fileInputRef.current?.click()} className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold hover:bg-violet-500/20 transition-all">
+                <button aria-label="Add More Files" onClick={() => fileInputRef.current?.click()} className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold hover:bg-violet-500/20 transition-all">
                   <Plus className="w-3 h-3" /><span>Add More</span>
                 </button>
               </div>
