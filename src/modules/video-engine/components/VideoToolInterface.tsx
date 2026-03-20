@@ -133,6 +133,7 @@ export function VideoToolInterface({
 
         {(task.file || task.files.length > 0) && (
           <motion.button
+            aria-label="Reset Tool"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             onClick={reset}
@@ -285,6 +286,7 @@ export function VideoToolInterface({
                   {task.files.length} Files Loaded
                 </h3>
                 <button
+                  aria-label="Add More Files"
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold hover:bg-indigo-500/20 transition-all"
                 >
