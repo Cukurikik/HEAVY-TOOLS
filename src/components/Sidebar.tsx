@@ -81,7 +81,7 @@ export default function Sidebar() {
             <p className="text-[10px] text-slate-400 font-bold leading-relaxed mb-4">
               Unlock WebGPU acceleration and batch processing.
             </p>
-            <button className="w-full py-2.5 rounded-xl bg-indigo-500 text-white text-[10px] font-black tracking-widest uppercase hover:bg-indigo-400 transition-colors">
+            <button className="w-full py-2.5 rounded-xl bg-indigo-500 text-white text-[10px] font-black tracking-widest uppercase hover:bg-indigo-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
               Upgrade Now
             </button>
           </div>
@@ -96,7 +96,7 @@ function SidebarLink({ link, isActive }: { link: any, isActive: boolean }) {
     <Link 
       href={link.href}
       className={cn(
-        "group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden",
+        "group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
         isActive 
           ? "bg-white/10 text-white shadow-xl shadow-black/20" 
           : "text-slate-400 hover:text-white hover:bg-white/5"
