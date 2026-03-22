@@ -154,6 +154,22 @@ describe('usePdfStore', () => {
       expect(state.task.error).toBe('Mock processing error');
     });
 
+    it('should handle invalid input error during client-side processing', async () => {
+      const file = new File(['invalid pdf content'], 'invalid.pdf', { type: 'application/pdf' });
+      await usePdfStore.getState().setFiles([file]);
+
+      // Mock PDFDocument.load to throw an error simulating invalid input
+      const { PDFDocument } = await import('pdf-lib');
+      vi.mocked(PDFDocument.load).mockRejectedValueOnce(new Error('Invalid PDF input'));
+
+      usePdfStore.getState().setOperation('split');
+      await usePdfStore.getState().processPdf();
+
+      const state = usePdfStore.getState();
+      expect(state.task.status).toBe('error');
+      expect(state.task.error).toBe('Invalid PDF input');
+    });
+
     it('should process server-side operation successfully', async () => {
       // Mock successful fetch response
       const mockBlob = new Blob(['result'], { type: 'application/pdf' });
