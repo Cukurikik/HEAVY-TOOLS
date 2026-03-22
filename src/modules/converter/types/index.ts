@@ -4,5 +4,7 @@ export interface ConverterTask {
   operation: "video" | "audio" | "image" | "document" | "idle";
   status: "idle" | "processing" | "success" | "error";
   progress: number;
+  outputUrl?: string;
+  outputName?: string;
   error?: string;
 }

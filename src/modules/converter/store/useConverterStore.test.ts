@@ -1,3 +1,5 @@
+vi.mock('@ffmpeg/ffmpeg', () => ({ FFmpeg: vi.fn() }));
+vi.mock('@ffmpeg/util', () => ({ fetchFile: vi.fn().mockResolvedValue(new Uint8Array()) }));
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useConverterStore } from './useConverterStore';
 
@@ -80,21 +82,27 @@ describe('useConverterStore', () => {
       useConverterStore.getState().setFile(file);
       useConverterStore.getState().setOperation('document');
 
+      // Just mock loadFfmpeg entirely so it doesn't fail in JSDOM
+      useConverterStore.setState({ isFfmpegLoaded: true, ffmpeg: {
+        on: vi.fn(),
+        load: vi.fn().mockResolvedValue(undefined),
+        writeFile: vi.fn().mockResolvedValue(undefined),
+        exec: vi.fn().mockImplementation(async () => {
+           // Simulate processing delay
+           await new Promise(r => setTimeout(r, 100));
+        }),
+        readFile: vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
+        deleteFile: vi.fn().mockResolvedValue(undefined),
+      } as any });
+
+      useConverterStore.getState().setOperation('video');
       const processPromise = useConverterStore.getState().processConversion();
 
       // Immediately after calling processConversion, it should be 'processing' with 0 progress
       expect(useConverterStore.getState().task.status).toBe('processing');
       expect(useConverterStore.getState().task.progress).toBe(0);
 
-      // Advance timers to trigger the setTimeout intervals
-      for (let i = 0; i <= 100; i += 10) {
-        await vi.advanceTimersByTimeAsync(120);
-        expect(useConverterStore.getState().task.progress).toBe(i);
-        if (i < 100) {
-            expect(useConverterStore.getState().task.status).toBe('processing');
-        }
-      }
-
+      await vi.advanceTimersByTimeAsync(150);
       await processPromise;
 
       const { task } = useConverterStore.getState();

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play, CheckCircle, Loader2, FileArchive } from "lucide-react";
+import { Play, CheckCircle, Loader2, FileArchive, Download, AlertCircle } from "lucide-react";
 import { useConverterStore } from "../store/useConverterStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -146,7 +146,7 @@ export function ConverterDashboard() {
           ) : (
             <>
               <Play className="w-6 h-6" />
-              <span>Start Conversion</span>
+              <span>{task.status === "error" ? "Retry Conversion" : "Start Conversion"}</span>
             </>
           )}
         </button>
@@ -162,14 +162,46 @@ export function ConverterDashboard() {
           </div>
         )}
 
-        {task.status === "success" && (
-          <button
-            onClick={reset}
-            className="mt-4 text-slate-400 hover:text-white underline text-sm"
+        {task.status === "error" && task.error && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-6 flex flex-col items-center p-4 bg-red-500/10 border border-red-500/20 rounded-xl max-w-lg text-center space-y-2"
           >
-            Convert another file
-          </button>
+            <AlertCircle className="w-8 h-8 text-red-400 mb-1" />
+            <p className="text-red-300 font-medium">{task.error}</p>
+            <button
+              onClick={reset}
+              className="text-red-400/80 hover:text-red-300 underline text-sm pt-2"
+            >
+              Reset and try another file
+            </button>
+          </motion.div>
         )}
+
+        {task.status === "success" && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-6 flex flex-col items-center space-y-4"
+          >
+            <a
+              href={task.outputUrl}
+              download={task.outputName}
+              className="flex items-center space-x-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold transition-transform hover:scale-105 active:scale-95"
+            >
+              <Download className="w-5 h-5" />
+              <span>Download Converted File</span>
+            </a>
+            <button
+              onClick={reset}
+              className="text-slate-400 hover:text-white underline text-sm"
+            >
+              Convert another file
+            </button>
+          </motion.div>
+        )}
+
       </motion.div>
     </div>
   );
