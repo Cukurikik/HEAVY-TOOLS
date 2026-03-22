@@ -1,0 +1,8 @@
+<<<<<<< SEARCH
+            recorder.start();
+            // Record for duration (default 10s)
+            const duration = (task.options.duration as number) || 10;
+=======
+            recorder.start();
+            const duration = (task.options.duration as number) || 10;
+>>>>>>> REPLACE
