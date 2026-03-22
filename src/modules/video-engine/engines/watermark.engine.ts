@@ -1,7 +1,14 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
 export interface WatermarkOptions { [key: string]: unknown; }
 export async function buildWatermarkArgs(input: string, output: string, opts: WatermarkOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
-  const text = (opts.text as string) || "HEAVY-TOOLS";
+  let text = (opts.text as string) || "HEAVY-TOOLS";
+
+  // Sanitize input for FFmpeg drawtext filter injection
+  text = text
+    .replace(/\\/g, '\\\\')
+    .replace(/:/g, '\\:')
+    .replace(/'/g, "'\\''");
+
   const posX = (opts.posX as string) || "10";
   const posY = (opts.posY as string) || "10";
   const fontSize = (opts.fontSize as number) || 24;
