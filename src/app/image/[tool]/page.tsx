@@ -51,10 +51,10 @@ const TOOLS: Record<string, { name: string; desc: string; icon: string }> = {
 };
 
 /* ── Main Page Component ─────────────────────────────────── */
-export default function ImageToolPage({ params }: { params: { tool: string } }) {
-  const toolInfo = TOOLS[params.tool];
+export default async function ImageToolPage({ params }: { params: Promise<{ tool: string }> }) {
+  const { tool } = await params;
+  const toolInfo = TOOLS[tool];
   if (!toolInfo) notFound();
-  const tool = params.tool;
 
   // Zustand store
   const imageData = useImageStore((s: any) => s.imageData);

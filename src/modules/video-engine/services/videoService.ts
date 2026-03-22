@@ -1,4 +1,6 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
+// @ts-ignore
+const { FFmpeg: FFmpegClass } = require('@ffmpeg/ffmpeg');
 import { toBlobURL } from '@ffmpeg/util';
 
 import * as engines from '../engines';
@@ -17,52 +19,28 @@ export async function initFFmpeg(onProgress: (p: number) => void, onLog: (l: str
     return ffmpeg;
   }
 
-  ffmpeg = new FFmpeg();
+  ffmpeg = new FFmpegClass() as FFmpeg;
 
-  ffmpeg.on('progress', ({ progress }: { progress: number }) => {
+  ffmpeg!.on('progress', ({ progress }: { progress: number }) => {
     if (currentOnProgress) currentOnProgress(Math.min(Math.round(progress * 100), 99));
   });
-  ffmpeg.on('log', ({ message }: { message: string }) => {
+  ffmpeg!.on('log', ({ message }: { message: string }) => {
     if (currentOnLog) currentOnLog(message);
   });
 
-  // Use the local UMD worker so Webpack doesn't intercept it.
   const baseURL = window.location.origin + '/ffmpeg';
 
   try {
-    // Memuat melalui toBlobURL secara paralel untuk efisiensi
-    const [classWorkerURL, coreURL, wasmURL, workerURL] = await Promise.all([
-      toBlobURL(`${baseURL}/814.ffmpeg.js`, 'text/javascript'),
-      toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-      toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
-    ]);
-
-    await ffmpeg.load({
-      classWorkerURL,
-      coreURL,
-      wasmURL,
-      workerURL,
+    await ffmpeg!.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
     });
   } catch (error) {
-    console.error("FFmpeg load error from local:", error);
-    // Fallback: jika URL lokal gagal, coba gunakan unpkg
-    const unpkgBaseURL = 'https://unpkg.com/@ffmpeg/core@0.12.9/dist/umd';
-    const unpkgClassWorkerURL = 'https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/814.ffmpeg.js';
-
-    const [classWorkerURL, coreURL, wasmURL, workerURL] = await Promise.all([
-      toBlobURL(unpkgClassWorkerURL, 'text/javascript'),
-      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.js`, 'text/javascript'),
-      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
-    ]);
-
-    await ffmpeg.load({
-      classWorkerURL,
-      coreURL,
-      wasmURL,
-      workerURL,
-    });
+    console.error("Critical FFmpeg Load Error:", error);
+    throw new Error(
+      `Failed to initialize FFmpeg Engine: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 
   return ffmpeg;

@@ -4,12 +4,12 @@ import JSZip from 'jszip';
 
 export async function POST(
   request: Request,
-  { params }: { params: { operation: string } }
+  { params }: { params: Promise<{ operation: string }> }
 ) {
   try {
+    const { operation } = await params;
     const formData = await request.formData();
     const files = formData.getAll('files') as File[];
-    const operation = params.operation;
 
     if (!files || files.length === 0) {
       return new NextResponse('No files provided', { status: 400 });
@@ -94,7 +94,7 @@ export async function POST(
       },
     });
   } catch (error) {
-    console.error(`Error in PDF operation ${params.operation}:`, error);
+    console.error(`Error in PDF operation:`, error);
     return new NextResponse(
       error instanceof Error ? error.message : 'Unknown error occurred during PDF processing',
       { status: 500 }

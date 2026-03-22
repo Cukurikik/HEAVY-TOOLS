@@ -12,13 +12,15 @@ import {
   FileVideo,
   Settings2,
   ChevronLeft,
-  Plus,
-  X,
 } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useVideoStore } from "../store/useVideoStore";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { VideoOperation } from "../types";
+import { VideoPlayer } from "./common/VideoPlayer";
+import { TimelineSlider } from "./common/TimelineSlider";
+import { CanvasPreview } from "./common/CanvasPreview";
 
 interface VideoToolInterfaceProps {
   toolId: VideoOperation;
@@ -40,6 +42,11 @@ export function VideoToolInterface({
   const { task, setFile, addFiles, setOperation, processVideo, reset } = useVideoStore();
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Custom video playback states
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   // Sync operation and reset state when navigating between tools
   useEffect(() => {
@@ -217,14 +224,32 @@ export function VideoToolInterface({
                     exit={{ opacity: 0 }}
                     className="w-full h-full flex flex-col"
                   >
-                    {/* Video Preview Player */}
+                    {/* Video Preview Player with Advanced Components */}
                     {videoPreviewUrl ? (
-                      <video
-                        src={videoPreviewUrl}
-                        controls
-                        className="w-full h-full object-contain bg-black"
-                        preload="metadata"
-                      />
+                      <div className="flex-1 flex flex-col overflow-hidden pb-20">
+                        <div className="flex-1 flex flex-col lg:flex-row p-4 gap-4 min-h-0">
+                          <div className="flex-[2] min-w-0 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl">
+                            <VideoPlayer
+                              ref={videoRef}
+                              src={videoPreviewUrl}
+                              onTimeUpdate={setCurrentTime}
+                              onDuration={setDuration}
+                            />
+                          </div>
+                          <div className="flex-[1] min-w-0 hidden lg:flex flex-col">
+                            <CanvasPreview videoRef={videoRef} currentTime={currentTime} />
+                          </div>
+                        </div>
+                        <div className="px-4 pb-4">
+                          <TimelineSlider
+                            duration={duration}
+                            currentTime={currentTime}
+                            onSeek={(t) => {
+                              if (videoRef.current) videoRef.current.currentTime = t;
+                            }}
+                          />
+                        </div>
+                      </div>
                     ) : (
                       <div className="flex-1 flex items-center justify-center bg-black/60 relative overflow-hidden">
                         <FileVideo className="w-32 h-32 text-indigo-400 opacity-10" />

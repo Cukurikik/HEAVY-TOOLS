@@ -163,33 +163,110 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
     }));
 
     try {
-      const { executeVideoTask } = await import("../services/videoService");
+      // ═══════════════════════════════════════════════════
+      // Route Server Tools (Stabilizer)
+      // ═══════════════════════════════════════════════════
+      if (task.operation === "stabilizer") {
+        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, "Uploading to server for stabilization..."] }));
+        
+        const formData = new FormData();
+        formData.append("file", task.file);
+        formData.append("options", JSON.stringify(task.options));
 
-      const onProgress = (progress: number) => {
-        set((state) => ({ task: { ...state.task, progress } }));
-      };
+        const res = await fetch(`/api/video/${task.operation}`, {
+          method: "POST",
+          body: formData,
+        });
 
-      const onLog = (log: string) => {
-        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, log] }));
-      };
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to start server task");
 
-      const { outputData, outputMimeType } = await executeVideoTask(
-        {
+        const jobId = data.jobId;
+        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, `Server Job ID: ${jobId} queued...`] }));
+
+        // Poll for progress
+        let isDone = false;
+        while (!isDone) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          const pollRes = await fetch(`/api/video/${task.operation}?jobId=${jobId}`);
+          const pollData = await pollRes.json();
+          
+          if (!pollRes.ok) throw new Error(pollData.error || "Failed to poll server task");
+
+          if (pollData.status === "processing") {
+            set((state) => ({ task: { ...state.task, progress: pollData.progress || 50 } }));
+          } else if (pollData.status === "success") {
+            isDone = true;
+            set((state) => ({
+              task: { 
+                ...state.task, 
+                status: "success", 
+                progress: 100, 
+                resultUrl: pollData.outputPath 
+              },
+              ffmpegLogs: [...state.ffmpegLogs, "Stabilization complete!"],
+            }));
+          } else if (pollData.status === "error" || pollData.status === "failed") {
+            throw new Error(pollData.error || "Server processing failed");
+          }
+        }
+        return;
+      }
+
+      // ═══════════════════════════════════════════════════
+      // Client WASM Tools (Web Worker)
+      // ═══════════════════════════════════════════════════
+      const worker = new Worker(new URL('../workers/ffmpeg.worker.ts', import.meta.url));
+      
+      worker.postMessage({
+        type: 'PROCESS',
+        payload: {
           operation: task.operation,
           file: task.file,
           files: task.files,
-          options: task.options,
-        },
-        onProgress,
-        onLog
-      );
+          options: task.options
+        }
+      });
 
-      const blob = new Blob([outputData.buffer as ArrayBuffer], { type: outputMimeType || 'video/mp4' });
-      const url = URL.createObjectURL(blob);
-
-      set((state) => ({
-        task: { ...state.task, status: "success", progress: 100, resultUrl: url },
-      }));
+      worker.onmessage = (e) => {
+        if (e.data.type === 'PROGRESS') {
+          set((state) => ({ task: { ...state.task, progress: e.data.progress } }));
+        }
+        if (e.data.type === 'LOG') {
+          set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, e.data.message] }));
+        }
+        if (e.data.type === 'DONE') {
+          const blob = new Blob([e.data.outputData.buffer as ArrayBuffer], { type: e.data.outputMimeType || 'video/mp4' });
+          const url = URL.createObjectURL(blob);
+          set((state) => ({
+            task: { ...state.task, status: "success", progress: 100, resultUrl: url },
+          }));
+          worker.terminate();
+        }
+        if (e.data.type === 'ERROR') {
+          console.error("Video processing worker error:", e.data.error);
+          set((state) => ({
+            task: {
+              ...state.task,
+              status: "error",
+              error: e.data.error || "Processing failed.",
+            },
+          }));
+          worker.terminate();
+        }
+      };
+      
+      worker.onerror = (err) => {
+        console.error("Worker generic error:", err);
+        set((state) => ({
+          task: {
+            ...state.task,
+            status: "error",
+            error: "Web Worker crashed heavily. Ensure you have Web Worker support.",
+          },
+        }));
+        worker.terminate();
+      };
     } catch (error) {
       console.error("Video processing error:", error);
       set((state) => ({

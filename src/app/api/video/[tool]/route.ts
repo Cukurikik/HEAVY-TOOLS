@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getVideoQueue } from "@/lib/queue";
+import { getVideoQueue, Job } from "@/lib/queue";
+import { spawn } from "child_process";
+import fs from "fs/promises";
+import path from "path";
 
 /**
  * Video Tools API Route Handler
@@ -11,7 +14,6 @@ import { getVideoQueue } from "@/lib/queue";
  * - Large files > 2GB (exceeds browser WASM memory)
  *
  * Uses InMemoryQueue (Layer 5) for rate-limiting with max concurrency of 2.
- * Most of the 30 tools run client-side via FFmpeg WASM.
  */
 
 const UploadSchema = z.object({
@@ -19,8 +21,76 @@ const UploadSchema = z.object({
   options: z.record(z.string(), z.unknown()).optional(),
 });
 
-// Server-side tools that need this endpoint
 const SERVER_TOOLS = ["stabilizer"] as const;
+
+// Ensure processor is set up exactly once per server instance runtime
+const queue = getVideoQueue();
+if (!queue.getAllJobs().length) {
+  queue.setProcessor(async (job: Job, onProgress: (pct: number) => void) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const outDir = "/tmp/omni/video/output";
+        await fs.mkdir(outDir, { recursive: true });
+        
+        const outputFilename = `job_${job.id}_output.mp4`;
+        const outputPath = path.join(outDir, outputFilename);
+
+        let args: string[] = [];
+
+        if (job.tool === "stabilizer") {
+          // Pass 1: Detect shakes
+          const trfPath = path.join(outDir, `transform_${job.id}.trf`);
+          const detectArgs = [
+            "-y", "-i", job.inputPath,
+            "-vf", `vidstabdetect=stepsize=32:shakiness=10:accuracy=10:result=${trfPath}`,
+            "-f", "null", "-"
+          ];
+
+          await new Promise<void>((res, rej) => {
+            const detectProp = spawn("ffmpeg", detectArgs);
+            detectProp.on("close", (code) => {
+              if (code === 0) res();
+              else rej(new Error(`Stabilizer Pass 1 failed with code ${code}`));
+            });
+          });
+
+          onProgress(50); // Pass 1 done
+
+          // Pass 2: Transform
+          args = [
+            "-y", "-i", job.inputPath,
+            "-vf", `vidstabtransform=input=${trfPath}:zoom=0:smoothing=10`,
+            "-vcodec", "libx264", "-preset", "fast", "-crf", "22",
+            "-acodec", "copy",
+            outputPath
+          ];
+        } else {
+          throw new Error("Unsupported server tool: " + job.tool);
+        }
+
+        const ffmpeg = spawn("ffmpeg", args);
+
+        ffmpeg.stderr.on("data", (data) => {
+          const log = data.toString();
+          // Extremely basic progress parsing (time=xx:xx:xx) could go here
+          // For now we just jump to 100 when closed
+        });
+
+        ffmpeg.on("close", (code) => {
+          if (code === 0) {
+            onProgress(100);
+            resolve(outputPath);
+          } else {
+            reject(new Error(`FFmpeg processing failed with code ${code}`));
+          }
+        });
+
+      } catch (error) {
+        reject(error);
+      }
+    });
+  });
+}
 
 export async function POST(
   request: NextRequest,
@@ -29,52 +99,39 @@ export async function POST(
   try {
     const { tool } = await params;
 
-    // Validate tool is a server-side tool
     if (!SERVER_TOOLS.includes(tool as (typeof SERVER_TOOLS)[number])) {
       return NextResponse.json(
-        {
-          error: `Tool "${tool}" runs client-side. Use the FFmpeg WASM Worker instead.`,
-          clientSide: true,
-        },
+        { error: `Tool "${tool}" runs client-side. Use FFmpeg WASM.`, clientSide: true },
         { status: 400 }
       );
     }
 
-    // Parse multipart form data
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
     const optionsRaw = formData.get("options") as string | null;
 
     if (!file) {
-      return NextResponse.json(
-        { error: "No file provided." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "No file provided." }, { status: 400 });
     }
 
-    // Validate options
     let options: Record<string, unknown> = {};
     if (optionsRaw) {
       try {
         const parsed = JSON.parse(optionsRaw);
-        options = UploadSchema.parse({
-          operation: tool,
-          options: parsed,
-        }).options || {};
+        options = UploadSchema.parse({ operation: tool, options: parsed }).options || {};
       } catch {
-        return NextResponse.json(
-          { error: "Invalid options format." },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Invalid options format." }, { status: 400 });
       }
     }
 
-    // Save file to temp storage
     const tmpDir = `/tmp/omni/video`;
+    await fs.mkdir(tmpDir, { recursive: true });
     const inputPath = `${tmpDir}/${crypto.randomUUID()}_${file.name}`;
+    
+    // Write file to disk
+    const arrayBuffer = await file.arrayBuffer();
+    await fs.writeFile(inputPath, Buffer.from(arrayBuffer));
 
-    // Enqueue job via InMemoryQueue (Layer 5)
-    const queue = getVideoQueue();
     const jobId = queue.enqueue(tool, inputPath, options);
 
     return NextResponse.json({
@@ -84,14 +141,12 @@ export async function POST(
       fileName: file.name,
       fileSize: file.size,
       status: "queued",
-      message: `Job queued. Poll GET /api/video/${tool}?jobId=${jobId} or GET /api/download/${jobId} for status.`,
+      message: `Job queued.`,
     });
   } catch (error) {
     console.error("Video API Error:", error);
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Internal server error",
-      },
+      { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 }
     );
   }
@@ -105,9 +160,7 @@ export async function GET(
   const { searchParams } = new URL(request.url);
   const jobId = searchParams.get("jobId");
 
-  // If jobId provided, return job status from queue
   if (jobId) {
-    const queue = getVideoQueue();
     const job = queue.getJob(jobId);
     if (!job) {
       return NextResponse.json({ error: "Job not found." }, { status: 404 });
@@ -117,7 +170,7 @@ export async function GET(
       tool: job.tool,
       status: job.status,
       progress: job.progress,
-      outputPath: job.outputPath,
+      outputPath: job.status === "success" ? `/api/download/${job.id}` : undefined,
       error: job.error,
       createdAt: job.createdAt,
       startedAt: job.startedAt,
@@ -125,13 +178,11 @@ export async function GET(
     });
   }
 
-  // No jobId — return tool info
   return NextResponse.json({
     tool,
     status: "available",
     engine: SERVER_TOOLS.includes(tool as (typeof SERVER_TOOLS)[number])
       ? "Server child_process"
       : "Client FFmpeg WASM",
-    description: `Video tool endpoint for: ${tool}`,
   });
 }

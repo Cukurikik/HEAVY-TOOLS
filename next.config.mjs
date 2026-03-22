@@ -1,10 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  outputFileTracingRoot: process.cwd(),
   transpilePackages: ['@tensorflow/tfjs', '@tensorflow/tfjs-backend-webgpu', '@imgly/background-removal'],
-  experimental: { 
-    instrumentationHook: true,
-  },
+  serverExternalPackages: [
+    'genkit',
+    '@genkit-ai/core',
+    '@genkit-ai/google-genai',
+    '@opentelemetry/instrumentation',
+    'require-in-the-middle',
+    'express'
+  ],
   async headers() {
     return [
       {

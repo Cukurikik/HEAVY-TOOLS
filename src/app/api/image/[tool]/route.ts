@@ -4,8 +4,8 @@ import sharp from 'sharp';
 // Tools that exclusively require server-side intervention
 const SERVER_TOOLS = ['svg-converter', 'raw-converter', 'screenshot-to-code'];
 
-export async function POST(req: NextRequest, { params }: { params: { tool: string } }) {
-  const { tool } = params;
+export async function POST(req: NextRequest, { params }: { params: Promise<{ tool: string }> }) {
+  const { tool } = await params;
 
   if (!SERVER_TOOLS.includes(tool)) {
     return NextResponse.json({ error: 'This tool is processed client-side.' }, { status: 400 });
