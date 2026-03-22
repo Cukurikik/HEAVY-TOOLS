@@ -131,13 +131,24 @@ async function processClientSide(task: PdfTask, onProgress: (p: number) => void)
     }
     case 'from-image': {
       const doc = await PDFDocument.create();
-      for (let i = 0; i < files.length; i++) {
-        const imgBytes = await files[i].arrayBuffer();
-        const isJpg = files[i].type === 'image/jpeg';
-        const img = isJpg ? await doc.embedJpg(imgBytes) : await doc.embedPng(imgBytes);
+      let completed = 0;
+
+      const embeddedImages = await Promise.all(
+        files.map(async (file) => {
+          const imgBytes = await file.arrayBuffer();
+          const isJpg = file.type === 'image/jpeg';
+          const img = isJpg ? await doc.embedJpg(imgBytes) : await doc.embedPng(imgBytes);
+
+          completed++;
+          onProgress(10 + (80 * completed) / files.length);
+
+          return img;
+        })
+      );
+
+      for (const img of embeddedImages) {
         const page = doc.addPage([img.width, img.height]);
         page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
-        onProgress(10 + (80 * (i + 1)) / files.length);
       }
       return toBlob(await doc.save());
     }
