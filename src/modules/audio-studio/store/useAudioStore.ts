@@ -71,7 +71,6 @@ export const useAudioStore = create<AudioStore>()(
               set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
             };
             recorder.start();
-            // Record for duration (default 10s)
             const duration = (task.options.duration as number) || 10;
             set((s) => ({ task: { ...s.task, progress: 50 } }));
             await new Promise((r) => setTimeout(r, duration * 1000));
