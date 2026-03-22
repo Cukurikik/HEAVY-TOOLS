@@ -23,6 +23,7 @@ self.onmessage = async (e) => {
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
           wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
           workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+          classWorkerURL: await toBlobURL(`${baseURL}/814.ffmpeg.js`, 'text/javascript'),
         });
       }
 
