@@ -208,7 +208,9 @@ async function buildFFmpegArgs(
 
     // 14. WATERMARK TOOL — -vf overlay= drawtext=
     case "watermark": {
-      const text = (opts.text as string) || "HEAVY-TOOLS";
+      const rawText = (opts.text as string) || "HEAVY-TOOLS";
+      // Escape for FFmpeg drawtext filter: replace \ with \\, : with \:, and ' with '\''
+      const text = rawText.replace(/\\/g, '\\\\').replace(/:/g, '\\:').replace(/'/g, "'\\''");
       const posX = (opts.posX as string) || "10";
       const posY = (opts.posY as string) || "10";
       const fontSize = (opts.fontSize as number) || 24;
