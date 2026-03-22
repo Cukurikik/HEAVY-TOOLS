@@ -2,6 +2,12 @@ import { create } from "zustand";
 import { VideoTask, VideoOperation } from "../types";
 import { getFFmpeg } from "@/app/video-titan/lib/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
+import {
+  sanitizeFFmpegMetadataArg,
+  escapeFFmetadataValue,
+  escapeFFmpegFilter,
+  sanitizeSrtContent
+} from "../utils/security";
 
 interface VideoStore {
   task: VideoTask;
@@ -237,7 +243,7 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
         // 13. SUBTITLE BURNER
         // ═══════════════════════════════════════
         case "subtitle-burner": {
-          const subText = (opts.subtitleText as string) || "Sample Subtitle";
+          const subText = sanitizeSrtContent((opts.subtitleText as string) || "Sample Subtitle");
           const subStart = (opts.subStart as string) || "00:00:00,000";
           const subEnd = (opts.subEnd as string) || "00:00:10,000";
           const srtContent = `1\n${subStart} --> ${subEnd}\n${subText}`;
@@ -250,7 +256,7 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
         // 14. WATERMARK TOOL
         // ═══════════════════════════════════════
         case "watermark": {
-          const text = (opts.text as string) || "HEAVY-TOOLS";
+          const text = escapeFFmpegFilter((opts.text as string) || "HEAVY-TOOLS");
           const posX = (opts.posX as string) || "10";
           const posY = (opts.posY as string) || "10";
           const fontSize = (opts.fontSize as number) || 24;
@@ -350,9 +356,9 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
         // 25. METADATA EDITOR
         // ═══════════════════════════════════════
         case "metadata-editor": {
-          const title = (opts.title as string) || "";
-          const author = (opts.author as string) || "";
-          const copyright = (opts.copyright as string) || "";
+          const title = sanitizeFFmpegMetadataArg((opts.title as string) || "");
+          const author = sanitizeFFmpegMetadataArg((opts.author as string) || "");
+          const copyright = sanitizeFFmpegMetadataArg((opts.copyright as string) || "");
           const metaArgs: string[] = ["-i", inputName];
           if (title) metaArgs.push("-metadata", `title=${title}`);
           if (author) metaArgs.push("-metadata", `artist=${author}`);
@@ -395,7 +401,7 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
               const np = nt.trim().split(":");
               return (parseInt(np[0]) * 3600 + parseInt(np[1]) * 60 + parseInt(np[2])) * 1000;
             })() : startMs + 60000;
-            metadataLines.push("[CHAPTER]", `TIMEBASE=1/1000`, `START=${startMs}`, `END=${endMs}`, `title=${(title || "Chapter").trim()}`);
+            metadataLines.push("[CHAPTER]", `TIMEBASE=1/1000`, `START=${startMs}`, `END=${endMs}`, `title=${escapeFFmetadataValue((title || "Chapter").trim())}`);
           }
           await ffmpeg.writeFile("metadata.txt", metadataLines.join("\n"));
           args = ["-i", inputName, "-i", "metadata.txt", "-map_metadata", "1", "-c", "copy", outputName];
