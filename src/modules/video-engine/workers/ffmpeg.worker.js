@@ -5,6 +5,7 @@
  */
 
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
 
 import * as engines from '../engines';
 import JSZip from 'jszip';
@@ -17,12 +18,39 @@ async function initFFmpeg() {
   ffmpeg = new FFmpeg();
 
   const baseURL = self.location.origin + '/ffmpeg';
-  await ffmpeg.load({
-    coreURL: `${baseURL}/ffmpeg-core.js`,
-    wasmURL: `${baseURL}/ffmpeg-core.wasm`,
-    workerURL: `${baseURL}/ffmpeg-core.worker.js`,
-    classWorkerURL: `${baseURL}/814.ffmpeg.js`,
-  });
+  try {
+    const [classWorkerURL, coreURL, wasmURL, workerURL] = await Promise.all([
+      toBlobURL(`${baseURL}/814.ffmpeg.js`, 'text/javascript'),
+      toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+    ]);
+
+    await ffmpeg.load({
+      classWorkerURL,
+      coreURL,
+      wasmURL,
+      workerURL,
+    });
+  } catch (error) {
+    console.error("FFmpeg worker load error:", error);
+    const unpkgBaseURL = 'https://unpkg.com/@ffmpeg/core@0.12.9/dist/umd';
+    const unpkgClassWorkerURL = 'https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/814.ffmpeg.js';
+
+    const [classWorkerURL, coreURL, wasmURL, workerURL] = await Promise.all([
+      toBlobURL(unpkgClassWorkerURL, 'text/javascript'),
+      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.js`, 'text/javascript'),
+      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      toBlobURL(`${unpkgBaseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+    ]);
+
+    await ffmpeg.load({
+      classWorkerURL,
+      coreURL,
+      wasmURL,
+      workerURL,
+    });
+  }
 
   return ffmpeg;
 }
@@ -68,7 +96,9 @@ self.onmessage = async (e) => {
         postMessage({ type: 'PROGRESS', progress: Math.round((i / payload.files.length) * 100) });
 
         const ret = await instance.exec(args);
-        if (ret !== 0) throw new Error("Batch failed on file " + f.name);
+        if (ret !== 0) {
+          throw new Error(`Batch processing failed on file: ${f.name}. Please ensure the file is valid and try again.`);
+        }
 
         const data = await instance.readFile(outputName);
         zip.file(`processed_${f.name}`, data);
@@ -114,7 +144,7 @@ self.onmessage = async (e) => {
       const ret = await instance.exec(args);
       instance.off('log', logCallback);
       if (ret !== 0) {
-        throw new Error(`FFmpeg exited with code ${ret}`);
+        throw new Error(`FFmpeg process failed with code ${ret}. Please check your configuration and try again.`);
       }
     } else {
       instance.off('log', logCallback);
