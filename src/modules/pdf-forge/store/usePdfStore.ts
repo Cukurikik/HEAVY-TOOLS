@@ -163,12 +163,23 @@ async function processClientSide(task: PdfTask, onProgress: (p: number) => void)
     }
     case 'batch-process': {
       const merged = await PDFDocument.create();
-      for (let i = 0; i < files.length; i++) {
-        const src = await PDFDocument.load(await files[i].arrayBuffer());
-        const copied = await merged.copyPages(src, src.getPageIndices());
-        copied.forEach(p => merged.addPage(p));
-        onProgress(10 + (80 * (i + 1)) / files.length);
+      let completed = 0;
+
+      const copiedPagesArrays = await Promise.all(
+        files.map(async (file) => {
+          const buf = await file.arrayBuffer();
+          const src = await PDFDocument.load(buf);
+          const copied = await merged.copyPages(src, src.getPageIndices());
+          completed++;
+          onProgress(10 + (80 * completed) / files.length);
+          return copied;
+        })
+      );
+
+      for (const copiedPages of copiedPagesArrays) {
+        copiedPages.forEach((p) => merged.addPage(p));
       }
+
       return toBlob(await merged.save());
     }
     default: {
