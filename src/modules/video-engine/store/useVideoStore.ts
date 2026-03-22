@@ -113,15 +113,17 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
         // ═══════════════════════════════════════
         case "merger": {
           const filesToMerge = task.files.length > 0 ? task.files : [task.file];
-          let concatList = "";
-          for (let i = 0; i < filesToMerge.length; i++) {
-            const f = filesToMerge[i];
-            if (!f) continue;
-            const ext = f.name.substring(f.name.lastIndexOf("."));
-            const name = `merge_${i}${ext}`;
-            await ffmpeg.writeFile(name, await fetchFile(f));
-            concatList += `file '${name}'\n`;
-          }
+          const results = await Promise.all(
+            filesToMerge.map(async (f, i) => {
+              if (!f) return null;
+              const ext = f.name.substring(f.name.lastIndexOf("."));
+              const name = `merge_${i}${ext}`;
+              await ffmpeg.writeFile(name, await fetchFile(f));
+              return `file '${name}'`;
+            })
+          );
+
+          const concatList = results.filter((r) => r !== null).join("\n") + "\n";
           await ffmpeg.writeFile("concat.txt", concatList);
           args = ["-f", "concat", "-safe", "0", "-i", "concat.txt", "-c", "copy", outputName];
           break;
