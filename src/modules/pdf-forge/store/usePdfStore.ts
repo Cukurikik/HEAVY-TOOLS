@@ -41,8 +41,11 @@ async function processClientSide(task: PdfTask, onProgress: (p: number) => void)
   switch (operation) {
     case 'merge': {
       const merged = await PDFDocument.create();
-      for (let i = 0; i < files.length; i++) {
-        const src = await PDFDocument.load(await files[i].arrayBuffer());
+      const loadedDocs = await Promise.all(
+        files.map(async (f) => await PDFDocument.load(await f.arrayBuffer()))
+      );
+      for (let i = 0; i < loadedDocs.length; i++) {
+        const src = loadedDocs[i];
         const copied = await merged.copyPages(src, src.getPageIndices());
         copied.forEach(p => merged.addPage(p));
         onProgress(10 + (80 * (i + 1)) / files.length);
@@ -163,8 +166,11 @@ async function processClientSide(task: PdfTask, onProgress: (p: number) => void)
     }
     case 'batch-process': {
       const merged = await PDFDocument.create();
-      for (let i = 0; i < files.length; i++) {
-        const src = await PDFDocument.load(await files[i].arrayBuffer());
+      const loadedDocs = await Promise.all(
+        files.map(async (f) => await PDFDocument.load(await f.arrayBuffer()))
+      );
+      for (let i = 0; i < loadedDocs.length; i++) {
+        const src = loadedDocs[i];
         const copied = await merged.copyPages(src, src.getPageIndices());
         copied.forEach(p => merged.addPage(p));
         onProgress(10 + (80 * (i + 1)) / files.length);
