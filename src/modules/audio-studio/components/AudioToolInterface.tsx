@@ -310,8 +310,8 @@ export function AudioToolInterface({
             <div className="space-y-6">
               {options || <div className="p-6 rounded-2xl bg-slate-800/30 border border-white/5 text-slate-500 text-sm text-center italic font-medium">No additional parameters required.</div>}
             </div>
-            <motion.button whileHover={canProcess && task.status !== "processing" ? { scale: 1.02, y: -4 } : {}}
-              whileTap={canProcess && task.status !== "processing" ? { scale: 0.98 } : {}}
+            <motion.button whileHover={canProcess && task.status !== "processing" ? { scale: 1.02, y: -4 } : undefined}
+              whileTap={canProcess && task.status !== "processing" ? { scale: 0.98 } : undefined}
               onClick={handleProcess} disabled={!canProcess || task.status === "processing"}
               className={cn(
                 "w-full flex items-center justify-center space-x-4 py-6 rounded-[1.5rem] font-black text-xl transition-all shadow-2xl",
