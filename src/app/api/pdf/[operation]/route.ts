@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { PDFDocument, rgb, degrees } from 'pdf-lib';
+import JSZip from 'jszip';
 
 export async function POST(
   request: Request,
@@ -13,29 +15,82 @@ export async function POST(
       return new NextResponse('No files provided', { status: 400 });
     }
 
-    // For now, as a fallback to prevent "Failed to fetch" and "Engine Failure" errors
-    // we simply return the first uploaded file so the user can download a result.
-    // Real implementation of compress, convert, to-word, etc. would require
-    // heavy server-side dependencies (LibreOffice, Sharp, etc.).
-
-    let resultBuffer: ArrayBuffer;
+    let resultBuffer: Uint8Array | null = null;
     let contentType = 'application/pdf';
+    let outputFilename = `${operation}-result.pdf`;
 
-    // If the operation expects a specific output type (e.g. word, excel) and we want to mock it:
-    // we just return the original PDF to prevent download errors.
-    const file = files[0];
-    resultBuffer = await file.arrayBuffer();
-    contentType = file.type || 'application/pdf';
+    switch (operation) {
+      case 'merger': {
+        const mergedPdf = await PDFDocument.create();
+        for (const file of files) {
+          const pdfA = await PDFDocument.load(await file.arrayBuffer());
+          const copiedPages = await mergedPdf.copyPages(pdfA, pdfA.getPageIndices());
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+        resultBuffer = await mergedPdf.save();
+        break;
+      }
 
-    // Simulate some processing time
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      case 'rotate-pages': {
+        const pdfDoc = await PDFDocument.load(await files[0].arrayBuffer());
+        const pages = pdfDoc.getPages();
+        pages.forEach((page) => {
+          page.setRotation(degrees(page.getRotation().angle + 90));
+        });
+        resultBuffer = await pdfDoc.save();
+        break;
+      }
 
-    return new NextResponse(resultBuffer, {
+      case 'watermark': {
+        const textToDraw = (formData.get('text') as string) || 'HEAVY-TOOLS';
+        const pdfDoc = await PDFDocument.load(await files[0].arrayBuffer());
+        const pages = pdfDoc.getPages();
+        pages.forEach((page) => {
+          const { width, height } = page.getSize();
+          page.drawText(textToDraw, {
+            x: width / 4,
+            y: height / 2,
+            size: 50,
+            color: rgb(0.95, 0.1, 0.1),
+            rotate: degrees(45),
+            opacity: 0.5,
+          });
+        });
+        resultBuffer = await pdfDoc.save();
+        break;
+      }
+
+      case 'splitter': {
+        const pdfDoc = await PDFDocument.load(await files[0].arrayBuffer());
+        const zip = new JSZip();
+        for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+          const newPdf = await PDFDocument.create();
+          const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
+          newPdf.addPage(copiedPage);
+          zip.file(`page-${i+1}.pdf`, await newPdf.save());
+        }
+        resultBuffer = await zip.generateAsync({ type: 'uint8array' });
+        contentType = 'application/zip';
+        outputFilename = 'split-pages.zip';
+        break;
+      }
+
+      default: {
+        const file = files[0];
+        resultBuffer = new Uint8Array(await file.arrayBuffer());
+        contentType = file.type || 'application/pdf';
+      }
+    }
+
+    if (!resultBuffer) {
+      throw new Error('Failed to generate output buffer');
+    }
+
+    return new NextResponse(new Blob([resultBuffer as any], { type: contentType }), {
       status: 200,
       headers: {
         'Content-Type': contentType,
-        // Provide a default filename
-        'Content-Disposition': `attachment; filename="${operation}-result.pdf"`,
+        'Content-Disposition': `attachment; filename="${outputFilename}"`,
       },
     });
   } catch (error) {
