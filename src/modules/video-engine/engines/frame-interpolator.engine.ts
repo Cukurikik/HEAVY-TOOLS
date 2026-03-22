@@ -1,26 +1,8 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
-
-export interface FrameInterpolatorOptions {
-  [key: string]: unknown;
+export interface FrameInterpolatorOptions { [key: string]: unknown; }
+export async function buildFrameInterpolatorArgs(input: string, output: string, opts: FrameInterpolatorOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
+  const targetFps = (opts.fps as number) || 60;
+  return ["-i", input, "-vf", `minterpolate=fps=${targetFps}:mi_mode=mci`, "-c:a", "copy", output];
 }
-
-/**
- * Frame Interpolator Engine
- * Tingkatkan FPS via minterpolate
- */
-export function buildFrameInterpolatorArgs(
-  input: string,
-  output: string,
-  opts: FrameInterpolatorOptions
-): string[] {
-  const fps = (opts.fps as number) || 60;
-return ["-i", input, "-vf", `minterpolate=fps=${fps}:mi_mode=mci`, "-c:a", "copy", output];
-}
-
-export function getFrameInterpolatorOutputName(opts: FrameInterpolatorOptions): string {
-  return "output.mp4";
-}
-
-export function getFrameInterpolatorMimeType(opts: FrameInterpolatorOptions): string {
-  return "video/mp4";
-}
+export function getFrameInterpolatorOutputName(opts: FrameInterpolatorOptions): string { return "output.mp4"; }
+export function getFrameInterpolatorMimeType(opts: FrameInterpolatorOptions): string { return "video/mp4"; }

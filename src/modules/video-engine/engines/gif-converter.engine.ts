@@ -1,27 +1,9 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
-
-export interface GifConverterOptions {
-  [key: string]: unknown;
+export interface GifConverterOptions { [key: string]: unknown; }
+export async function buildGifConverterArgs(input: string, output: string, opts: GifConverterOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
+  const gifFps = (opts.fps as number) || 10;
+  const gifScale = (opts.scale as number) || 480;
+  return ["-i", input, "-vf", `fps=${gifFps},scale=${gifScale}:-1:flags=lanczos`, output];
 }
-
-/**
- * GIF Converter Engine
- * Konversi video ke GIF
- */
-export function buildGifConverterArgs(
-  input: string,
-  output: string,
-  opts: GifConverterOptions
-): string[] {
-  const fps = (opts.fps as number) || 10;
-const sc = (opts.scale as number) || 480;
-return ["-i", input, "-vf", `fps=${fps},scale=${sc}:-1:flags=lanczos`, "output.gif"];
-}
-
-export function getGifConverterOutputName(opts: GifConverterOptions): string {
-  return "output.gif";
-}
-
-export function getGifConverterMimeType(opts: GifConverterOptions): string {
-  return "image/gif";
-}
+export function getGifConverterOutputName(opts: GifConverterOptions): string { return "output.gif"; }
+export function getGifConverterMimeType(opts: GifConverterOptions): string { return "image/gif"; }

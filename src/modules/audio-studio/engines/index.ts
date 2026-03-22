@@ -14,7 +14,7 @@ export * from "./silence-remover.engine";
 export * from "./voice-isolator.engine";
 export * from "./bass-booster.engine";
 export * from "./stereo-panner.engine";
-export * from "./waveform-visualizer.engine";
+export * from "./audio-reverser.engine";
 export * from "./metadata-editor.engine";
 export * from "./bpm-detector.engine";
 export * from "./key-finder.engine";

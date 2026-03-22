@@ -62,16 +62,37 @@ export function AudioToolInterface({
       timer = setTimeout(() => {
         if (!waveformRef.current) return;
         if (!wavesurfer.current) {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          let waveColor = '#8b5cf6';
+          let progressColor = '#c4b5fd';
+          
+          if (ctx) {
+            const grad = ctx.createLinearGradient(0, 0, 0, 150);
+            grad.addColorStop(0, '#f43f5e');
+            grad.addColorStop(0.5, '#8b5cf6');
+            grad.addColorStop(1, '#3b82f6');
+            waveColor = grad as any;
+            
+            const pGrad = ctx.createLinearGradient(0, 0, 0, 150);
+            pGrad.addColorStop(0, '#fb7185');
+            pGrad.addColorStop(0.5, '#a78bfa');
+            pGrad.addColorStop(1, '#60a5fa');
+            progressColor = pGrad as any;
+          }
+
           wavesurfer.current = WaveSurfer.create({
             container: waveformRef.current,
-            waveColor: '#8b5cf6',
-            progressColor: '#c4b5fd',
-            cursorColor: '#f8fafc',
-            barWidth: 2,
-            barGap: 2,
-            barRadius: 2,
-            height: 64,
+            waveColor: waveColor,
+            progressColor: progressColor,
+            cursorColor: '#ffffff',
+            barWidth: 3,
+            barGap: 3,
+            barRadius: 3,
+            height: 80,
             normalize: true,
+            cursorWidth: 2,
+            interact: true,
           });
 
           wavesurfer.current.on('audioprocess', () => {
@@ -156,7 +177,7 @@ export function AudioToolInterface({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Left Column: Upload & Preview */}
+        {/* Left Column: Upload & Preview / Advanced Visualizer */}
         <div className="lg:col-span-8 space-y-8">
           {!isRecorder ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -246,7 +267,7 @@ export function AudioToolInterface({
                 </button>
               </div>
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {task.files.map((f, i) => (
+                {task.files.map((f: File, i: number) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-800/50 border border-white/5">
                     <div className="flex items-center space-x-3 min-w-0">
                       <Music className="w-5 h-5 text-violet-400 shrink-0" />

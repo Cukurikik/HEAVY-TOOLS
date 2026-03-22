@@ -14,7 +14,7 @@ export{SilenceRemoverOptions}from"./SilenceRemoverOptions";
 export{VoiceIsolatorOptions}from"./VoiceIsolatorOptions";
 export{BassBoosterOptions}from"./BassBoosterOptions";
 export{StereoPannerOptions}from"./StereoPannerOptions";
-export{WaveformVisualizerOptions}from"./WaveformVisualizerOptions";
+export{AudioReverserOptions}from"./AudioReverserOptions";
 export{MetadataEditorOptions}from"./MetadataEditorOptions";
 export{BpmDetectorOptions}from"./BpmDetectorOptions";
 export{KeyFinderOptions}from"./KeyFinderOptions";

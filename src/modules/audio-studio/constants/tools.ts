@@ -3,8 +3,8 @@ import {
   Scissors, Combine, FileAudio, Sliders, Split,
   TrendingUp, Clock, VolumeX, BarChart3, Gauge,
   Waves, Activity, Eraser, Mic, Speaker, MoveHorizontal,
-  AudioWaveform, Tag, Heart, Key, Layers, Podcast,
-  Mic2, BarChart, Sunset, Repeat, Music, Headphones, Circle
+  History, Tag, Heart, Key, Layers, Podcast,
+  Mic2, BarChart, Sunset, Repeat, Music, Headphones, Circle, AudioWaveform
 } from "lucide-react";
 
 export interface AudioToolDef {
@@ -32,7 +32,8 @@ export const AUDIO_TOOLS: AudioToolDef[] = [
   { id: "voice-isolator", name: "Voice Isolator", desc: "Isolasi vokal dari instrumen", icon: Mic, color: "from-purple-600 to-violet-600" },
   { id: "bass-booster", name: "Bass Booster", desc: "Boost frekuensi rendah", icon: Speaker, color: "from-stone-600 to-slate-600" },
   { id: "stereo-panner", name: "Stereo Panner", desc: "Atur posisi stereo L/R", icon: MoveHorizontal, color: "from-sky-600 to-blue-600" },
-  { id: "waveform-visualizer", name: "Waveform Visualizer", desc: "Visualisasi gelombang audio real-time", icon: AudioWaveform, color: "from-green-600 to-emerald-600" },
+  { id: "audio-reverser", name: "Audio Reverser", desc: "Membalikkan arah audio (Reverse)", icon: History, color: "from-green-600 to-emerald-600" },
+  { id: "waveform-visualizer", name: "Waveform Visualizer", desc: "Advanced 2D/3D Canvas Visualization", icon: AudioWaveform, color: "from-emerald-600 to-teal-600" },
   { id: "metadata-editor", name: "Metadata Editor", desc: "Edit ID3 tags (title, artist, album)", icon: Tag, color: "from-slate-600 to-gray-600" },
   { id: "bpm-detector", name: "BPM Detector", desc: "Deteksi tempo otomatis via FFT", icon: Heart, color: "from-rose-600 to-pink-600" },
   { id: "key-finder", name: "Key Finder", desc: "Deteksi key/nada dasar lagu", icon: Key, color: "from-amber-600 to-yellow-600" },

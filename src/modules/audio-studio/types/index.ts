@@ -15,6 +15,7 @@ export type AudioOperation =
   | "voice-isolator"
   | "bass-booster"
   | "stereo-panner"
+  | "audio-reverser"
   | "waveform-visualizer"
   | "metadata-editor"
   | "bpm-detector"

@@ -42,11 +42,9 @@ self.onmessage = async (e: MessageEvent<AIUpscaleWorkerMessage>) => {
     // Try to load TensorFlow.js dynamically
     let usedAI = false;
     try {
-      // @ts-expect-error -- TF.js is an optional dependency
       const tf = await import('@tensorflow/tfjs');
 
       try {
-        // @ts-expect-error -- WebGPU backend is optional
         await import('@tensorflow/tfjs-backend-webgpu');
         await tf.setBackend('webgpu');
       } catch {

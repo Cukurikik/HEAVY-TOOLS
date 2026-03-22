@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AudioTask, AudioOperation } from "../types";
 import { getFFmpeg } from "@/app/video-titan/lib/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+
 
 const INITIAL_TASK: AudioTask = {
   id: "",
@@ -30,26 +30,26 @@ interface AudioStore {
 
 export const useAudioStore = create<AudioStore>()(
   persist(
-    (set, get) => ({
+    (set: any, get: any) => ({
       task: INITIAL_TASK,
 
       setFile: (file) =>
-        set((state) => ({
+        set((state: any) => ({
           task: { ...state.task, file, id: crypto.randomUUID(), status: "idle", resultUrl: "", error: "" },
         })),
 
       addFiles: (files) =>
-        set((state) => ({
+        set((state: any) => ({
           task: { ...state.task, files: [...state.task.files, ...files], file: files[0] || state.task.file },
         })),
 
       setOperation: (operation) =>
-        set((state) => ({
+        set((state: any) => ({
           task: { ...state.task, operation },
         })),
 
       setOptions: (newOpts) =>
-        set((state) => ({
+        set((state: any) => ({
           task: { ...state.task, options: { ...state.task.options, ...newOpts } },
         })),
 
@@ -58,7 +58,7 @@ export const useAudioStore = create<AudioStore>()(
 
         // Voice Recorder and Audio Recorder use MediaRecorder API
         if (task.operation === "voice-recorder" || task.operation === "audio-recorder") {
-          set((s) => ({ task: { ...s.task, status: "processing", progress: 0, error: "" } }));
+          set((s: any) => ({ task: { ...s.task, status: "processing", progress: 0, error: "" } }));
           try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const recorder = new MediaRecorder(stream);
@@ -68,17 +68,17 @@ export const useAudioStore = create<AudioStore>()(
               const blob = new Blob(chunks, { type: "audio/webm" });
               const url = URL.createObjectURL(blob);
               stream.getTracks().forEach((t) => t.stop());
-              set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
+              set((s: any) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
             };
             recorder.start();
             // Record for duration (default 10s)
             const duration = (task.options.duration as number) || 10;
-            set((s) => ({ task: { ...s.task, progress: 50 } }));
+            set((s: any) => ({ task: { ...s.task, progress: 50 } }));
             await new Promise((r) => setTimeout(r, duration * 1000));
             recorder.stop();
           } catch (error) {
             console.error("Audio Recording Error occurred.", error);
-            set((s) => ({
+            set((s: any) => ({
               task: { ...s.task, status: "error", error: "Recording failed securely. Please check your microphone permissions and try again." },
             }));
           }
@@ -93,20 +93,20 @@ export const useAudioStore = create<AudioStore>()(
           task.operation === "key-finder"
         ) {
           if (!task.file) return;
-          set((s) => ({ task: { ...s.task, status: "processing", progress: 10, error: "" } }));
+          set((s: any) => ({ task: { ...s.task, status: "processing", progress: 10, error: "" } }));
           try {
             const audioCtx = new OfflineAudioContext(2, 44100 * 30, 44100);
             const arrayBuffer = await task.file.arrayBuffer();
-            set((s) => ({ task: { ...s.task, progress: 40 } }));
+            set((s: any) => ({ task: { ...s.task, progress: 40 } }));
             const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-            set((s) => ({ task: { ...s.task, progress: 70 } }));
+            set((s: any) => ({ task: { ...s.task, progress: 70 } }));
             // For analysis tools, we simply decode and re-export the audio
             const wavBlob = audioBufferToWav(audioBuffer);
             const url = URL.createObjectURL(wavBlob);
-            set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
+            set((s: any) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
           } catch (error) {
             console.error("Audio Analysis Error occurred.", error);
-            set((s) => ({
+            set((s: any) => ({
               task: { ...s.task, status: "error", error: "Analysis failed securely. Please try again." },
             }));
           }
@@ -115,16 +115,17 @@ export const useAudioStore = create<AudioStore>()(
 
         // All other tools use FFmpeg WASM
         if (!task.file || task.operation === "idle") return;
-        set((s) => ({ task: { ...s.task, status: "processing", progress: 0, error: "" } }));
+        set((s: any) => ({ task: { ...s.task, status: "processing", progress: 0, error: "" } }));
 
         try {
           const ffmpeg = await getFFmpeg();
           ffmpeg.on("progress", ({ progress }) => {
-            set((s) => ({ task: { ...s.task, progress: Math.round(progress * 100) } }));
+            set((s: any) => ({ task: { ...s.task, progress: Math.round(progress * 100) } }));
           });
 
           const inputName = "input_audio" + getExt(task.file.name);
-          await ffmpeg.writeFile(inputName, await fetchFile(task.file));
+          const arrayBuffer = await task.file.arrayBuffer();
+          await ffmpeg.writeFile(inputName, new Uint8Array(arrayBuffer));
 
           const opts = task.options;
           let args: string[] = [];
@@ -224,6 +225,10 @@ export const useAudioStore = create<AudioStore>()(
               args = ["-i", inputName, "-af", `stereotools=mpan=${pan}`, outputName];
               break;
             }
+            case "audio-reverser": {
+              args = ["-i", inputName, "-af", "areverse", outputName];
+              break;
+            }
             case "waveform-visualizer":
             case "spectrum-analyzer":
             case "bpm-detector":
@@ -314,12 +319,12 @@ export const useAudioStore = create<AudioStore>()(
           const blob = new Blob([data as unknown as BlobPart], { type: outputMime });
           const url = URL.createObjectURL(blob);
 
-          set((s) => ({
+          set((s: any) => ({
             task: { ...s.task, status: "success", progress: 100, resultUrl: url },
           }));
         } catch (error) {
           console.error("Audio Processing Error occurred.", error);
-          set((s) => ({
+          set((s: any) => ({
             task: {
               ...s.task,
               status: "error",

@@ -1,27 +1,9 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
-
-export interface TimelapseOptions {
-  [key: string]: unknown;
+export interface TimelapseOptions { [key: string]: unknown; }
+export async function buildTimelapseArgs(input: string, output: string, opts: TimelapseOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
+  const tlSpeed = (opts.speed as number) || 10;
+  const tlStep = Math.max(1, Math.round(tlSpeed));
+  return ["-i", input, "-vf", `framestep=${tlStep},setpts=N/30/TB`, "-an", output];
 }
-
-/**
- * Timelapse Maker Engine
- * Buat timelapse skip-frame
- */
-export function buildTimelapseArgs(
-  input: string,
-  output: string,
-  opts: TimelapseOptions
-): string[] {
-  const sp = (opts.speed as number) || 10;
-const pts = (1/sp).toFixed(4);
-return ["-i", input, "-vf", `setpts=${pts}*PTS`, "-an", output];
-}
-
-export function getTimelapseOutputName(opts: TimelapseOptions): string {
-  return "output.mp4";
-}
-
-export function getTimelapseMimeType(opts: TimelapseOptions): string {
-  return "video/mp4";
-}
+export function getTimelapseOutputName(opts: TimelapseOptions): string { return "output.mp4"; }
+export function getTimelapseMimeType(opts: TimelapseOptions): string { return "video/mp4"; }

@@ -1,4 +1,7 @@
 {
   "css.lint.unknownAtRules": "ignore",
-  "terminal.integrated.enableImages": true
+  "terminal.integrated.enableImages": true,
+  "files.associations": {
+    "*.json": "jsonc"
+  }
 }
