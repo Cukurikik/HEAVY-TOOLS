@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { usePdfStore } from './usePdfStore';
+import { usePdfStore, toBlob } from './usePdfStore';
 
 // Mock pdf-lib
 vi.mock('pdf-lib', () => {
@@ -50,6 +50,26 @@ describe('usePdfStore', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe('toBlob', () => {
+    it('should convert a Uint8Array to a Blob with application/pdf type', () => {
+      const data = new Uint8Array([1, 2, 3, 4]);
+      const blob = toBlob(data);
+
+      expect(blob).toBeInstanceOf(Blob);
+      expect(blob.type).toBe('application/pdf');
+      expect(blob.size).toBe(4);
+    });
+
+    it('should handle an empty Uint8Array correctly', () => {
+      const emptyData = new Uint8Array([]);
+      const blob = toBlob(emptyData);
+
+      expect(blob).toBeInstanceOf(Blob);
+      expect(blob.type).toBe('application/pdf');
+      expect(blob.size).toBe(0);
+    });
   });
 
   it('should have initial state', () => {
