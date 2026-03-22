@@ -30,7 +30,7 @@ async function loadPdfPages(file: File): Promise<PdfPage[]> {
   }));
 }
 
-function toBlob(data: Uint8Array): Blob {
+export function toBlob(data: Uint8Array): Blob {
   return new Blob([data.buffer as ArrayBuffer], { type: 'application/pdf' });
 }
 
