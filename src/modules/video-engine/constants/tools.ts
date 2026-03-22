@@ -1,5 +1,9 @@
 import { VideoToolDefinition } from '../types';
 
+/**
+ * Registry of all available tools within the Video Engine module.
+ * Used for dynamic UI generation and dashboard routing.
+ */
 export const VIDEO_TOOLS: VideoToolDefinition[] = [
   {
     id: 'trimmer',
