@@ -101,6 +101,11 @@ async function handleScreenRecording(
 }
 
 // ═══════════════════════════════════════════════════
+// Track mount state to prevent double-mount crashes
+// ═══════════════════════════════════════════════════
+let isMounted = false;
+
+// ═══════════════════════════════════════════════════
 // Zustand Store
 // ═══════════════════════════════════════════════════
 
@@ -162,59 +167,13 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       ffmpegLogs: [],
     }));
 
+    // BUG FIX: Track ffmpeg reference for cleanup in finally block
+    let ffmpeg: any = null;
+
     try {
       // ═══════════════════════════════════════════════════
-      // Route Server Tools (Stabilizer)
-      // ═══════════════════════════════════════════════════
-      if (task.operation === "stabilizer") {
-        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, "Uploading to server for stabilization..."] }));
-        
-        const formData = new FormData();
-        formData.append("file", task.file);
-        formData.append("options", JSON.stringify(task.options));
-
-        const res = await fetch(`/api/video/${task.operation}`, {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to start server task");
-
-        const jobId = data.jobId;
-        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, `Server Job ID: ${jobId} queued...`] }));
-
-        // Poll for progress
-        let isDone = false;
-        while (!isDone) {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          const pollRes = await fetch(`/api/video/${task.operation}?jobId=${jobId}`);
-          const pollData = await pollRes.json();
-          
-          if (!pollRes.ok) throw new Error(pollData.error || "Failed to poll server task");
-
-          if (pollData.status === "processing") {
-            set((state) => ({ task: { ...state.task, progress: pollData.progress || 50 } }));
-          } else if (pollData.status === "success") {
-            isDone = true;
-            set((state) => ({
-              task: { 
-                ...state.task, 
-                status: "success", 
-                progress: 100, 
-                resultUrl: pollData.outputPath 
-              },
-              ffmpegLogs: [...state.ffmpegLogs, "Stabilization complete!"],
-            }));
-          } else if (pollData.status === "error" || pollData.status === "failed") {
-            throw new Error(pollData.error || "Server processing failed");
-          }
-        }
-        return;
-      }
-
-      // ═══════════════════════════════════════════════════
       // Client WASM Tools (Background Thread)
+      // All 29 non-screen-recorder tools use FFmpeg WASM
       // ═══════════════════════════════════════════════════
       const { getFFmpeg } = await import('../lib/ffmpeg-core');
       const engines = await import('../engines');
@@ -228,16 +187,22 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       };
 
       // Spawns native worker safely, or returns warm singleton instance
-      const ffmpeg = await getFFmpeg(onProgress, onLog);
+      ffmpeg = await getFFmpeg(onProgress, onLog);
+
+      // BUG FIX: Safely unmount previous mount if it was left behind from a crashed run
+      if (isMounted) {
+        try { await ffmpeg.unmount('/opt'); } catch (_) {}
+        isMounted = false;
+      }
 
       try {
         await ffmpeg.createDir('/opt');
       } catch (e) { /* Ignore if exists */ }
 
       // Mounting files as Blobs using WORKERFS zero-copy feature
-      // Note: FFmpeg proxies this command to its internal Web Worker!
       // @ts-ignore
       await ffmpeg.mount('WORKERFS', { files: task.file ? [task.file] : task.files }, '/opt');
+      isMounted = true;
 
       const fileToProcess = task.file || task.files[0];
       const inputName = '/opt/' + fileToProcess.name;
@@ -260,7 +225,16 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       }
 
       const outputData = await ffmpeg.readFile(outputName) as Uint8Array;
-      await ffmpeg.unmount('/opt');
+
+      // BUG FIX: Unmount BEFORE creating blob (moved to finally block as safety net)
+      try { await ffmpeg.unmount('/opt'); isMounted = false; } catch (_) {}
+
+      // BUG FIX: Clean up temporary files written by engines (subtitles, metadata, concat, etc.)
+      try { await ffmpeg.deleteFile(outputName); } catch (_) {}
+      try { await ffmpeg.deleteFile('sub.srt'); } catch (_) {}
+      try { await ffmpeg.deleteFile('metadata.txt'); } catch (_) {}
+      try { await ffmpeg.deleteFile('palette.png'); } catch (_) {}
+      try { await ffmpeg.deleteFile('concat.txt'); } catch (_) {}
 
       const blob = new Blob([outputData.buffer as ArrayBuffer], { type: getMime ? getMime(task.options) : 'video/mp4' });
       const url = URL.createObjectURL(blob);
@@ -270,6 +244,13 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       }));
     } catch (error) {
       console.error("Video processing error:", error);
+
+      // BUG FIX: ALWAYS unmount on error to prevent "mount point already exists" on retry
+      if (ffmpeg && isMounted) {
+        try { await ffmpeg.unmount('/opt'); } catch (_) {}
+        isMounted = false;
+      }
+
       set((state) => ({
         task: {
           ...state.task,

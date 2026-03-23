@@ -1,0 +1,1 @@
+﻿src/modules/converter/store/useConverterStore.test.ts(90,36): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type 'ConverterState | Partial<ConverterState> | ((state: WritableNonArrayDraft<ConverterState>) => void)'.

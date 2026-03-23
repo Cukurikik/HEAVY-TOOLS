@@ -1,9 +1,5 @@
 {
-  "css.lint.unknownAtRules": "ignore",
-  "terminal.integrated.enableImages": true,
-  "files.associations": {
-    "*.json": "jsonc"
-  },
-  "terminal.integrated.suggest.insertTrailingSpace": true,
-  "prettier.resolveGlobalModules": true
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "prisma.pinToPrisma6": false
 }

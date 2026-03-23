@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PdfForgeDashboard } from "@/modules/pdf-forge";
+import dynamic from "next/dynamic";
+
+const PdfForgeDashboard = dynamic(() => import("@/modules/pdf-forge").then(m => m.PdfForgeDashboard), { ssr: false });
 
 export default function PdfForge() {
   return (

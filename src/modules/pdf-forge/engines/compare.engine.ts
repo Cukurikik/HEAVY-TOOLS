@@ -1,22 +1,30 @@
-// Engine: pdf-parse + diff-match-patch | Execution: hybrid
-import type { PdfOperation } from '../types';
+import type { PdfTask } from '../types';
 
-export interface CompareEngineConfig {
-  operation: PdfOperation;
-  engine: string;
-  execution: 'hybrid';
-  description: string;
-  defaultOptions: Record<string, unknown>;
-}
+export async function processCompare(task: PdfTask, onProgress: (p: number) => void): Promise<Blob> {
+  if (task.files.length < 2) {
+     throw new Error("Compare tool requires exactly 2 PDF files.");
+  }
 
-export function getCompareConfig(): CompareEngineConfig {
-  return {
-    operation: 'compare',
-    engine: 'pdf-parse + diff-match-patch',
-    execution: 'hybrid',
-    description: 'Bandingkan dua PDF',
-    defaultOptions: {
-      granularity: 'word'
-    },
-  };
+  const formData = new FormData();
+  formData.append('file1', task.files[0]);
+  formData.append('file2', task.files[1]);
+  
+  onProgress(20);
+  
+  const res = await fetch('/api/pdf/compare', {
+    method: 'POST',
+    body: formData,
+  });
+  
+  onProgress(80);
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Comparison failed: ${errorText}`);
+  }
+  
+  const blob = await res.blob();
+  onProgress(100);
+  
+  // Return an annotated PDF outlining the differences
+  return blob;
 }

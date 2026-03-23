@@ -1,19 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function ToPowerpointOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function ToPowerpointOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Slide Size</label>
-          <select defaultValue="16:9" onChange={(e) => setOptions({ slideSize: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="16:9">16:9</option>
-            <option value="4:3">4:3</option>
-          </select>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-orange-600/10 border border-orange-600/20">
+        <h4 className="text-orange-500 font-bold mb-1">Convert to Microsoft PowerPoint (.pptx)</h4>
+        <p className="text-xs text-orange-200/60 leading-relaxed font-medium">
+          Converts the uploaded PDF to an editable PPTX presentation. Each page of the PDF will be translated into an individual PowerPoint slide with movable assets.
+        </p>
+      </div>
     </div>
   );
 }

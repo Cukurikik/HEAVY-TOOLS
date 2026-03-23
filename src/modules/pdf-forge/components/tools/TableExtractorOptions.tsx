@@ -1,20 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function TableExtractorOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function TableExtractorOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Output Format</label>
-          <select defaultValue="csv" onChange={(e) => setOptions({ outputFormat: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="csv">csv</option>
-            <option value="json">json</option>
-            <option value="xlsx">xlsx</option>
-          </select>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-emerald-600/10 border border-emerald-600/20">
+        <h4 className="text-emerald-500 font-bold mb-1">AI-Powered Table Extraction</h4>
+        <p className="text-xs text-emerald-200/60 leading-relaxed font-medium">
+          The engine will scan the PDF for tabular data structures and output a ZIP file containing pure CSV files for every data grid discovered.
+        </p>
+      </div>
     </div>
   );
 }

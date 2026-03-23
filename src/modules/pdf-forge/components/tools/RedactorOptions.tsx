@@ -1,20 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function RedactorOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function RedactorOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Redaction Color</label>
-          <select defaultValue="black" onChange={(e) => setOptions({ redactColor: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="black">black</option>
-            <option value="white">white</option>
-            <option value="gray">gray</option>
-          </select>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20">
+        <h4 className="text-rose-400 font-bold mb-1">Permanent Blackout Redaction</h4>
+        <p className="text-xs text-rose-200/60 leading-relaxed font-medium">
+          Upload a PDF to view its pages. Drag a selection box over sensitive information (text, images, PII). The engine will draw solid black blocks and attempt to strip the underlying data.
+        </p>
+      </div>
     </div>
   );
 }

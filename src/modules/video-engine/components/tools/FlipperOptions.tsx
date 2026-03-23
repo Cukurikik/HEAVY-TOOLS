@@ -2,15 +2,31 @@
 
 import { useVideoStore } from "../../store/useVideoStore";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 /**
  * Video Flipper — Configuration Panel
- * Flip horizontal/vertical
+ * Flip horizontal/vertical/both
  */
 export function FlipperOptions() {
   const { setOptions, task } = useVideoStore();
 
   return (
-    <div className="space-y-4"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Flip Direction</Label><div className="grid grid-cols-2 gap-3">{[{value:"horizontal",label:"↔ Horizontal"},{value:"vertical",label:"↕ Vertical"}].map((d)=>(<button key={d.value} onClick={()=>setOptions({direction:d.value})} className={`py-4 rounded-xl border text-sm font-bold transition-all ${(task.options?.direction||"horizontal")===d.value?"bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20":"bg-slate-800 border-slate-700 text-slate-300 hover:bg-indigo-500/10"}`}>{d.label}</button>))}</div></div>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Direction</Label>
+        <Select defaultValue="horizontal" onValueChange={(val) => setOptions({ direction: val })}>
+          <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-slate-900 border-slate-800 text-white">
+            <SelectItem value="horizontal">↔ Horizontal (Mirror)</SelectItem>
+            <SelectItem value="vertical">↕ Vertical (Upside Down)</SelectItem>
+            <SelectItem value="both">⤡ Both Axes</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 }

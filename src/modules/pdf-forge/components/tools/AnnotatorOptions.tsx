@@ -1,22 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function AnnotatorOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function AnnotatorOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Annotation Color</label>
-          <select defaultValue="#FFFF00" onChange={(e) => setOptions({ color: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="#FFFF00">#FFFF00</option>
-            <option value="#FF0000">#FF0000</option>
-            <option value="#00FF00">#00FF00</option>
-            <option value="#0000FF">#0000FF</option>
-            <option value="#FF00FF">#FF00FF</option>
-          </select>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+        <h4 className="text-teal-400 font-bold mb-1">Interactive Annotation Canvas</h4>
+        <p className="text-xs text-teal-200/60 leading-relaxed font-medium">
+          Upload a PDF. Use the toolbar on the left to highlight text, draw freehand shapes with Konva, and add sticky notes. Click Export when finished.
+        </p>
+      </div>
     </div>
   );
 }

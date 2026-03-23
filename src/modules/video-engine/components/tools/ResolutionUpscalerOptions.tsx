@@ -1,16 +1,58 @@
 "use client";
 
 import { useVideoStore } from "../../store/useVideoStore";
+import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 /**
- * AI Upscaler — Configuration Panel
- * Upscale resolusi via bicubic
+ * Resolution Upscaler — Configuration Panel
+ * Scale with algorithm presets and target resolution
  */
 export function ResolutionUpscalerOptions() {
   const { setOptions, task } = useVideoStore();
 
   return (
-    <div className="space-y-4"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Scale Factor</Label><div className="grid grid-cols-3 gap-2">{[2,3,4].map((s)=>(<button key={s} onClick={()=>setOptions({scale:s})} className={`py-4 rounded-xl border text-sm font-bold transition-all ${(task.options?.scale||2)===s?"bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20":"bg-slate-800 border-slate-700 text-slate-300 hover:bg-indigo-500/10"}`}>{s}x</button>))}</div><div className="p-3 rounded-xl bg-yellow-500/5 border border-yellow-500/10 text-yellow-400/70 text-[10px] font-bold text-center uppercase tracking-widest">Bicubic interpolation</div></div>
+    <div className="space-y-6">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Scale Factor</Label>
+          <span className="text-rose-400 font-black text-lg">{(task.options?.scale as number) || 2}x</span>
+        </div>
+        <Slider defaultValue={[2]} min={1} max={4} step={1} onValueChange={(val) => setOptions({ scale: val[0] })} />
+        <div className="flex justify-between text-[9px] text-slate-500 uppercase tracking-widest font-bold">
+          <span>1x (Original)</span>
+          <span>4x</span>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Algorithm</Label>
+        <Select defaultValue="lanczos" onValueChange={(val) => setOptions({ algorithm: val })}>
+          <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-slate-900 border-slate-800 text-white">
+            <SelectItem value="lanczos">Lanczos (Best Quality)</SelectItem>
+            <SelectItem value="bicubic">Bicubic (Balanced)</SelectItem>
+            <SelectItem value="bilinear">Bilinear (Fast)</SelectItem>
+            <SelectItem value="neighbor">Nearest Neighbor (Pixel Art)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Target Resolution</Label>
+        <Select defaultValue="auto" onValueChange={(val) => setOptions({ targetRes: val })}>
+          <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-slate-900 border-slate-800 text-white">
+            <SelectItem value="auto">Auto (Scale Factor)</SelectItem>
+            <SelectItem value="3840:2160">4K (3840×2160)</SelectItem>
+            <SelectItem value="2560:1440">2K (2560×1440)</SelectItem>
+            <SelectItem value="1920:1080">1080p</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 }

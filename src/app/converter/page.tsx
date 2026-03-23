@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ConverterDashboard } from "@/modules/converter";
+import dynamic from "next/dynamic";
+
+const ConverterDashboard = dynamic(() => import("@/modules/converter").then(m => m.ConverterDashboard), { ssr: false });
 
 export default function Converter() {
   return (

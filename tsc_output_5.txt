@@ -1,0 +1,44 @@
+﻿src/app/pdf/[tool]/page.tsx(3,10): error TS2614: Module '"@/modules/pdf-forge/components/PdfToolInterface"' has no exported member 'PdfToolInterface'. Did you mean to use 'import PdfToolInterface from "@/modules/pdf-forge/components/PdfToolInterface"' instead?
+src/modules/converter/components/ConverterToolInterface.tsx(3,34): error TS2307: Cannot find module '../../types' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(4,35): error TS2307: Cannot find module '../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(6,30): error TS2307: Cannot find module '@/components/common/FileDropzone' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(7,29): error TS2307: Cannot find module '@/components/common/ProgressBar' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(8,35): error TS2307: Cannot find module '@/components/common/ToastNotification' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(71,32): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/modules/converter/components/ConverterToolInterface.tsx(71,37): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/modules/converter/components/tools/ArchiveCreatorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ArchiveExtractorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/AudioConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/BarcodeGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/Base64Options.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CadConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ColorConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CsvJsonOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CurrencyConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/DocumentConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/EbookConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/EncodingConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/FontConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HashGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HeicConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HexEncoderOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ImageConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/JsonYamlOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/MagicByteDetectorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/MarkdownHtmlOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/NumberSystemOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/QrGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/RawConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/SpreadsheetConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/SubtitleConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/TimezoneConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/UnitConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/VectorConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/VideoConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/XmlJsonOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/store/useConverterStore.test.ts(90,36): error TS2353: Object literal may only specify known properties, and 'isFfmpegLoaded' does not exist in type 'ConverterState | Partial<ConverterState> | ((state: WritableNonArrayDraft<ConverterState>) => void)'.
+src/modules/pdf-forge/engines/decrypt.engine.ts(9,80): error TS2353: Object literal may only specify known properties, and 'password' does not exist in type 'LoadOptions'.
+src/modules/pdf-forge/engines/encrypt.engine.ts(13,5): error TS2353: Object literal may only specify known properties, and 'userPassword' does not exist in type 'SaveOptions'.
+src/modules/pdf-forge/engines/ocr.engine.ts(30,23): error TS2345: Argument of type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' is not assignable to parameter of type 'RenderParameters'.
+  Property 'canvas' is missing in type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' but required in type 'RenderParameters'.
+src/modules/pdf-forge/engines/watermark.engine.ts(21,17): error TS2322: Type '"degrees"' is not assignable to type 'RotationTypes'.

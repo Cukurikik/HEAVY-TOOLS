@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { DASHSCOPE_MODELS, getAllModelIds, getApiEndpoint } from "@/lib/ai-models";
-import { createGenkitInstance } from "@/lib/genkit";
 
 const FALLBACK_KEYS = [
   process.env.ALIBABA_CLOUD_API_KEY,

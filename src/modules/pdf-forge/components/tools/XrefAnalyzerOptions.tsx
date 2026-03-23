@@ -1,16 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function XrefAnalyzerOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function XrefAnalyzerOptions() {
   return (
-    <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <input type="checkbox" defaultChecked={false} onChange={(e) => setOptions({ showRawData: e.target.checked })}
-            className="w-4 h-4 accent-blue-500 rounded" />
-          <label className="text-sm text-gray-300">Show Raw XREF Data</label>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-red-600/10 border border-red-600/20">
+        <h4 className="text-red-500 font-bold mb-1">Developer Cross-Reference Table</h4>
+        <p className="text-xs text-red-200/60 leading-relaxed font-medium">
+          Extracts and visualizes the raw low-level XREF (Cross-Reference) table and object streams inside the PDF file. Output is a readable TXT diagnostics log.
+        </p>
+      </div>
     </div>
   );
 }

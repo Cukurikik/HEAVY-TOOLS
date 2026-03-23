@@ -4,20 +4,38 @@ const { FFmpeg } = require('@ffmpeg/ffmpeg');
 let ffmpegInstance: FFmpegType | null = null;
 let loadPromise: Promise<boolean> | null = null;
 
+// ═══════════════════════════════════════════════════
+// Track registered listeners by reference so we can
+// actually remove them on subsequent calls (BUG FIX:
+// .off(() => {}) creates a NEW function ref that
+// never matches the old one → memory leak)
+// ═══════════════════════════════════════════════════
+let currentProgressHandler: ((e: any) => void) | null = null;
+let currentLogHandler: ((e: any) => void) | null = null;
+
 export const getFFmpeg = async (onProgress?: (p: number) => void, onLog?: (m: string) => void): Promise<FFmpegType> => {
   if (!ffmpegInstance) {
     ffmpegInstance = new FFmpeg();
   }
 
-  // Bind fresh event listeners (remove old ones to avoid memory leaks/duplicate logs)
-  ffmpegInstance!.off('progress', () => {});
-  ffmpegInstance!.off('log', () => {});
-  
+  // Remove PREVIOUS handlers by their actual reference
+  if (currentProgressHandler) {
+    try { ffmpegInstance!.off('progress', currentProgressHandler); } catch (_) {}
+    currentProgressHandler = null;
+  }
+  if (currentLogHandler) {
+    try { ffmpegInstance!.off('log', currentLogHandler); } catch (_) {}
+    currentLogHandler = null;
+  }
+
+  // Register NEW handlers and store their references
   if (onProgress) {
-    ffmpegInstance!.on('progress', ({ progress }: any) => onProgress(progress));
+    currentProgressHandler = ({ progress }: any) => onProgress(progress);
+    ffmpegInstance!.on('progress', currentProgressHandler);
   }
   if (onLog) {
-    ffmpegInstance!.on('log', ({ message }: any) => onLog(message));
+    currentLogHandler = ({ message }: any) => onLog(message);
+    ffmpegInstance!.on('log', currentLogHandler);
   }
 
   // Load core exactly once

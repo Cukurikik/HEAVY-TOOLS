@@ -1,5 +1,38 @@
 "use client";
-import{useAudioStore}from"../../store/useAudioStore";
-import{Input}from"@/components/ui/input";
-import{Label}from"@/components/ui/label";
-export function MetadataEditorOptions(){const{setOptions,task}=useAudioStore();return(<div className="space-y-4"><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Title</Label><Input type="text" placeholder="Song title..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({title:e.target.value})}/></div><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Artist</Label><Input type="text" placeholder="Artist..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({artist:e.target.value})}/></div><div className="space-y-2"><Label className="text-slate-300 text-xs font-bold uppercase tracking-widest">Album</Label><Input type="text" placeholder="Album..." className="bg-slate-800 border-slate-700 text-white" onChange={(e)=>setOptions({album:e.target.value})}/></div></div>);}
+import { useAudioStore } from "../../store/useAudioStore";
+
+export function MetadataEditorOptions() {
+  const { task, setOptions } = useAudioStore();
+  const opts = task.options;
+
+  const fields = [
+    { id: "title", label: "Title", placeholder: "Song Title" },
+    { id: "artist", label: "Artist", placeholder: "Artist Name" },
+    { id: "album", label: "Album", placeholder: "Album Name" },
+    { id: "year", label: "Year", placeholder: "YYYY" },
+    { id: "genre", label: "Genre", placeholder: "e.g. Rock, Pop, Jazz" },
+    { id: "track", label: "Track Number", placeholder: "e.g. 1/12" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        {fields.map((field) => (
+          <div key={field.id} className="space-y-2">
+            <label className="text-sm font-bold text-slate-400">{field.label}</label>
+            <input
+              type="text"
+              placeholder={field.placeholder}
+              value={(opts[field.id] as string) || ""}
+              onChange={(e) => setOptions({ [field.id]: e.target.value })}
+              className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-slate-500 outline-none"
+            />
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-slate-500">
+        Leave fields empty to keep original (if copy mode) or remove them.
+      </p>
+    </div>
+  );
+}

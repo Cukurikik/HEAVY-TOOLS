@@ -1,31 +1,39 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
+import { usePdfStore } from "../../store/usePdfStore";
 
-export default function MetadataEditorOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function MetadataEditorOptions() {
+  const { task, setOptions } = usePdfStore();
+  const opts = task.options;
+
+  const fields = [
+    { id: "title", label: "Title", placeholder: "Document Title" },
+    { id: "author", label: "Author", placeholder: "Author Name" },
+    { id: "subject", label: "Subject", placeholder: "Document Topic" },
+    { id: "keywords", label: "Keywords", placeholder: "Comma separated e.g. report, 2026, q1" },
+    { id: "producer", label: "Producer", placeholder: "Software Name" },
+    { id: "creator", label: "Creator", placeholder: "Application Name" },
+  ];
+
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Title</label>
-          <input type="text" defaultValue="" onChange={(e) => setOptions({ title: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Author</label>
-          <input type="text" defaultValue="" onChange={(e) => setOptions({ author: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Subject</label>
-          <input type="text" defaultValue="" onChange={(e) => setOptions({ subject: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Keywords (comma-separated)</label>
-          <input type="text" defaultValue="" onChange={(e) => setOptions({ keywords: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none" />
-        </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        {fields.map((field) => (
+          <div key={field.id} className="space-y-2">
+            <label className="text-sm font-bold text-slate-400">{field.label}</label>
+            <input
+              type="text"
+              placeholder={field.placeholder}
+              value={(opts[field.id] as string) || ""}
+              onChange={(e) => setOptions({ [field.id]: e.target.value })}
+              className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gray-500 outline-none"
+            />
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-slate-500">
+        Leave fields empty to keep original metadata. Modifications embed deeply into the PDF dictionary.
+      </p>
     </div>
   );
 }

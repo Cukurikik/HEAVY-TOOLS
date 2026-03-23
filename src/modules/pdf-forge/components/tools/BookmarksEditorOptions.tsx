@@ -1,22 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function BookmarksEditorOptions() {
-  const { task: { options: rawOpts }, setOptions } = usePdfStore();
-  const options = rawOpts as Record<string, string | number | boolean>;
+export function BookmarksEditorOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Bookmark Title</label>
-          <input type="text" defaultValue="Chapter 1" onChange={(e) => setOptions({ bookmarkTitle: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none" />
-        </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Target Page: {options.bookmarkPage ?? 1}</label>
-          <input type="range" min={1} max={999} defaultValue={1} onChange={(e) => setOptions({ bookmarkPage: Number(e.target.value) })}
-            className="w-full accent-blue-500" />
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-cyan-600/10 border border-cyan-600/20">
+        <h4 className="text-cyan-500 font-bold mb-1">Outline / Bookmark Editor</h4>
+        <p className="text-xs text-cyan-200/60 leading-relaxed font-medium">
+          Upload a PDF to view its internal outline structure. You can rename, delete, and add new nested bookmarks pointing to specific pages.
+        </p>
+      </div>
     </div>
   );
 }

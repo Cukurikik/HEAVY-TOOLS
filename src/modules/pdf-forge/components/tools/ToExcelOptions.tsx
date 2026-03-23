@@ -1,16 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function ToExcelOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function ToExcelOptions() {
   return (
-    <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <input type="checkbox" defaultChecked={true} onChange={(e) => setOptions({ detectTables: e.target.checked })}
-            className="w-4 h-4 accent-blue-500 rounded" />
-          <label className="text-sm text-gray-300">Auto Detect Tables</label>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-green-600/10 border border-green-600/20">
+        <h4 className="text-green-500 font-bold mb-1">Convert to Microsoft Excel (.xlsx)</h4>
+        <p className="text-xs text-green-200/60 leading-relaxed font-medium">
+          Converts the uploaded PDF to an editable XLSX spreadsheet. The engine scans the document for grid structures and isolates tables into individual workbook sheets.
+        </p>
+      </div>
     </div>
   );
 }

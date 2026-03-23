@@ -1,0 +1,7 @@
+﻿src/modules/converter/components/ConverterToolInterface.tsx(6,30): error TS2307: Cannot find module '@/components/common/FileDropzone' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(7,29): error TS2307: Cannot find module '@/components/common/ProgressBar' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(8,35): error TS2307: Cannot find module '@/components/common/ToastNotification' or its corresponding type declarations.
+src/modules/converter/store/useConverterStore.test.ts(90,36): error TS2353: Object literal may only specify known properties, and 'isFfmpegLoaded' does not exist in type 'ConverterState | Partial<ConverterState> | ((state: WritableNonArrayDraft<ConverterState>) => void)'.
+src/modules/pdf-forge/engines/decrypt.engine.ts(9,80): error TS2353: Object literal may only specify known properties, and 'password' does not exist in type 'LoadOptions'.
+src/modules/pdf-forge/engines/ocr.engine.ts(30,23): error TS2345: Argument of type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' is not assignable to parameter of type 'RenderParameters'.
+  Property 'canvas' is missing in type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' but required in type 'RenderParameters'.

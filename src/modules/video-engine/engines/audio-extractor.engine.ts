@@ -1,17 +1,28 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
 export interface AudioExtractorOptions { [key: string]: unknown; }
 export async function buildAudioExtractorArgs(input: string, output: string, opts: AudioExtractorOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
-  const audioFmt = (opts.format as string) || "mp3";
-  if (audioFmt === "mp3") {
-    return ["-i", input, "-vn", "-acodec", "libmp3lame", "-q:a", "2", output];
-  } else if (audioFmt === "wav") {
-    return ["-i", input, "-vn", "-acodec", "pcm_s16le", output];
+  const format = (opts.audioFormat as string) || "mp3";
+  const bitrate = (opts.audioBitrate as string) || "192";
+  const sampleRate = (opts.sampleRate as string) || "44100";
+  const args = ["-i", input, "-vn", "-ar", sampleRate];
+  if (format === "wav" || format === "flac") {
+    args.push("-c:a", format === "flac" ? "flac" : "pcm_s16le");
+  } else if (format === "ogg") {
+    args.push("-c:a", "libvorbis", "-b:a", `${bitrate}k`);
+  } else if (format === "aac") {
+    args.push("-c:a", "aac", "-b:a", `${bitrate}k`);
   } else {
-    return ["-i", input, "-vn", "-c:a", "aac", output];
+    args.push("-c:a", "libmp3lame", "-b:a", `${bitrate}k`);
   }
+  args.push(output);
+  return args;
 }
-export function getAudioExtractorOutputName(opts: AudioExtractorOptions): string { return `output.${(opts.format as string) || 'mp3'}`; }
-export function getAudioExtractorMimeType(opts: AudioExtractorOptions): string { 
-  const audioFmt = (opts.format as string) || "mp3";
-  return audioFmt === "mp3" ? "audio/mpeg" : audioFmt === "wav" ? "audio/wav" : audioFmt === "aac" ? "audio/aac" : `audio/${audioFmt}`;
+export function getAudioExtractorOutputName(opts: AudioExtractorOptions): string {
+  const f = (opts.audioFormat as string) || "mp3";
+  return `audio.${f}`;
+}
+export function getAudioExtractorMimeType(opts: AudioExtractorOptions): string {
+  const f = (opts.audioFormat as string) || "mp3";
+  const map: Record<string, string> = { mp3: "audio/mpeg", aac: "audio/aac", wav: "audio/wav", flac: "audio/flac", ogg: "audio/ogg" };
+  return map[f] || "audio/mpeg";
 }

@@ -1,26 +1,47 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
+import { usePdfStore } from "../../store/usePdfStore";
 
-export default function ToImageOptions() {
-  const { task: { options: rawOpts }, setOptions } = usePdfStore();
-  const options = rawOpts as Record<string, string | number | boolean>;
+export function ToImageOptions() {
+  const { task, setOptions } = usePdfStore();
+  const opts = task.options;
+
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Image Format</label>
-          <select defaultValue="png" onChange={(e) => setOptions({ format: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="png">png</option>
-            <option value="jpeg">jpeg</option>
-            <option value="webp">webp</option>
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-400">Target Image Format</label>
+          <select
+            value={(opts.format as string) || "png"}
+            onChange={(e) => setOptions({ format: e.target.value })}
+            className="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-purple-500 outline-none"
+          >
+            <option value="png">PNG (Lossless, Transparent)</option>
+            <option value="jpeg">JPEG (Compressed, Smaller Size)</option>
+            <option value="webp">WebP (Next-Gen Compression)</option>
           </select>
         </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Scale Factor: {options.scale ?? 2}</label>
-          <input type="range" min={1} max={4} defaultValue={2} onChange={(e) => setOptions({ scale: Number(e.target.value) })}
-            className="w-full accent-blue-500" />
+
+        <div className="space-y-2">
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-sm font-bold text-slate-400">Render Quality (DPI)</label>
+            <span className="text-purple-400 font-mono text-xs bg-purple-500/10 px-2 py-1 rounded">
+              {(opts.dpi as number) ?? 300} DPI
+            </span>
+          </div>
+          <input
+            type="range"
+            min="72" max="600" step="12"
+            value={(opts.dpi as number) ?? 300}
+            onChange={(e) => setOptions({ dpi: parseInt(e.target.value) })}
+            className="w-full accent-purple-500"
+          />
         </div>
+      </div>
+      
+      <p className="text-xs text-slate-500">
+        You will receive a ZIP file containing one image per PDF page.
+      </p>
     </div>
   );
 }

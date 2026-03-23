@@ -1,22 +1,26 @@
-// Engine: LibreOffice | Execution: server
-import type { PdfOperation } from '../types';
+import type { PdfTask } from '../types';
 
-export interface ToPowerpointEngineConfig {
-  operation: PdfOperation;
-  engine: string;
-  execution: 'server';
-  description: string;
-  defaultOptions: Record<string, unknown>;
-}
-
-export function getToPowerpointConfig(): ToPowerpointEngineConfig {
-  return {
-    operation: 'to-powerpoint',
-    engine: 'LibreOffice',
-    execution: 'server',
-    description: 'Konversi PDF ke PPTX',
-    defaultOptions: {
-      slideSize: '16:9'
-    },
-  };
+export async function processToPowerpoint(task: PdfTask, onProgress: (p: number) => void): Promise<Blob> {
+  const formData = new FormData();
+  formData.append('file', task.files[0]);
+  formData.append('targetFormat', 'pptx');
+  
+  onProgress(20);
+  
+  const res = await fetch('/api/pdf/convert', {
+    method: 'POST',
+    body: formData,
+  });
+  
+  onProgress(80);
+  
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`To PowerPoint conversion failed: ${errorText}`);
+  }
+  
+  const blob = await res.blob();
+  onProgress(100);
+  
+  return blob;
 }

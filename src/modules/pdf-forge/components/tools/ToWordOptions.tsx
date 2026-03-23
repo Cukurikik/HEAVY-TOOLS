@@ -1,16 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function ToWordOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function ToWordOptions() {
   return (
-    <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <input type="checkbox" defaultChecked={true} onChange={(e) => setOptions({ preserveLayout: e.target.checked })}
-            className="w-4 h-4 accent-blue-500 rounded" />
-          <label className="text-sm text-gray-300">Preserve Layout</label>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-blue-600/10 border border-blue-600/20">
+        <h4 className="text-blue-500 font-bold mb-1">Convert to Microsoft Word (.docx)</h4>
+        <p className="text-xs text-blue-200/60 leading-relaxed font-medium">
+          Converts the uploaded PDF to an editable DOCX file. The server engine uses advanced OCR layout recognition to maintain original margins, text flow, and image positioning.
+        </p>
+      </div>
     </div>
   );
 }

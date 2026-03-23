@@ -1,16 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function RepairOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function RepairOptions() {
   return (
-    <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <input type="checkbox" defaultChecked={true} onChange={(e) => setOptions({ ignoreEncryption: e.target.checked })}
-            className="w-4 h-4 accent-blue-500 rounded" />
-          <label className="text-sm text-gray-300">Ignore Encryption</label>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-lime-600/10 border border-lime-600/20">
+        <h4 className="text-lime-500 font-bold mb-1">Deep Structural Repair</h4>
+        <p className="text-xs text-lime-200/60 leading-relaxed font-medium">
+          Upload a broken, corrupted, or unreadable PDF file. The engine will attempt to bypass severe errors, rebuild the XREF table, and synthesize a healthy PDF document.
+        </p>
+      </div>
     </div>
   );
 }

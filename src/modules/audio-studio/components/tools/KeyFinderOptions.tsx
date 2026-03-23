@@ -1,4 +1,20 @@
 "use client";
-import{useAudioStore}from"../../store/useAudioStore";
+import { useAudioStore } from "../../store/useAudioStore";
 
-export function KeyFinderOptions(){const{setOptions,task}=useAudioStore();return(<div className="p-5 rounded-xl bg-amber-500/5 border border-amber-500/10 text-center space-y-2"><div className="text-amber-400 font-black text-sm uppercase tracking-widest">Chromatic Analysis</div><p className="text-amber-300/60 text-xs font-medium">Identifies musical key via spectral analysis.</p></div>);}
+export function KeyFinderOptions() {
+  const { task } = useAudioStore();
+  const opts = task.options;
+
+  return (
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+        <h4 className="text-2xl font-black text-amber-400 mb-2">
+          {opts.detectedKey as string || "Analyzation Pending"}
+        </h4>
+        <p className="text-xs text-amber-200/60 font-medium">
+          Upload an audio file to automatically detect its musical key (e.g. C Major, A Minor) using chromagram analysis.
+        </p>
+      </div>
+    </div>
+  );
+}

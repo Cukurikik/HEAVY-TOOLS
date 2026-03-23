@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10gb',
+    },
+  },
   outputFileTracingRoot: process.cwd(),
   transpilePackages: ['@tensorflow/tfjs', '@tensorflow/tfjs-backend-webgpu', '@imgly/background-removal'],
   serverExternalPackages: [
@@ -14,11 +19,20 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/ffmpeg/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
           { key: 'Cross-Origin-Resource-Policy', value: 'cross-origin' },
+          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; worker-src 'self' blob:; media-src 'self' blob: data: *; img-src 'self' blob: data: *; connect-src 'self' blob: data: *" },
+          { key: 'Accept-Ranges', value: 'bytes' }
         ],
       },
     ];

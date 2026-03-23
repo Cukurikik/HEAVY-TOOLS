@@ -1,3 +1,8 @@
-export function buildAudioSplitterArgs(input:string,output:string,opts:Record<string,unknown>):string[]{const d=(opts.segmentDuration as number)||30;return["-i",input,"-f","segment","-segment_time",d.toString(),"-c","copy","segment_%03d.mp3"];}
-export function getAudioSplitterOutputName():string{return"output.mp3";}
-export function getAudioSplitterMimeType():string{return"audio/mpeg";}
+import type { FFmpeg } from "@ffmpeg/ffmpeg";
+export interface AudioSplitterOptions { [key: string]: unknown; }
+export async function buildAudioSplitterArgs(input: string, output: string, opts: AudioSplitterOptions, ffmpeg?: FFmpeg): Promise<string[]> {
+  const segDur = (opts.segmentDuration as number) || 30;
+  return ["-i", input, "-f", "segment", "-segment_time", segDur.toString(), "-c", "copy", output];
+}
+export function getAudioSplitterOutputName(opts: AudioSplitterOptions): string { return "segment_%03d.mp3"; }
+export function getAudioSplitterMimeType(opts: AudioSplitterOptions): string { return "audio/mpeg"; }

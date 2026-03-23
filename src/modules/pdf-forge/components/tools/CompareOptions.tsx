@@ -1,20 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function CompareOptions() {
-  const { task: { options }, setOptions } = usePdfStore();
+export function CompareOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Comparison Granularity</label>
-          <select defaultValue="word" onChange={(e) => setOptions({ granularity: e.target.value })}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:border-blue-500 focus:outline-none">
-            <option value="character">character</option>
-            <option value="word">word</option>
-            <option value="line">line</option>
-          </select>
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-yellow-600/10 border border-yellow-600/20">
+        <h4 className="text-yellow-500 font-bold mb-1">Visual & Textual Differences</h4>
+        <p className="text-xs text-yellow-200/60 leading-relaxed font-medium">
+          Upload exactly two PDF files. The engine will generate a comprehensive view highlighting exactly what text, images, or formatting changed between the two versions.
+        </p>
+      </div>
     </div>
   );
 }

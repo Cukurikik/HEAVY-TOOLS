@@ -1,22 +1,25 @@
-// Engine: pdf-lib + pdf-parse | Execution: client
-import type { PdfOperation } from '../types';
+import type { PdfTask } from '../types';
 
-export interface XrefAnalyzerEngineConfig {
-  operation: PdfOperation;
-  engine: string;
-  execution: 'client';
-  description: string;
-  defaultOptions: Record<string, unknown>;
-}
-
-export function getXrefAnalyzerConfig(): XrefAnalyzerEngineConfig {
-  return {
-    operation: 'xref-analyze',
-    engine: 'pdf-lib + pdf-parse',
-    execution: 'client',
-    description: 'Analisis struktur internal PDF',
-    defaultOptions: {
-      showRawData: false
-    },
-  };
+export async function processXrefAnalyze(task: PdfTask, onProgress: (p: number) => void): Promise<Blob> {
+  // This tool doesn't output a PDF, it outputs a TXT log file with the XREF table
+  const formData = new FormData();
+  formData.append('file', task.files[0]);
+  
+  onProgress(20);
+  
+  const res = await fetch('/api/pdf/xref-analyze', {
+    method: 'POST',
+    body: formData,
+  });
+  
+  onProgress(80);
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`XREF Analyzation failed: ${errorText}`);
+  }
+  
+  const blob = await res.blob();
+  onProgress(100);
+  
+  return blob; // Type will be handled by UI (e.g. text/plain)
 }

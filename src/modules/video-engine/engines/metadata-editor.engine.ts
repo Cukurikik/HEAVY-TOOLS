@@ -1,13 +1,18 @@
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
 export interface MetadataEditorOptions { [key: string]: unknown; }
 export async function buildMetadataEditorArgs(input: string, output: string, opts: MetadataEditorOptions, ffmpeg?: FFmpeg, files?: File[]): Promise<string[]> {
-  const title = (opts.title as string) || "";
-  const author = (opts.author as string) || "";
-  const copyright = (opts.copyright as string) || "";
   const metaArgs: string[] = ["-i", input];
-  if (title) metaArgs.push("-metadata", `title=${title}`);
-  if (author) metaArgs.push("-metadata", `artist=${author}`);
-  if (copyright) metaArgs.push("-metadata", `copyright=${copyright}`);
+  const fields: Record<string, string> = {
+    title: (opts.title as string) || "",
+    artist: (opts.author as string) || "",
+    copyright: (opts.copyright as string) || "",
+    date: (opts.year as string) || "",
+    genre: (opts.genre as string) || "",
+    comment: (opts.comment as string) || "",
+  };
+  for (const [key, val] of Object.entries(fields)) {
+    if (val) metaArgs.push("-metadata", `${key}=${val}`);
+  }
   metaArgs.push("-c", "copy", output);
   return metaArgs;
 }

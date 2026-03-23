@@ -1,4 +1,20 @@
 "use client";
-import{useAudioStore}from"../../store/useAudioStore";
+import { useAudioStore } from "../../store/useAudioStore";
 
-export function BpmDetectorOptions(){const{setOptions,task}=useAudioStore();return(<div className="p-5 rounded-xl bg-rose-500/5 border border-rose-500/10 text-center space-y-2"><div className="text-rose-400 font-black text-sm uppercase tracking-widest">FFT Analysis</div><p className="text-rose-300/60 text-xs font-medium">Detects BPM using Web Audio AnalyserNode.</p></div>);}
+export function BpmDetectorOptions() {
+  const { task } = useAudioStore();
+  const opts = task.options;
+
+  return (
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center">
+        <h4 className="text-xl font-black text-rose-400 mb-2">
+          {opts.detectedBpm ? `${opts.detectedBpm} BPM` : "Analyzation Pending"}
+        </h4>
+        <p className="text-xs text-rose-200/60 font-medium">
+          Upload an audio file to automatically detect its tempo (Beats Per Minute) using FFT analysis.
+        </p>
+      </div>
+    </div>
+  );
+}

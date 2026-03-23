@@ -1,0 +1,357 @@
+﻿.next/types/app/converter/archive-creator/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/archive-creator/page.js' or its corresponding type declarations.
+.next/types/app/converter/archive-creator/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/archive-creator/page.js' or its corresponding type declarations.
+.next/types/app/converter/archive-extractor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/archive-extractor/page.js' or its corresponding type declarations.
+.next/types/app/converter/archive-extractor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/archive-extractor/page.js' or its corresponding type declarations.
+.next/types/app/converter/audio-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/audio-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/audio-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/audio-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/barcode-generator/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/barcode-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/barcode-generator/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/barcode-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/base64/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/base64/page.js' or its corresponding type declarations.
+.next/types/app/converter/base64/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/base64/page.js' or its corresponding type declarations.
+.next/types/app/converter/cad-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/cad-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/cad-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/cad-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/color-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/color-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/color-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/color-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/csv-json/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/csv-json/page.js' or its corresponding type declarations.
+.next/types/app/converter/csv-json/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/csv-json/page.js' or its corresponding type declarations.
+.next/types/app/converter/currency-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/currency-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/currency-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/currency-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/document-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/document-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/document-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/document-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/ebook-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/ebook-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/ebook-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/ebook-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/encoding-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/encoding-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/encoding-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/encoding-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/font-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/font-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/font-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/font-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/hash-generator/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/hash-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/hash-generator/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/hash-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/heic-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/heic-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/heic-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/heic-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/hex-encoder/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/hex-encoder/page.js' or its corresponding type declarations.
+.next/types/app/converter/hex-encoder/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/hex-encoder/page.js' or its corresponding type declarations.
+.next/types/app/converter/image-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/image-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/image-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/image-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/json-yaml/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/json-yaml/page.js' or its corresponding type declarations.
+.next/types/app/converter/json-yaml/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/json-yaml/page.js' or its corresponding type declarations.
+.next/types/app/converter/magic-byte-detector/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/magic-byte-detector/page.js' or its corresponding type declarations.
+.next/types/app/converter/magic-byte-detector/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/magic-byte-detector/page.js' or its corresponding type declarations.
+.next/types/app/converter/markdown-html/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/markdown-html/page.js' or its corresponding type declarations.
+.next/types/app/converter/markdown-html/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/markdown-html/page.js' or its corresponding type declarations.
+.next/types/app/converter/number-system/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/number-system/page.js' or its corresponding type declarations.
+.next/types/app/converter/number-system/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/number-system/page.js' or its corresponding type declarations.
+.next/types/app/converter/qr-generator/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/qr-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/qr-generator/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/qr-generator/page.js' or its corresponding type declarations.
+.next/types/app/converter/raw-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/raw-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/raw-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/raw-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/spreadsheet-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/spreadsheet-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/spreadsheet-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/spreadsheet-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/subtitle-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/subtitle-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/subtitle-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/subtitle-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/timezone-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/timezone-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/timezone-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/timezone-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/unit-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/unit-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/unit-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/unit-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/vector-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/vector-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/vector-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/vector-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/video-converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/video-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/video-converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/video-converter/page.js' or its corresponding type declarations.
+.next/types/app/converter/xml-json/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/converter/xml-json/page.js' or its corresponding type declarations.
+.next/types/app/converter/xml-json/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/converter/xml-json/page.js' or its corresponding type declarations.
+.next/types/app/pdf/annotator/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/annotator/page.js' or its corresponding type declarations.
+.next/types/app/pdf/annotator/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/annotator/page.js' or its corresponding type declarations.
+.next/types/app/pdf/batch-processor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/batch-processor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/batch-processor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/batch-processor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/bookmarks-editor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/bookmarks-editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/bookmarks-editor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/bookmarks-editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/compare/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/compare/page.js' or its corresponding type declarations.
+.next/types/app/pdf/compare/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/compare/page.js' or its corresponding type declarations.
+.next/types/app/pdf/compressor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/compressor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/compressor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/compressor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/converter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/converter/page.js' or its corresponding type declarations.
+.next/types/app/pdf/converter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/converter/page.js' or its corresponding type declarations.
+.next/types/app/pdf/crop-pages/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/crop-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/crop-pages/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/crop-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/decrypt/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/decrypt/page.js' or its corresponding type declarations.
+.next/types/app/pdf/decrypt/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/decrypt/page.js' or its corresponding type declarations.
+.next/types/app/pdf/digital-signature/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/digital-signature/page.js' or its corresponding type declarations.
+.next/types/app/pdf/digital-signature/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/digital-signature/page.js' or its corresponding type declarations.
+.next/types/app/pdf/editor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/editor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/encrypt/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/encrypt/page.js' or its corresponding type declarations.
+.next/types/app/pdf/encrypt/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/encrypt/page.js' or its corresponding type declarations.
+.next/types/app/pdf/extract-pages/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/extract-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/extract-pages/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/extract-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/form-filler/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/form-filler/page.js' or its corresponding type declarations.
+.next/types/app/pdf/form-filler/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/form-filler/page.js' or its corresponding type declarations.
+.next/types/app/pdf/from-html/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/from-html/page.js' or its corresponding type declarations.
+.next/types/app/pdf/from-html/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/from-html/page.js' or its corresponding type declarations.
+.next/types/app/pdf/from-image/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/from-image/page.js' or its corresponding type declarations.
+.next/types/app/pdf/from-image/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/from-image/page.js' or its corresponding type declarations.
+.next/types/app/pdf/merger/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/merger/page.js' or its corresponding type declarations.
+.next/types/app/pdf/merger/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/merger/page.js' or its corresponding type declarations.
+.next/types/app/pdf/metadata-editor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/metadata-editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/metadata-editor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/metadata-editor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/ocr/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/ocr/page.js' or its corresponding type declarations.
+.next/types/app/pdf/ocr/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/ocr/page.js' or its corresponding type declarations.
+.next/types/app/pdf/redactor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/redactor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/redactor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/redactor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/reorder-pages/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/reorder-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/reorder-pages/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/reorder-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/repair/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/repair/page.js' or its corresponding type declarations.
+.next/types/app/pdf/repair/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/repair/page.js' or its corresponding type declarations.
+.next/types/app/pdf/rotate-pages/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/rotate-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/rotate-pages/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/rotate-pages/page.js' or its corresponding type declarations.
+.next/types/app/pdf/splitter/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/splitter/page.js' or its corresponding type declarations.
+.next/types/app/pdf/splitter/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/splitter/page.js' or its corresponding type declarations.
+.next/types/app/pdf/table-extractor/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/table-extractor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/table-extractor/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/table-extractor/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-excel/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/to-excel/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-excel/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/to-excel/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-image/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/to-image/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-image/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/to-image/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-powerpoint/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/to-powerpoint/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-powerpoint/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/to-powerpoint/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-word/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/to-word/page.js' or its corresponding type declarations.
+.next/types/app/pdf/to-word/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/to-word/page.js' or its corresponding type declarations.
+.next/types/app/pdf/watermark/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/watermark/page.js' or its corresponding type declarations.
+.next/types/app/pdf/watermark/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/watermark/page.js' or its corresponding type declarations.
+.next/types/app/pdf/xref-analyzer/page.ts(2,24): error TS2307: Cannot find module '../../../../../src/app/pdf/xref-analyzer/page.js' or its corresponding type declarations.
+.next/types/app/pdf/xref-analyzer/page.ts(7,29): error TS2307: Cannot find module '../../../../../src/app/pdf/xref-analyzer/page.js' or its corresponding type declarations.
+.next/types/validator.ts(359,39): error TS2307: Cannot find module '../../src/app/converter/archive-creator/page.js' or its corresponding type declarations.
+.next/types/validator.ts(368,39): error TS2307: Cannot find module '../../src/app/converter/archive-extractor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(377,39): error TS2307: Cannot find module '../../src/app/converter/audio-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(386,39): error TS2307: Cannot find module '../../src/app/converter/barcode-generator/page.js' or its corresponding type declarations.
+.next/types/validator.ts(395,39): error TS2307: Cannot find module '../../src/app/converter/base64/page.js' or its corresponding type declarations.
+.next/types/validator.ts(404,39): error TS2307: Cannot find module '../../src/app/converter/cad-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(413,39): error TS2307: Cannot find module '../../src/app/converter/color-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(422,39): error TS2307: Cannot find module '../../src/app/converter/csv-json/page.js' or its corresponding type declarations.
+.next/types/validator.ts(431,39): error TS2307: Cannot find module '../../src/app/converter/currency-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(440,39): error TS2307: Cannot find module '../../src/app/converter/document-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(449,39): error TS2307: Cannot find module '../../src/app/converter/ebook-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(458,39): error TS2307: Cannot find module '../../src/app/converter/encoding-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(467,39): error TS2307: Cannot find module '../../src/app/converter/font-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(476,39): error TS2307: Cannot find module '../../src/app/converter/hash-generator/page.js' or its corresponding type declarations.
+.next/types/validator.ts(485,39): error TS2307: Cannot find module '../../src/app/converter/heic-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(494,39): error TS2307: Cannot find module '../../src/app/converter/hex-encoder/page.js' or its corresponding type declarations.
+.next/types/validator.ts(503,39): error TS2307: Cannot find module '../../src/app/converter/image-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(512,39): error TS2307: Cannot find module '../../src/app/converter/json-yaml/page.js' or its corresponding type declarations.
+.next/types/validator.ts(521,39): error TS2307: Cannot find module '../../src/app/converter/magic-byte-detector/page.js' or its corresponding type declarations.
+.next/types/validator.ts(530,39): error TS2307: Cannot find module '../../src/app/converter/markdown-html/page.js' or its corresponding type declarations.
+.next/types/validator.ts(539,39): error TS2307: Cannot find module '../../src/app/converter/number-system/page.js' or its corresponding type declarations.
+.next/types/validator.ts(557,39): error TS2307: Cannot find module '../../src/app/converter/qr-generator/page.js' or its corresponding type declarations.
+.next/types/validator.ts(566,39): error TS2307: Cannot find module '../../src/app/converter/raw-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(575,39): error TS2307: Cannot find module '../../src/app/converter/spreadsheet-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(584,39): error TS2307: Cannot find module '../../src/app/converter/subtitle-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(593,39): error TS2307: Cannot find module '../../src/app/converter/timezone-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(602,39): error TS2307: Cannot find module '../../src/app/converter/unit-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(611,39): error TS2307: Cannot find module '../../src/app/converter/vector-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(620,39): error TS2307: Cannot find module '../../src/app/converter/video-converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(629,39): error TS2307: Cannot find module '../../src/app/converter/xml-json/page.js' or its corresponding type declarations.
+.next/types/validator.ts(665,39): error TS2307: Cannot find module '../../src/app/pdf/annotator/page.js' or its corresponding type declarations.
+.next/types/validator.ts(674,39): error TS2307: Cannot find module '../../src/app/pdf/batch-processor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(683,39): error TS2307: Cannot find module '../../src/app/pdf/bookmarks-editor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(692,39): error TS2307: Cannot find module '../../src/app/pdf/compare/page.js' or its corresponding type declarations.
+.next/types/validator.ts(701,39): error TS2307: Cannot find module '../../src/app/pdf/compressor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(710,39): error TS2307: Cannot find module '../../src/app/pdf/converter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(719,39): error TS2307: Cannot find module '../../src/app/pdf/crop-pages/page.js' or its corresponding type declarations.
+.next/types/validator.ts(728,39): error TS2307: Cannot find module '../../src/app/pdf/decrypt/page.js' or its corresponding type declarations.
+.next/types/validator.ts(737,39): error TS2307: Cannot find module '../../src/app/pdf/digital-signature/page.js' or its corresponding type declarations.
+.next/types/validator.ts(746,39): error TS2307: Cannot find module '../../src/app/pdf/editor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(755,39): error TS2307: Cannot find module '../../src/app/pdf/encrypt/page.js' or its corresponding type declarations.
+.next/types/validator.ts(764,39): error TS2307: Cannot find module '../../src/app/pdf/extract-pages/page.js' or its corresponding type declarations.
+.next/types/validator.ts(773,39): error TS2307: Cannot find module '../../src/app/pdf/form-filler/page.js' or its corresponding type declarations.
+.next/types/validator.ts(782,39): error TS2307: Cannot find module '../../src/app/pdf/from-html/page.js' or its corresponding type declarations.
+.next/types/validator.ts(791,39): error TS2307: Cannot find module '../../src/app/pdf/from-image/page.js' or its corresponding type declarations.
+.next/types/validator.ts(800,39): error TS2307: Cannot find module '../../src/app/pdf/merger/page.js' or its corresponding type declarations.
+.next/types/validator.ts(809,39): error TS2307: Cannot find module '../../src/app/pdf/metadata-editor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(818,39): error TS2307: Cannot find module '../../src/app/pdf/ocr/page.js' or its corresponding type declarations.
+.next/types/validator.ts(836,39): error TS2307: Cannot find module '../../src/app/pdf/redactor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(845,39): error TS2307: Cannot find module '../../src/app/pdf/reorder-pages/page.js' or its corresponding type declarations.
+.next/types/validator.ts(854,39): error TS2307: Cannot find module '../../src/app/pdf/repair/page.js' or its corresponding type declarations.
+.next/types/validator.ts(863,39): error TS2307: Cannot find module '../../src/app/pdf/rotate-pages/page.js' or its corresponding type declarations.
+.next/types/validator.ts(872,39): error TS2307: Cannot find module '../../src/app/pdf/splitter/page.js' or its corresponding type declarations.
+.next/types/validator.ts(881,39): error TS2307: Cannot find module '../../src/app/pdf/table-extractor/page.js' or its corresponding type declarations.
+.next/types/validator.ts(890,39): error TS2307: Cannot find module '../../src/app/pdf/to-excel/page.js' or its corresponding type declarations.
+.next/types/validator.ts(899,39): error TS2307: Cannot find module '../../src/app/pdf/to-image/page.js' or its corresponding type declarations.
+.next/types/validator.ts(908,39): error TS2307: Cannot find module '../../src/app/pdf/to-powerpoint/page.js' or its corresponding type declarations.
+.next/types/validator.ts(917,39): error TS2307: Cannot find module '../../src/app/pdf/to-word/page.js' or its corresponding type declarations.
+.next/types/validator.ts(926,39): error TS2307: Cannot find module '../../src/app/pdf/watermark/page.js' or its corresponding type declarations.
+.next/types/validator.ts(935,39): error TS2307: Cannot find module '../../src/app/pdf/xref-analyzer/page.js' or its corresponding type declarations.
+src/app/pdf/[tool]/page.tsx(3,10): error TS2614: Module '"@/modules/pdf-forge/components/PdfToolInterface"' has no exported member 'PdfToolInterface'. Did you mean to use 'import PdfToolInterface from "@/modules/pdf-forge/components/PdfToolInterface"' instead?
+src/modules/converter/components/ConverterDashboard.tsx(12,17): error TS2339: Property 'setFile' does not exist on type 'ConverterState'.
+src/modules/converter/components/ConverterDashboard.tsx(58,20): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(72,19): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(75,67): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(77,26): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(124,27): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(127,19): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/components/ConverterDashboard.tsx(189,26): error TS2551: Property 'outputUrl' does not exist on type 'ConverterTask'. Did you mean 'outputUrls'?
+src/modules/converter/components/ConverterToolInterface.tsx(3,34): error TS2307: Cannot find module '../../types' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(4,35): error TS2307: Cannot find module '../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(6,30): error TS2307: Cannot find module '@/components/common/FileDropzone' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(7,29): error TS2307: Cannot find module '@/components/common/ProgressBar' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(8,35): error TS2307: Cannot find module '@/components/common/ToastNotification' or its corresponding type declarations.
+src/modules/converter/components/ConverterToolInterface.tsx(71,32): error TS7006: Parameter 'url' implicitly has an 'any' type.
+src/modules/converter/components/ConverterToolInterface.tsx(71,37): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/modules/converter/components/tools/ArchiveCreatorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ArchiveExtractorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/AudioConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/BarcodeGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/Base64Options.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CadConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ColorConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CsvJsonOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/CurrencyConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/DocumentConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/EbookConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/EncodingConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/FontConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HashGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HeicConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/HexEncoderOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/ImageConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/JsonYamlOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/MagicByteDetectorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/MarkdownHtmlOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/NumberSystemOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/QrGeneratorOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/RawConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/SpreadsheetConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/SubtitleConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/TimezoneConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/UnitConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/VectorConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/VideoConverterOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/components/tools/XmlJsonOptions.tsx(3,35): error TS2307: Cannot find module '../../../store/useConverterStore' or its corresponding type declarations.
+src/modules/converter/store/useConverterStore.test.ts(35,34): error TS2551: Property 'setFile' does not exist on type 'ConverterState'. Did you mean 'setFiles'?
+src/modules/converter/store/useConverterStore.test.ts(38,17): error TS2551: Property 'file' does not exist on type 'ConverterTask'. Did you mean 'files'?
+src/modules/converter/store/useConverterStore.test.ts(73,36): error TS2551: Property 'setFile' does not exist on type 'ConverterState'. Did you mean 'setFiles'?
+src/modules/converter/store/useConverterStore.test.ts(82,36): error TS2551: Property 'setFile' does not exist on type 'ConverterState'. Did you mean 'setFiles'?
+src/modules/converter/store/useConverterStore.test.ts(86,36): error TS2353: Object literal may only specify known properties, and 'isFfmpegLoaded' does not exist in type 'ConverterState | Partial<ConverterState> | ((state: WritableNonArrayDraft<ConverterState>) => void)'.
+src/modules/converter/store/useConverterStore.test.ts(116,34): error TS2551: Property 'setFile' does not exist on type 'ConverterState'. Did you mean 'setFiles'?
+src/modules/pdf-forge/components/tools/index.ts(1,10): error TS2305: Module '"./MergerOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(2,10): error TS2305: Module '"./SplitterOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(3,10): error TS2305: Module '"./CompressorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(4,10): error TS2305: Module '"./ConverterOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(5,10): error TS2305: Module '"./OcrOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(6,10): error TS2305: Module '"./EditorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(7,10): error TS2305: Module '"./AnnotatorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(8,10): error TS2305: Module '"./WatermarkOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(9,10): error TS2305: Module '"./DigitalSignatureOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(10,10): error TS2305: Module '"./EncryptOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(11,10): error TS2305: Module '"./DecryptOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(12,10): error TS2305: Module '"./RotatePagesOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(13,10): error TS2305: Module '"./CropPagesOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(14,10): error TS2305: Module '"./ExtractPagesOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(15,10): error TS2305: Module '"./ReorderPagesOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(16,10): error TS2305: Module '"./RedactorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(17,10): error TS2305: Module '"./FormFillerOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(18,10): error TS2305: Module '"./ToWordOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(19,10): error TS2305: Module '"./ToExcelOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(20,10): error TS2305: Module '"./ToPowerpointOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(21,10): error TS2305: Module '"./ToImageOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(22,10): error TS2305: Module '"./FromImageOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(23,10): error TS2305: Module '"./FromHtmlOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(24,10): error TS2305: Module '"./MetadataEditorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(25,10): error TS2305: Module '"./TableExtractorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(26,10): error TS2305: Module '"./RepairOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(27,10): error TS2305: Module '"./CompareOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(28,10): error TS2305: Module '"./BatchProcessorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(29,10): error TS2305: Module '"./BookmarksEditorOptions"' has no exported member 'default'.
+src/modules/pdf-forge/components/tools/index.ts(30,10): error TS2305: Module '"./XrefAnalyzerOptions"' has no exported member 'default'.
+src/modules/pdf-forge/engines/annotator.engine.ts(32,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/bookmarks-editor.engine.ts(17,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/crop-pages.engine.ts(20,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/decrypt.engine.ts(9,80): error TS2353: Object literal may only specify known properties, and 'password' does not exist in type 'LoadOptions'.
+src/modules/pdf-forge/engines/decrypt.engine.ts(16,22): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/editor.engine.ts(23,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/encrypt.engine.ts(13,5): error TS2353: Object literal may only specify known properties, and 'userPassword' does not exist in type 'SaveOptions'.
+src/modules/pdf-forge/engines/encrypt.engine.ts(27,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/extract-pages.engine.ts(24,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/form-filler.engine.ts(41,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/from-image.engine.ts(28,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/merger.engine.ts(18,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/metadata-editor.engine.ts(21,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/ocr.engine.ts(30,23): error TS2345: Argument of type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' is not assignable to parameter of type 'RenderParameters'.
+  Property 'canvas' is missing in type '{ canvasContext: CanvasRenderingContext2D; viewport: PageViewport; }' but required in type 'RenderParameters'.
+src/modules/pdf-forge/engines/ocr.engine.ts(52,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/redactor.engine.ts(30,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/reorder-pages.engine.ts(20,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/repair.engine.ts(22,22): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/rotate-pages.engine.ts(26,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/splitter.engine.ts(48,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+src/modules/pdf-forge/engines/watermark.engine.ts(21,17): error TS2322: Type '"degrees"' is not assignable to type 'RotationTypes'.
+src/modules/pdf-forge/engines/watermark.engine.ts(29,20): error TS2322: Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+    Types of property 'buffer' are incompatible.
+      Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+        Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength

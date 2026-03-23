@@ -9,7 +9,7 @@ import { useState } from "react";
 const MAX_SIZE = 50 * 1024 * 1024; // 50MB
 
 export function ConverterDashboard() {
-  const { task, setFile, setOperation, processConversion, reset } = useConverterStore();
+  const { task, setFiles, setOperation, processConversion, reset } = useConverterStore();
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -29,7 +29,7 @@ export function ConverterDashboard() {
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file.size <= MAX_SIZE) {
-        setFile(file);
+        setFiles([file]);
       }
     }
   };
@@ -37,7 +37,7 @@ export function ConverterDashboard() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      setFiles([e.target.files[0]]);
     }
   };
 
@@ -55,7 +55,7 @@ export function ConverterDashboard() {
             className={cn(
               "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
               dragActive ? "border-amber-500 bg-amber-500/10" : "border-slate-700 hover:border-slate-500",
-              task.file ? "border-emerald-500 bg-emerald-500/10" : ""
+              task.files.length > 0 ? "border-emerald-500 bg-emerald-500/10" : ""
             )}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -69,12 +69,12 @@ export function ConverterDashboard() {
               className="hidden"
               onChange={handleChange}
             />
-            {task.file ? (
+            {task.files.length > 0 ? (
               <div className="flex flex-col items-center space-y-2">
                 <CheckCircle className="w-10 h-10 text-emerald-400" />
-                <p className="text-emerald-300 font-medium">{task.file.name}</p>
+                <p className="text-emerald-300 font-medium">{task.files[0].name}</p>
                 <p className="text-sm text-emerald-400/70">
-                  {(task.file.size / (1024 * 1024)).toFixed(2)} MB
+                  {(task.files[0].size / (1024 * 1024)).toFixed(2)} MB
                 </p>
               </div>
             ) : (
@@ -121,10 +121,10 @@ export function ConverterDashboard() {
       >
         <button
           onClick={processConversion}
-          disabled={!task.file || task.operation === "idle" || task.status === "processing"}
+          disabled={task.files.length === 0 || task.operation === "idle" || task.status === "processing"}
           className={cn(
             "flex items-center space-x-2 px-8 py-4 rounded-full font-bold text-lg transition-all",
-            !task.file || task.operation === "idle"
+            task.files.length === 0 || task.operation === "idle"
               ? "bg-slate-800 text-slate-500 cursor-not-allowed"
               : task.status === "processing"
               ? "bg-amber-600 text-white cursor-wait"
@@ -186,8 +186,8 @@ export function ConverterDashboard() {
             className="mt-6 flex flex-col items-center space-y-4"
           >
             <a
-              href={task.outputUrl}
-              download={task.outputName}
+              href={task.outputUrls[0]}
+              download={`converted-${task.files[0]?.name || 'file'}`}
               className="flex items-center space-x-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold transition-transform hover:scale-105 active:scale-95"
             >
               <Download className="w-5 h-5" />

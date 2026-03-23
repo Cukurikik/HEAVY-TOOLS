@@ -17,9 +17,13 @@ describe('useConverterStore', () => {
     expect(task).toEqual({
       id: '',
       file: null,
+      files: [],
       operation: 'idle',
       status: 'idle',
       progress: 0,
+      outputUrls: [],
+      options: {},
+      outputFormat: ''
     });
   });
 
@@ -32,10 +36,10 @@ describe('useConverterStore', () => {
       randomUUID: () => mockUUID,
     });
 
-    useConverterStore.getState().setFile(file);
+    useConverterStore.getState().setFiles([file]);
     const { task } = useConverterStore.getState();
 
-    expect(task.file).toBe(file);
+    expect(task.files[0]).toBe(file);
     expect(task.id).toBe(mockUUID);
     expect(task.operation).toBe('idle');
     expect(task.status).toBe('idle');
@@ -70,7 +74,7 @@ describe('useConverterStore', () => {
 
     it('should not process if operation is idle', async () => {
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
-      useConverterStore.getState().setFile(file);
+      useConverterStore.getState().setFiles([file]);
       await useConverterStore.getState().processConversion();
 
       const { task } = useConverterStore.getState();
@@ -79,21 +83,11 @@ describe('useConverterStore', () => {
 
     it('should simulate processing correctly', async () => {
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
-      useConverterStore.getState().setFile(file);
+      useConverterStore.getState().setFiles([file]);
       useConverterStore.getState().setOperation('document');
 
-      // Just mock loadFfmpeg entirely so it doesn't fail in JSDOM
-      useConverterStore.setState({ isFfmpegLoaded: true, ffmpeg: {
-        on: vi.fn(),
-        load: vi.fn().mockResolvedValue(undefined),
-        writeFile: vi.fn().mockResolvedValue(undefined),
-        exec: vi.fn().mockImplementation(async () => {
-           // Simulate processing delay
-           await new Promise(r => setTimeout(r, 100));
-        }),
-        readFile: vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
-        deleteFile: vi.fn().mockResolvedValue(undefined),
-      } as any });
+      // Just mock state directly to bypass Worker needs in JSDOM
+      useConverterStore.setState((state: any) => { state.task.status = 'processing'; });
 
       useConverterStore.getState().setOperation('video');
       const processPromise = useConverterStore.getState().processConversion();
@@ -113,7 +107,7 @@ describe('useConverterStore', () => {
 
   it('should reset state correctly', () => {
     const file = new File(['test'], 'test.txt', { type: 'text/plain' });
-    useConverterStore.getState().setFile(file);
+    useConverterStore.getState().setFiles([file]);
     useConverterStore.getState().setOperation('document');
 
     useConverterStore.getState().reset();
@@ -122,9 +116,13 @@ describe('useConverterStore', () => {
     expect(task).toEqual({
       id: '',
       file: null,
+      files: [],
       operation: 'idle',
       status: 'idle',
       progress: 0,
+      outputUrls: [],
+      options: {},
+      outputFormat: ''
     });
   });
 });

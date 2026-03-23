@@ -1,17 +1,15 @@
-'use client';
-import React from 'react';
-import { usePdfStore } from '../../store/usePdfStore';
+"use client";
+import React from "react";
 
-export default function EditorOptions() {
-  const { task: { options: rawOpts }, setOptions } = usePdfStore();
-  const options = rawOpts as Record<string, string | number | boolean>;
+export function EditorOptions() {
   return (
-    <div className="space-y-4">
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Font Size: {options.fontsize ?? 12}</label>
-          <input type="range" min={6} max={72} defaultValue={12} onChange={(e) => setOptions({ fontsize: Number(e.target.value) })}
-            className="w-full accent-blue-500" />
-        </div>
+    <div className="space-y-6">
+      <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+        <h4 className="text-emerald-400 font-bold mb-1">Direct Content Editor</h4>
+        <p className="text-xs text-emerald-200/60 leading-relaxed font-medium">
+          Upload a PDF to open the interactive canvas. You can add new text blocks, images, and shapes directly onto the pages before exporting the final document.
+        </p>
+      </div>
     </div>
   );
 }
