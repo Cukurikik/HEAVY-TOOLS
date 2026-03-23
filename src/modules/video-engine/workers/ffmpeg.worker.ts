@@ -1,5 +1,4 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
 import * as engines from '../engines';
 
 let ffmpeg: FFmpeg | null = null;
@@ -11,18 +10,18 @@ self.onmessage = async (e) => {
     try {
       if (!ffmpeg) {
         ffmpeg = new FFmpeg();
-        ffmpeg.on('progress', ({ progress }) => {
+        ffmpeg!.on('progress', ({ progress }: any) => {
           self.postMessage({ type: 'PROGRESS', progress: Math.min(Math.round(progress * 100), 99) });
         });
-        ffmpeg.on('log', ({ message }) => {
+        ffmpeg!.on('log', ({ message }: any) => {
           self.postMessage({ type: 'LOG', message });
         });
 
         const baseURL = self.location.origin + '/ffmpeg';
-        await ffmpeg.load({
-          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-          workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+        await ffmpeg!.load({
+          coreURL: `${baseURL}/ffmpeg-core.js`,
+          wasmURL: `${baseURL}/ffmpeg-core.wasm`,
+          workerURL: `${baseURL}/ffmpeg-core.worker.js`,
         });
       }
 
@@ -32,12 +31,12 @@ self.onmessage = async (e) => {
 
       // We ensure the mount point exists for Emscripten FS
       try {
-        await ffmpeg.createDir('/opt');
+        await ffmpeg!.createDir('/opt');
       } catch (e) { /* Ignore if exists */ }
 
       // We mount WORKERFS to avoid out-of-memory errors on large files
       // @ts-ignore - WORKERFS uses OPFS implicitly in browsers, bypassing MEMFS crashes
-      await ffmpeg.mount('WORKERFS', { files: payload.file ? [payload.file] : payload.files }, '/opt');
+      await ffmpeg!.mount('WORKERFS', { files: payload.file ? [payload.file] : payload.files }, '/opt');
 
       const fileToProcess = payload.file || payload.files[0];
       const inputName = '/opt/' + fileToProcess.name;
@@ -54,16 +53,16 @@ self.onmessage = async (e) => {
       const outputName = getOutput(payload.options);
       
       // We pass the absolute path (/opt/filename) to the engine
-      const args = await buildFn(inputName, outputName, payload.options, ffmpeg, payload.files);
+      const args = await buildFn(inputName, outputName, payload.options, ffmpeg!, payload.files);
       
-      const ret = await ffmpeg.exec(args);
+      const ret = await ffmpeg!.exec(args);
       if (ret !== 0) {
         throw new Error(`FFmpeg process failed with code ${ret}. File may be corrupted or settings are invalid.`);
       }
 
-      const outputData = await ffmpeg.readFile(outputName);
+      const outputData = await ffmpeg!.readFile(outputName);
       
-      await ffmpeg.unmount('/opt');
+      await ffmpeg!.unmount('/opt');
 
       self.postMessage({ 
         type: 'DONE', 

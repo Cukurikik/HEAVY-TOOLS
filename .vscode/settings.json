@@ -3,5 +3,7 @@
   "terminal.integrated.enableImages": true,
   "files.associations": {
     "*.json": "jsonc"
-  }
+  },
+  "terminal.integrated.suggest.insertTrailingSpace": true,
+  "prettier.resolveGlobalModules": true
 }

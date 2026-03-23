@@ -214,59 +214,60 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       }
 
       // ═══════════════════════════════════════════════════
-      // Client WASM Tools (Web Worker)
+      // Client WASM Tools (Background Thread)
       // ═══════════════════════════════════════════════════
-      const worker = new Worker(new URL('../workers/ffmpeg.worker.ts', import.meta.url));
-      
-      worker.postMessage({
-        type: 'PROCESS',
-        payload: {
-          operation: task.operation,
-          file: task.file,
-          files: task.files,
-          options: task.options
-        }
-      });
+      const { getFFmpeg } = await import('../lib/ffmpeg-core');
+      const engines = await import('../engines');
 
-      worker.onmessage = (e) => {
-        if (e.data.type === 'PROGRESS') {
-          set((state) => ({ task: { ...state.task, progress: e.data.progress } }));
-        }
-        if (e.data.type === 'LOG') {
-          set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, e.data.message] }));
-        }
-        if (e.data.type === 'DONE') {
-          const blob = new Blob([e.data.outputData.buffer as ArrayBuffer], { type: e.data.outputMimeType || 'video/mp4' });
-          const url = URL.createObjectURL(blob);
-          set((state) => ({
-            task: { ...state.task, status: "success", progress: 100, resultUrl: url },
-          }));
-          worker.terminate();
-        }
-        if (e.data.type === 'ERROR') {
-          console.error("Video processing worker error:", e.data.error);
-          set((state) => ({
-            task: {
-              ...state.task,
-              status: "error",
-              error: e.data.error || "Processing failed.",
-            },
-          }));
-          worker.terminate();
-        }
+      const onProgress = (progress: number) => {
+        set((state) => ({ task: { ...state.task, progress: Math.min(Math.round(progress * 100), 99) } }));
       };
       
-      worker.onerror = (err) => {
-        console.error("Worker generic error:", err);
-        set((state) => ({
-          task: {
-            ...state.task,
-            status: "error",
-            error: "Web Worker crashed heavily. Ensure you have Web Worker support.",
-          },
-        }));
-        worker.terminate();
+      const onLog = (message: string) => {
+        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, message] }));
       };
+
+      // Spawns native worker safely, or returns warm singleton instance
+      const ffmpeg = await getFFmpeg(onProgress, onLog);
+
+      try {
+        await ffmpeg.createDir('/opt');
+      } catch (e) { /* Ignore if exists */ }
+
+      // Mounting files as Blobs using WORKERFS zero-copy feature
+      // Note: FFmpeg proxies this command to its internal Web Worker!
+      // @ts-ignore
+      await ffmpeg.mount('WORKERFS', { files: task.file ? [task.file] : task.files }, '/opt');
+
+      const fileToProcess = task.file || task.files[0];
+      const inputName = '/opt/' + fileToProcess.name;
+      
+      const engineKeyParts = task.operation.split('-');
+      const engineKey = engineKeyParts.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+      
+      const buildFn = (engines as any)[`build${engineKey}Args`];
+      const getOutput = (engines as any)[`get${engineKey}OutputName`];
+      const getMime = (engines as any)[`get${engineKey}MimeType`];
+      
+      if (!buildFn) throw new Error(`Engine not found for operation: ${task.operation}`);
+
+      const outputName = getOutput(task.options);
+      const args = await buildFn(inputName, outputName, task.options, ffmpeg, task.files);
+      
+      const ret = await ffmpeg.exec(args);
+      if (ret !== 0) {
+        throw new Error(`FFmpeg process failed with code ${ret}. File may be corrupted or settings are invalid.`);
+      }
+
+      const outputData = await ffmpeg.readFile(outputName) as Uint8Array;
+      await ffmpeg.unmount('/opt');
+
+      const blob = new Blob([outputData.buffer as ArrayBuffer], { type: getMime ? getMime(task.options) : 'video/mp4' });
+      const url = URL.createObjectURL(blob);
+      
+      set((state) => ({
+        task: { ...state.task, status: "success", progress: 100, resultUrl: url },
+      }));
     } catch (error) {
       console.error("Video processing error:", error);
       set((state) => ({
