@@ -32,6 +32,8 @@ jobs:
 
     - name: Run Prisma Generate
       run: pnpm exec prisma generate
+      env:
+        DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres'
 
     - name: ESLint Check
       run: pnpm run lint
