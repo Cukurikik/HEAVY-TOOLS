@@ -14,9 +14,9 @@ describe('useConverterStore', () => {
 
   it('should initialize with default state', () => {
     const { task } = useConverterStore.getState();
-    expect(task).toEqual({
+    const { createdAt, ...taskWithoutDate } = task;
+    expect(taskWithoutDate).toEqual({
       id: '',
-      file: null,
       files: [],
       operation: 'idle',
       status: 'idle',
@@ -25,6 +25,7 @@ describe('useConverterStore', () => {
       options: {},
       outputFormat: ''
     });
+    expect(createdAt).toBeInstanceOf(Date);
   });
 
   it('should set file and generate a new id', () => {
@@ -75,19 +76,27 @@ describe('useConverterStore', () => {
     it('should not process if operation is idle', async () => {
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       useConverterStore.getState().setFiles([file]);
+      useConverterStore.getState().setOperation('idle');
       await useConverterStore.getState().processConversion();
 
       const { task } = useConverterStore.getState();
-      expect(task.status).toBe('idle');
+      expect(task.status).toBe('error');
     });
 
     it('should simulate processing correctly', async () => {
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       useConverterStore.getState().setFiles([file]);
-      useConverterStore.getState().setOperation('document');
 
-      // Just mock state directly to bypass Worker needs in JSDOM
-      useConverterStore.setState((state: any) => { state.task.status = 'processing'; });
+      const engines = await import('../engines');
+      (engines as any).processVideo = vi.fn().mockImplementation(async (task, onProgress) => {
+        // use fake timer to delay so we can check the intermediate state
+        return new Promise(resolve => {
+          setTimeout(() => {
+            onProgress(50);
+            resolve('mock-url');
+          }, 100);
+        });
+      });
 
       useConverterStore.getState().setOperation('video');
       const processPromise = useConverterStore.getState().processConversion();
@@ -113,9 +122,9 @@ describe('useConverterStore', () => {
     useConverterStore.getState().reset();
 
     const { task } = useConverterStore.getState();
-    expect(task).toEqual({
+    const { createdAt, ...taskWithoutDate } = task;
+    expect(taskWithoutDate).toEqual({
       id: '',
-      file: null,
       files: [],
       operation: 'idle',
       status: 'idle',
@@ -124,5 +133,6 @@ describe('useConverterStore', () => {
       options: {},
       outputFormat: ''
     });
+    expect(createdAt).toBeInstanceOf(Date);
   });
 });

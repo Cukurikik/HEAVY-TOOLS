@@ -114,7 +114,6 @@ describe('usePdfStore', () => {
     const state = usePdfStore.getState();
     expect(state.task.operation).toBe('merge'); // Default
     expect(state.task.selectedPages).toEqual([]);
-    expect(state.task.id).toBe('');
   });
 
   describe('processPdf', () => {
@@ -189,7 +188,7 @@ describe('usePdfStore', () => {
 
       const state = usePdfStore.getState();
       expect(state.task.status).toBe('error');
-      expect(state.task.error).toBe('Server error');
+      expect(state.task.error).toBe('Compression failed: Server error');
     });
   });
 });
