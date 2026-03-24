@@ -23,6 +23,12 @@ model User {
   videoPresets  VideoPreset[]
   watermarks    WatermarkTemplate[]
   cloudVideos   CloudVideo[]
+
+  // Audio Engine Relations
+  audioTasks      AudioTaskHistory[]
+  audioPresets    AudioPreset[]
+  masteringChains MasteringChain[]
+  cloudAudios     CloudAudio[]
 }
 
 // ═══════════════════════════════════════════════════
@@ -109,3 +115,75 @@ model AuditLog {
   details        Json?
   createdAt      DateTime  @default(now())
 }
+
+// ═══════════════════════════════════════════════════
+// FASE 2 (AUDIO): Audio Engine Schemas
+// ═══════════════════════════════════════════════════
+
+// 11. Schema AudioTaskHistory
+model AudioTaskHistory {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolName       String    // e.g., "Stem Splitter", "Mastering Hub"
+  inputFile      String?   
+  outputFile     String?
+  durationMs     Int?
+  status         String    @default("success") // success, error
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+
+  // 19. Index Optimization Audio
+  @@index([createdAt])
+  @@index([userId])
+}
+
+// 12. Schema AudioPreset
+model AudioPreset {
+  id             String    @id @default(uuid())
+  userId         String?   // Global presets can have null userId
+  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String    // e.g., "Podcast Enhancer Default"
+  tool           String
+  settings       Json      // Store parameter options
+  isGlobal       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+}
+
+// 13. Schema MasteringChain
+model MasteringChain {
+  id             String    @id @default(uuid())
+  userId         String?   // allow null for global/default chains
+  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String    // e.g., "Vocal Pop Chain"
+  chain          Json      // Array sequence of fx: [{type: 'eq'}, {type: 'compressor'}]
+  isGlobal       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+}
+
+// 14. Schema CloudAudio
+model CloudAudio {
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fileName       String
+  fileUrl        String
+  sizeBytes      BigInt
+  mimeType       String
+  isPinned       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+}
+
+// 15. Schema AudioAnalytics (Anonymous Telemetry)
+model AudioAnalytics {
+  id             String    @id @default(uuid())
+  sessionId      String?   // Anonymous session ID
+  toolName       String
+  processTimeMs  Int
+  inputFormat    String?
+  outputFormat   String?
+  success        Boolean   @default(true)
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+}
+

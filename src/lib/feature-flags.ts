@@ -12,6 +12,10 @@ export const FEATURE_FLAGS = {
   
   // Enforce global maintenance mode over Cloud Video functionalities
   cloudRenderMaintenance: process.env.FLAG_CLOUD_MAINTENANCE === 'true' || false,
+
+  // 70. Feature Flagging Audio
+  enableAiStemSplitter: process.env.FLAG_ENABLE_STEM_SPLITTER === 'true' || true,
+  audioCloudMaintenance: process.env.FLAG_AUDIO_CLOUD_MAINTENANCE === 'true' || false,
 }
 
 export function isFeatureActive(featureName: keyof typeof FEATURE_FLAGS): boolean {

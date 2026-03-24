@@ -1,0 +1,29 @@
+name: Audio Backend CI
+
+on:
+  push:
+    paths:
+      - 'src/modules/audio-studio/**'
+      - 'src/app/api/audio/**'
+      - 'src/lib/audio-*'
+
+jobs:
+  test-audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Run Audio Unit Tests
+        run: npx vitest run src/__tests__/audio-*
+        
+      - name: TypeScript Compile Audit
+        run: npx tsc --noEmit

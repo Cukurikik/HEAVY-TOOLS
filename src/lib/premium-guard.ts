@@ -37,5 +37,29 @@ export function premiumGuard(userStatus: UserSubscription | null, action: string
     return tier === 'FREE'; 
   }
 
+  // 61. Premium Guard (Lossless Export)
+  if (action === 'export:lossless' && tier === 'FREE') {
+    throw new Error('Ekspor Lossless (WAV/FLAC) hanya tersedia untuk pengguna PRO. Silakan upgrade.');
+  }
+
+  // 62. Premium Guard (Batch Processing Audio)
+  if (action === 'batch:process:audio' && tier === 'FREE') {
+    const fileCount = context?.fileCount || 1;
+    if (fileCount > 5) {
+      throw new Error('Pengguna FREE maksimal memproses 5 file audio secara bulk. Silakan upgrade.');
+    }
+  }
+
+  // 63. Premium Guard (Stem Splitter 4-Stems)
+  if (action === 'ai:stem-splitter-4' && tier === 'FREE') {
+    throw new Error('Pemisahan 4-Stems Definisi Tinggi terkunci untuk pengguna PRO.');
+  }
+
+  // 69. Bitrate Enforcement Flag
+  if (action === 'bitrate:enforcement' && tier === 'FREE') {
+    return true; // Enforces a 128kbps cap on the client/cloud parameters
+  }
+
   return true;
 }
+

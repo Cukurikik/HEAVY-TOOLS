@@ -26,6 +26,14 @@ const nextConfig = {
         ],
       },
       {
+        source: '/models/audio/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Content-Type', value: 'application/octet-stream' }
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
