@@ -32,17 +32,20 @@ export default function Navbar() {
         </div>
         
         <div className="flex items-center gap-8">
-          <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer group">
+          <button
+            aria-label="Search Commands"
+            className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
+          >
             <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
             <span className="text-xs font-bold tracking-wider">SEARCH COMMANDS</span>
             <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded border border-white/10 font-mono">⌘K</span>
-          </div>
+          </button>
 
           <div className="flex items-center gap-4">
-            <IconButton icon={<Bell className="w-5 h-5" />} />
-            <IconButton icon={<User className="w-5 h-5" />} />
+            <IconButton icon={<Bell className="w-5 h-5" />} ariaLabel="Notifications" />
+            <IconButton icon={<User className="w-5 h-5" />} ariaLabel="User Profile" />
             <div className="h-8 w-[1px] bg-white/10 mx-2" />
-            <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 group cursor-pointer">
+            <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 group cursor-pointer" title="System Status: Online" aria-label="System Status: Online">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
               <span className="text-[10px] font-black text-emerald-500 tracking-widest uppercase">System Online</span>
             </div>
@@ -55,19 +58,21 @@ export default function Navbar() {
 
 function NavLink({ href, label }: { href: string, label: string }) {
   return (
-    <Link href={href} className="text-xs font-black text-slate-400 hover:text-white tracking-widest uppercase transition-colors relative group">
+    <Link href={href} className="text-xs font-black text-slate-400 hover:text-white tracking-widest uppercase transition-colors relative group focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none focus-visible:rounded">
       {label}
       <span className="absolute -bottom-2 left-0 w-0 h-[2px] bg-indigo-500 group-hover:w-full transition-all duration-300" />
     </Link>
   );
 }
 
-function IconButton({ icon }: { icon: React.ReactNode }) {
+function IconButton({ icon, ariaLabel }: { icon: React.ReactNode, ariaLabel: string }) {
   return (
     <motion.button
       whileHover={{ scale: 1.1, y: -2 }}
       whileTap={{ scale: 0.9 }}
-      className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+      aria-label={ariaLabel}
+      title={ariaLabel}
+      className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-all focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none"
     >
       {icon}
     </motion.button>
