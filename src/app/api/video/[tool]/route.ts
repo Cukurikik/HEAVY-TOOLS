@@ -126,7 +126,10 @@ export async function POST(
 
     const tmpDir = `/tmp/omni/video`;
     await fs.mkdir(tmpDir, { recursive: true });
-    const inputPath = `${tmpDir}/${crypto.randomUUID()}_${file.name}`;
+
+    // Prevent path traversal by extracting just the filename
+    const safeFileName = path.basename(file.name);
+    const inputPath = path.join(tmpDir, `${crypto.randomUUID()}_${safeFileName}`);
     
     // Write file to disk
     const arrayBuffer = await file.arrayBuffer();
