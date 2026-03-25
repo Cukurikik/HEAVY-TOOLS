@@ -1,0 +1,3 @@
+## 2024-05-18 - Convert interactive `div` elements to semantic `button`s in custom components
+**Learning:** In Next.js with Tailwind CSS, custom interactive UI elements built as `div`s with `cursor-pointer` lack inherent keyboard navigation (Tab-ability) and explicit ARIA roles. The use of `motion.button` and `<button>` requires specific tailwind utility classes for accessible focusing.
+**Action:** Always convert interactive `div` wrappers acting as controls into standard `button` or `motion.button` elements. Additionally, explicitly apply `focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:outline-none` classes to these buttons to ensure standard and prominent focus indicators are visible when interacting with keyboard navigation.
