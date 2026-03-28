@@ -52,3 +52,58 @@ export type VideoAnalytics = Prisma.VideoAnalyticsModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model AudioTaskHistory
+ * 
+ */
+export type AudioTaskHistory = Prisma.AudioTaskHistoryModel
+/**
+ * Model AudioPreset
+ * 
+ */
+export type AudioPreset = Prisma.AudioPresetModel
+/**
+ * Model MasteringChain
+ * 
+ */
+export type MasteringChain = Prisma.MasteringChainModel
+/**
+ * Model CloudAudio
+ * 
+ */
+export type CloudAudio = Prisma.CloudAudioModel
+/**
+ * Model AudioAnalytics
+ * 
+ */
+export type AudioAnalytics = Prisma.AudioAnalyticsModel
+/**
+ * Model PdfTaskHistory
+ * 
+ */
+export type PdfTaskHistory = Prisma.PdfTaskHistoryModel
+/**
+ * Model PdfSignatureTemplate
+ * 
+ */
+export type PdfSignatureTemplate = Prisma.PdfSignatureTemplateModel
+/**
+ * Model PdfPreset
+ * 
+ */
+export type PdfPreset = Prisma.PdfPresetModel
+/**
+ * Model PdfWatermarkTemplate
+ * 
+ */
+export type PdfWatermarkTemplate = Prisma.PdfWatermarkTemplateModel
+/**
+ * Model CloudPdfFile
+ * 
+ */
+export type CloudPdfFile = Prisma.CloudPdfFileModel
+/**
+ * Model PdfAnalytics
+ * 
+ */
+export type PdfAnalytics = Prisma.PdfAnalyticsModel

@@ -31,7 +31,7 @@ export function LoopEngineOptions() {
           <p className="text-violet-400/50 text-[10px] font-medium">Outputs as repeating GIF instead of MP4</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.infiniteGif as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ infiniteGif: checked })}
         />
       </div>

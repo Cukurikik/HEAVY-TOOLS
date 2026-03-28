@@ -5,8 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 import { PDFDocument } from 'pdf-lib';
 import type { PdfTask, PdfOperation, PdfPage } from '../types';
 
-// Import all engine runners
-import * as engines from '../engines';
+// Removed engine imports in favor of Web Worker
 
 interface PdfState {
   task: PdfTask;
@@ -89,7 +88,7 @@ export const usePdfStore = create<PdfState>()(
 
       processPdf: async () => {
         const { task, updateProgress } = get();
-        if (task.files.length === 0) return;
+        if (task.files.length === 0 && !task.files[0]) return;
 
         set((state: any) => {
           state.task.status = 'processing';
@@ -98,36 +97,55 @@ export const usePdfStore = create<PdfState>()(
         });
 
         try {
-          // Dynamic Engine Dispatch
-          // This maps the task.operation (e.g. 'merge') to the exported engine ('processMerge')
-          const engineName = `process${
-            task.operation.split('-').map((part: string) => part.charAt(0).toUpperCase() + part.slice(1)).join('')
-          }` as keyof typeof engines;
+          // Dynamic Engine Dispatch via Web Worker (Local First)
+          const worker = new Worker(new URL('@/workers/pdf.worker.ts', import.meta.url));
 
-          const engineRunner = engines[engineName] as any;
+          worker.onmessage = (e: MessageEvent) => {
+            const { type, progress, message, resultUrls, error } = e.data;
 
-          if (!engineRunner || typeof engineRunner !== 'function') {
-            throw new Error(`Engine for operation '${task.operation}' is not implemented yet.`);
-          }
+            if (type === 'LOG') {
+              console.log(message);
+            } else if (type === 'PROGRESS') {
+              updateProgress(progress);
+            } else if (type === 'SUCCESS') {
+              set((state: any) => {
+                state.task.status = 'success';
+                state.task.progress = 100;
+                state.task.resultUrl = resultUrls[0];
+                state.history.push({ ...state.task } as PdfTask);
+              });
+              worker.terminate();
+            } else if (type === 'ERROR') {
+              set((state: any) => {
+                state.task.status = 'error';
+                state.task.error = error || "PDF Processing failed.";
+              });
+              worker.terminate();
+            }
+          };
 
-          // Execute the dynamic engine
-          const resultBlob = await engineRunner(task, updateProgress);
+          worker.onerror = (err) => {
+            console.error("PDF Worker generic error:", err);
+            set((state: any) => {
+              state.task.status = 'error';
+              state.task.error = "Background Worker Crash. Memory limit or isolation failure.";
+            });
+            worker.terminate();
+          };
 
-          if (!resultBlob) {
-             throw new Error("Engine returned nothing.");
-          }
-
-          const url = URL.createObjectURL(resultBlob);
-
-          set((state: any) => {
-            state.task.status = 'success';
-            state.task.progress = 100;
-            state.task.resultUrl = url;
-            state.task.resultBlob = resultBlob;
-            state.history.push({ ...state.task } as PdfTask);
+          // Blast payload to the isolated worker thread
+          worker.postMessage({
+            type: 'PROCESS_PDF',
+            payload: {
+              toolSlug: task.operation,
+              file: task.files[0],
+              files: task.files,
+              options: task.options
+            }
           });
+
         } catch (err: any) {
-          console.error("PDF Processing Error:", err);
+          console.error("PDF Orchestrator Error:", err);
           set((state: any) => {
             state.task.status = 'error';
             state.task.error = err instanceof Error ? err.message : String(err);

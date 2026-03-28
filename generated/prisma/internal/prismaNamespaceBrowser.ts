@@ -24,30 +24,28 @@ export const Decimal = runtime.Decimal
 
 
 export const NullTypes = {
-  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
-  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
-  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
+  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
+  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
+  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.DbNull
-
+export const DbNull = runtime.objectEnumValues.instances.DbNull
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.JsonNull
-
+export const JsonNull = runtime.objectEnumValues.instances.JsonNull
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.AnyNull
+export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 export const ModelName = {
@@ -57,7 +55,18 @@ export const ModelName = {
   WatermarkTemplate: 'WatermarkTemplate',
   CloudVideo: 'CloudVideo',
   VideoAnalytics: 'VideoAnalytics',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  AudioTaskHistory: 'AudioTaskHistory',
+  AudioPreset: 'AudioPreset',
+  MasteringChain: 'MasteringChain',
+  CloudAudio: 'CloudAudio',
+  AudioAnalytics: 'AudioAnalytics',
+  PdfTaskHistory: 'PdfTaskHistory',
+  PdfSignatureTemplate: 'PdfSignatureTemplate',
+  PdfPreset: 'PdfPreset',
+  PdfWatermarkTemplate: 'PdfWatermarkTemplate',
+  CloudPdfFile: 'CloudPdfFile',
+  PdfAnalytics: 'PdfAnalytics'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -171,6 +180,158 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const AudioTaskHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolName: 'toolName',
+  inputFile: 'inputFile',
+  outputFile: 'outputFile',
+  durationMs: 'durationMs',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioTaskHistoryScalarFieldEnum = (typeof AudioTaskHistoryScalarFieldEnum)[keyof typeof AudioTaskHistoryScalarFieldEnum]
+
+
+export const AudioPresetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  tool: 'tool',
+  settings: 'settings',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioPresetScalarFieldEnum = (typeof AudioPresetScalarFieldEnum)[keyof typeof AudioPresetScalarFieldEnum]
+
+
+export const MasteringChainScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  chain: 'chain',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type MasteringChainScalarFieldEnum = (typeof MasteringChainScalarFieldEnum)[keyof typeof MasteringChainScalarFieldEnum]
+
+
+export const CloudAudioScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  sizeBytes: 'sizeBytes',
+  mimeType: 'mimeType',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt'
+} as const
+
+export type CloudAudioScalarFieldEnum = (typeof CloudAudioScalarFieldEnum)[keyof typeof CloudAudioScalarFieldEnum]
+
+
+export const AudioAnalyticsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  toolName: 'toolName',
+  processTimeMs: 'processTimeMs',
+  inputFormat: 'inputFormat',
+  outputFormat: 'outputFormat',
+  success: 'success',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioAnalyticsScalarFieldEnum = (typeof AudioAnalyticsScalarFieldEnum)[keyof typeof AudioAnalyticsScalarFieldEnum]
+
+
+export const PdfTaskHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolName: 'toolName',
+  inputFile: 'inputFile',
+  outputFile: 'outputFile',
+  pageCount: 'pageCount',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfTaskHistoryScalarFieldEnum = (typeof PdfTaskHistoryScalarFieldEnum)[keyof typeof PdfTaskHistoryScalarFieldEnum]
+
+
+export const PdfSignatureTemplateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  signatureData: 'signatureData',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfSignatureTemplateScalarFieldEnum = (typeof PdfSignatureTemplateScalarFieldEnum)[keyof typeof PdfSignatureTemplateScalarFieldEnum]
+
+
+export const PdfPresetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  tool: 'tool',
+  settings: 'settings',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfPresetScalarFieldEnum = (typeof PdfPresetScalarFieldEnum)[keyof typeof PdfPresetScalarFieldEnum]
+
+
+export const PdfWatermarkTemplateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  text: 'text',
+  imageUrl: 'imageUrl',
+  color: 'color',
+  opacity: 'opacity',
+  rotation: 'rotation',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfWatermarkTemplateScalarFieldEnum = (typeof PdfWatermarkTemplateScalarFieldEnum)[keyof typeof PdfWatermarkTemplateScalarFieldEnum]
+
+
+export const CloudPdfFileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  sizeBytes: 'sizeBytes',
+  pageCount: 'pageCount',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt'
+} as const
+
+export type CloudPdfFileScalarFieldEnum = (typeof CloudPdfFileScalarFieldEnum)[keyof typeof CloudPdfFileScalarFieldEnum]
+
+
+export const PdfAnalyticsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  toolName: 'toolName',
+  processTimeMs: 'processTimeMs',
+  pageCount: 'pageCount',
+  fileSizeBytes: 'fileSizeBytes',
+  success: 'success',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfAnalyticsScalarFieldEnum = (typeof PdfAnalyticsScalarFieldEnum)[keyof typeof PdfAnalyticsScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1,5 +1,28 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "prisma.pinToPrisma6": false
+  "prisma.pinToPrisma6": false,
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3000,
+      "driver": "PostgreSQL",
+      "name": "OMNI TOOLS",
+      "database": "FILE",
+      "username": "Dikaa"
+    },
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3000,
+      "driver": "PostgreSQL",
+      "name": "omni tools",
+      "database": "omnitools",
+      "username": "dikaa",
+      "password": ""
+    }
+  ]
 }

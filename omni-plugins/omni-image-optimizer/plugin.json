@@ -1,0 +1,10 @@
+{
+  "id": "omni-image-optimizer",
+  "name": "Image Optimizer Pro",
+  "version": "1.0.0",
+  "description": "Ekstensi otomatis untuk optimasi dan kompresi bulk JPEG/PNG menggunakan worker lokal.",
+  "author": "Kapten Omni-Tool",
+  "main": "index.js",
+  "price": 0,
+  "permissions": ["read:local_files", "write:local_files"]
+}

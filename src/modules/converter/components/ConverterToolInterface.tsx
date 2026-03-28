@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ConverterToolDef } from "../types";
+import { converterTools } from "../constants/tools";
 import { useConverterStore } from "../store/useConverterStore";
 import dynamic from "next/dynamic";
 import FileDropzone from "@/components/common/FileDropzone";
@@ -49,10 +50,11 @@ const OptionComponents: Record<string, React.ComponentType> = {
 };
 
 interface Props {
-  tool: ConverterToolDef;
+  toolId: string;
 }
 
-export default function ConverterToolInterface({ tool }: Props) {
+export default function ConverterToolInterface({ toolId }: Props) {
+  const tool = converterTools.find((t) => t.id === toolId)!;
   const { task, setFiles, setOperation, processConversion, reset } = useConverterStore();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -105,9 +107,9 @@ export default function ConverterToolInterface({ tool }: Props) {
           <div className="bg-slate-900/50 backdrop-blur-md rounded-3xl border border-white/5 p-8 shadow-2xl">
             {task.status === "idle" && (
               <FileDropzone 
-                onFilesDrop={setFiles} 
+                onFilesAccepted={setFiles} 
                 multiple={tool.acceptsMultiple} 
-                accept="*" // Specific accept types handled via frontend wrapper ideally, generic for now
+                accept={{ '*/*': [] }} // Specific accept types handled via frontend wrapper ideally, generic for now
               />
             )}
 

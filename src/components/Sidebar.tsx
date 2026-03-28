@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   Zap,
   ChevronRight,
-  Bot
+  Bot,
+  BrainCircuit
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ const links = [
   { name: "Image Matrix", href: "/image", icon: ImageIcon },
   { name: "PDF Forge", href: "/pdf", icon: FileText },
   { name: "Converter", href: "/converter", icon: Repeat },
+  { name: "LLM Engine", href: "/llm", icon: BrainCircuit },
 ];
 
 const secondaryLinks = [

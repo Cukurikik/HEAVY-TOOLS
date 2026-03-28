@@ -38,7 +38,7 @@ export function BlackWhiteOptions() {
           <p className="text-amber-400/50 text-[10px] font-medium">Warm vintage color grading</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.sepia as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ sepia: checked })}
         />
       </div>

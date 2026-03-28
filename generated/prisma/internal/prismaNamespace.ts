@@ -15,7 +15,7 @@
  * model files in the `model` directory!
  */
 
-import * as runtime from "@prisma/client/runtime/client"
+import * as runtime from "@prisma/client/runtime/library"
 import type * as Prisma from "../models"
 import { type PrismaClient } from "./class"
 
@@ -65,6 +65,14 @@ export type Decimal = runtime.Decimal
 export type DecimalJsLike = runtime.DecimalJsLike
 
 /**
+ * Metrics
+ */
+export type Metrics = runtime.Metrics
+export type Metric<T> = runtime.Metric<T>
+export type MetricHistogram = runtime.MetricHistogram
+export type MetricHistogramBucket = runtime.MetricHistogramBucket
+
+/**
 * Extensions
 */
 export type Extension = runtime.Types.Extensions.UserArgs
@@ -80,12 +88,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 6.19.2
+ * Query Engine version: c2990dca591cba766e3b7ef5d9e8a84796e47ab7
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "6.19.2",
+  engine: "c2990dca591cba766e3b7ef5d9e8a84796e47ab7"
 }
 
 /**
@@ -102,30 +110,28 @@ export type InputJsonValue = runtime.InputJsonValue
 
 
 export const NullTypes = {
-  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
-  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
-  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
+  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
+  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
+  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.DbNull
-
+export const DbNull = runtime.objectEnumValues.instances.DbNull
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.JsonNull
-
+export const JsonNull = runtime.objectEnumValues.instances.JsonNull
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.AnyNull
+export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 type SelectAndInclude = {
@@ -390,7 +396,18 @@ export const ModelName = {
   WatermarkTemplate: 'WatermarkTemplate',
   CloudVideo: 'CloudVideo',
   VideoAnalytics: 'VideoAnalytics',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  AudioTaskHistory: 'AudioTaskHistory',
+  AudioPreset: 'AudioPreset',
+  MasteringChain: 'MasteringChain',
+  CloudAudio: 'CloudAudio',
+  AudioAnalytics: 'AudioAnalytics',
+  PdfTaskHistory: 'PdfTaskHistory',
+  PdfSignatureTemplate: 'PdfSignatureTemplate',
+  PdfPreset: 'PdfPreset',
+  PdfWatermarkTemplate: 'PdfWatermarkTemplate',
+  CloudPdfFile: 'CloudPdfFile',
+  PdfAnalytics: 'PdfAnalytics'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "videoTaskHistory" | "videoPreset" | "watermarkTemplate" | "cloudVideo" | "videoAnalytics" | "auditLog"
+    modelProps: "user" | "videoTaskHistory" | "videoPreset" | "watermarkTemplate" | "cloudVideo" | "videoAnalytics" | "auditLog" | "audioTaskHistory" | "audioPreset" | "masteringChain" | "cloudAudio" | "audioAnalytics" | "pdfTaskHistory" | "pdfSignatureTemplate" | "pdfPreset" | "pdfWatermarkTemplate" | "cloudPdfFile" | "pdfAnalytics"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +945,820 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AudioTaskHistory: {
+      payload: Prisma.$AudioTaskHistoryPayload<ExtArgs>
+      fields: Prisma.AudioTaskHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AudioTaskHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AudioTaskHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.AudioTaskHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AudioTaskHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.AudioTaskHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.AudioTaskHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.AudioTaskHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AudioTaskHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.AudioTaskHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        update: {
+          args: Prisma.AudioTaskHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.AudioTaskHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AudioTaskHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AudioTaskHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.AudioTaskHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioTaskHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.AudioTaskHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAudioTaskHistory>
+        }
+        groupBy: {
+          args: Prisma.AudioTaskHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioTaskHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AudioTaskHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioTaskHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    AudioPreset: {
+      payload: Prisma.$AudioPresetPayload<ExtArgs>
+      fields: Prisma.AudioPresetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AudioPresetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AudioPresetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        findFirst: {
+          args: Prisma.AudioPresetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AudioPresetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        findMany: {
+          args: Prisma.AudioPresetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>[]
+        }
+        create: {
+          args: Prisma.AudioPresetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        createMany: {
+          args: Prisma.AudioPresetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AudioPresetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>[]
+        }
+        delete: {
+          args: Prisma.AudioPresetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        update: {
+          args: Prisma.AudioPresetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        deleteMany: {
+          args: Prisma.AudioPresetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AudioPresetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AudioPresetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>[]
+        }
+        upsert: {
+          args: Prisma.AudioPresetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioPresetPayload>
+        }
+        aggregate: {
+          args: Prisma.AudioPresetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAudioPreset>
+        }
+        groupBy: {
+          args: Prisma.AudioPresetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioPresetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AudioPresetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioPresetCountAggregateOutputType> | number
+        }
+      }
+    }
+    MasteringChain: {
+      payload: Prisma.$MasteringChainPayload<ExtArgs>
+      fields: Prisma.MasteringChainFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MasteringChainFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MasteringChainFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        findFirst: {
+          args: Prisma.MasteringChainFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MasteringChainFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        findMany: {
+          args: Prisma.MasteringChainFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>[]
+        }
+        create: {
+          args: Prisma.MasteringChainCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        createMany: {
+          args: Prisma.MasteringChainCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MasteringChainCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>[]
+        }
+        delete: {
+          args: Prisma.MasteringChainDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        update: {
+          args: Prisma.MasteringChainUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        deleteMany: {
+          args: Prisma.MasteringChainDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MasteringChainUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MasteringChainUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>[]
+        }
+        upsert: {
+          args: Prisma.MasteringChainUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MasteringChainPayload>
+        }
+        aggregate: {
+          args: Prisma.MasteringChainAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMasteringChain>
+        }
+        groupBy: {
+          args: Prisma.MasteringChainGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MasteringChainGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MasteringChainCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MasteringChainCountAggregateOutputType> | number
+        }
+      }
+    }
+    CloudAudio: {
+      payload: Prisma.$CloudAudioPayload<ExtArgs>
+      fields: Prisma.CloudAudioFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CloudAudioFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CloudAudioFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        findFirst: {
+          args: Prisma.CloudAudioFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CloudAudioFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        findMany: {
+          args: Prisma.CloudAudioFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>[]
+        }
+        create: {
+          args: Prisma.CloudAudioCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        createMany: {
+          args: Prisma.CloudAudioCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CloudAudioCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>[]
+        }
+        delete: {
+          args: Prisma.CloudAudioDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        update: {
+          args: Prisma.CloudAudioUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        deleteMany: {
+          args: Prisma.CloudAudioDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CloudAudioUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CloudAudioUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>[]
+        }
+        upsert: {
+          args: Prisma.CloudAudioUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudAudioPayload>
+        }
+        aggregate: {
+          args: Prisma.CloudAudioAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCloudAudio>
+        }
+        groupBy: {
+          args: Prisma.CloudAudioGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CloudAudioGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CloudAudioCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CloudAudioCountAggregateOutputType> | number
+        }
+      }
+    }
+    AudioAnalytics: {
+      payload: Prisma.$AudioAnalyticsPayload<ExtArgs>
+      fields: Prisma.AudioAnalyticsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AudioAnalyticsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AudioAnalyticsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        findFirst: {
+          args: Prisma.AudioAnalyticsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AudioAnalyticsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        findMany: {
+          args: Prisma.AudioAnalyticsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>[]
+        }
+        create: {
+          args: Prisma.AudioAnalyticsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        createMany: {
+          args: Prisma.AudioAnalyticsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AudioAnalyticsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>[]
+        }
+        delete: {
+          args: Prisma.AudioAnalyticsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        update: {
+          args: Prisma.AudioAnalyticsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        deleteMany: {
+          args: Prisma.AudioAnalyticsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AudioAnalyticsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AudioAnalyticsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>[]
+        }
+        upsert: {
+          args: Prisma.AudioAnalyticsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AudioAnalyticsPayload>
+        }
+        aggregate: {
+          args: Prisma.AudioAnalyticsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAudioAnalytics>
+        }
+        groupBy: {
+          args: Prisma.AudioAnalyticsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioAnalyticsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AudioAnalyticsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AudioAnalyticsCountAggregateOutputType> | number
+        }
+      }
+    }
+    PdfTaskHistory: {
+      payload: Prisma.$PdfTaskHistoryPayload<ExtArgs>
+      fields: Prisma.PdfTaskHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PdfTaskHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PdfTaskHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.PdfTaskHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PdfTaskHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.PdfTaskHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.PdfTaskHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.PdfTaskHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PdfTaskHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.PdfTaskHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        update: {
+          args: Prisma.PdfTaskHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.PdfTaskHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PdfTaskHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PdfTaskHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.PdfTaskHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfTaskHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.PdfTaskHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePdfTaskHistory>
+        }
+        groupBy: {
+          args: Prisma.PdfTaskHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfTaskHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PdfTaskHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfTaskHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    PdfSignatureTemplate: {
+      payload: Prisma.$PdfSignatureTemplatePayload<ExtArgs>
+      fields: Prisma.PdfSignatureTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PdfSignatureTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PdfSignatureTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.PdfSignatureTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PdfSignatureTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.PdfSignatureTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.PdfSignatureTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.PdfSignatureTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PdfSignatureTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.PdfSignatureTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        update: {
+          args: Prisma.PdfSignatureTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.PdfSignatureTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PdfSignatureTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PdfSignatureTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.PdfSignatureTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfSignatureTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.PdfSignatureTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePdfSignatureTemplate>
+        }
+        groupBy: {
+          args: Prisma.PdfSignatureTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfSignatureTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PdfSignatureTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfSignatureTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
+    PdfPreset: {
+      payload: Prisma.$PdfPresetPayload<ExtArgs>
+      fields: Prisma.PdfPresetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PdfPresetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PdfPresetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        findFirst: {
+          args: Prisma.PdfPresetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PdfPresetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        findMany: {
+          args: Prisma.PdfPresetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>[]
+        }
+        create: {
+          args: Prisma.PdfPresetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        createMany: {
+          args: Prisma.PdfPresetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PdfPresetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>[]
+        }
+        delete: {
+          args: Prisma.PdfPresetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        update: {
+          args: Prisma.PdfPresetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        deleteMany: {
+          args: Prisma.PdfPresetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PdfPresetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PdfPresetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>[]
+        }
+        upsert: {
+          args: Prisma.PdfPresetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfPresetPayload>
+        }
+        aggregate: {
+          args: Prisma.PdfPresetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePdfPreset>
+        }
+        groupBy: {
+          args: Prisma.PdfPresetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfPresetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PdfPresetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfPresetCountAggregateOutputType> | number
+        }
+      }
+    }
+    PdfWatermarkTemplate: {
+      payload: Prisma.$PdfWatermarkTemplatePayload<ExtArgs>
+      fields: Prisma.PdfWatermarkTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PdfWatermarkTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PdfWatermarkTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.PdfWatermarkTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PdfWatermarkTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.PdfWatermarkTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.PdfWatermarkTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.PdfWatermarkTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PdfWatermarkTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.PdfWatermarkTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        update: {
+          args: Prisma.PdfWatermarkTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.PdfWatermarkTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PdfWatermarkTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PdfWatermarkTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.PdfWatermarkTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfWatermarkTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.PdfWatermarkTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePdfWatermarkTemplate>
+        }
+        groupBy: {
+          args: Prisma.PdfWatermarkTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfWatermarkTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PdfWatermarkTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfWatermarkTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
+    CloudPdfFile: {
+      payload: Prisma.$CloudPdfFilePayload<ExtArgs>
+      fields: Prisma.CloudPdfFileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CloudPdfFileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CloudPdfFileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        findFirst: {
+          args: Prisma.CloudPdfFileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CloudPdfFileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        findMany: {
+          args: Prisma.CloudPdfFileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>[]
+        }
+        create: {
+          args: Prisma.CloudPdfFileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        createMany: {
+          args: Prisma.CloudPdfFileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CloudPdfFileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>[]
+        }
+        delete: {
+          args: Prisma.CloudPdfFileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        update: {
+          args: Prisma.CloudPdfFileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        deleteMany: {
+          args: Prisma.CloudPdfFileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CloudPdfFileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CloudPdfFileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>[]
+        }
+        upsert: {
+          args: Prisma.CloudPdfFileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CloudPdfFilePayload>
+        }
+        aggregate: {
+          args: Prisma.CloudPdfFileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCloudPdfFile>
+        }
+        groupBy: {
+          args: Prisma.CloudPdfFileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CloudPdfFileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CloudPdfFileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CloudPdfFileCountAggregateOutputType> | number
+        }
+      }
+    }
+    PdfAnalytics: {
+      payload: Prisma.$PdfAnalyticsPayload<ExtArgs>
+      fields: Prisma.PdfAnalyticsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PdfAnalyticsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PdfAnalyticsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        findFirst: {
+          args: Prisma.PdfAnalyticsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PdfAnalyticsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        findMany: {
+          args: Prisma.PdfAnalyticsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>[]
+        }
+        create: {
+          args: Prisma.PdfAnalyticsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        createMany: {
+          args: Prisma.PdfAnalyticsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PdfAnalyticsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>[]
+        }
+        delete: {
+          args: Prisma.PdfAnalyticsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        update: {
+          args: Prisma.PdfAnalyticsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        deleteMany: {
+          args: Prisma.PdfAnalyticsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PdfAnalyticsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PdfAnalyticsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>[]
+        }
+        upsert: {
+          args: Prisma.PdfAnalyticsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PdfAnalyticsPayload>
+        }
+        aggregate: {
+          args: Prisma.PdfAnalyticsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePdfAnalytics>
+        }
+        groupBy: {
+          args: Prisma.PdfAnalyticsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfAnalyticsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PdfAnalyticsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PdfAnalyticsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1062,6 +1893,158 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const AudioTaskHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolName: 'toolName',
+  inputFile: 'inputFile',
+  outputFile: 'outputFile',
+  durationMs: 'durationMs',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioTaskHistoryScalarFieldEnum = (typeof AudioTaskHistoryScalarFieldEnum)[keyof typeof AudioTaskHistoryScalarFieldEnum]
+
+
+export const AudioPresetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  tool: 'tool',
+  settings: 'settings',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioPresetScalarFieldEnum = (typeof AudioPresetScalarFieldEnum)[keyof typeof AudioPresetScalarFieldEnum]
+
+
+export const MasteringChainScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  chain: 'chain',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type MasteringChainScalarFieldEnum = (typeof MasteringChainScalarFieldEnum)[keyof typeof MasteringChainScalarFieldEnum]
+
+
+export const CloudAudioScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  sizeBytes: 'sizeBytes',
+  mimeType: 'mimeType',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt'
+} as const
+
+export type CloudAudioScalarFieldEnum = (typeof CloudAudioScalarFieldEnum)[keyof typeof CloudAudioScalarFieldEnum]
+
+
+export const AudioAnalyticsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  toolName: 'toolName',
+  processTimeMs: 'processTimeMs',
+  inputFormat: 'inputFormat',
+  outputFormat: 'outputFormat',
+  success: 'success',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type AudioAnalyticsScalarFieldEnum = (typeof AudioAnalyticsScalarFieldEnum)[keyof typeof AudioAnalyticsScalarFieldEnum]
+
+
+export const PdfTaskHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  toolName: 'toolName',
+  inputFile: 'inputFile',
+  outputFile: 'outputFile',
+  pageCount: 'pageCount',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfTaskHistoryScalarFieldEnum = (typeof PdfTaskHistoryScalarFieldEnum)[keyof typeof PdfTaskHistoryScalarFieldEnum]
+
+
+export const PdfSignatureTemplateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  signatureData: 'signatureData',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfSignatureTemplateScalarFieldEnum = (typeof PdfSignatureTemplateScalarFieldEnum)[keyof typeof PdfSignatureTemplateScalarFieldEnum]
+
+
+export const PdfPresetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  tool: 'tool',
+  settings: 'settings',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfPresetScalarFieldEnum = (typeof PdfPresetScalarFieldEnum)[keyof typeof PdfPresetScalarFieldEnum]
+
+
+export const PdfWatermarkTemplateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  text: 'text',
+  imageUrl: 'imageUrl',
+  color: 'color',
+  opacity: 'opacity',
+  rotation: 'rotation',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfWatermarkTemplateScalarFieldEnum = (typeof PdfWatermarkTemplateScalarFieldEnum)[keyof typeof PdfWatermarkTemplateScalarFieldEnum]
+
+
+export const CloudPdfFileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  sizeBytes: 'sizeBytes',
+  pageCount: 'pageCount',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt'
+} as const
+
+export type CloudPdfFileScalarFieldEnum = (typeof CloudPdfFileScalarFieldEnum)[keyof typeof CloudPdfFileScalarFieldEnum]
+
+
+export const PdfAnalyticsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  toolName: 'toolName',
+  processTimeMs: 'processTimeMs',
+  pageCount: 'pageCount',
+  fileSizeBytes: 'fileSizeBytes',
+  success: 'success',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type PdfAnalyticsScalarFieldEnum = (typeof PdfAnalyticsScalarFieldEnum)[keyof typeof PdfAnalyticsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1215,22 +2198,26 @@ export type BatchPayload = {
   count: number
 }
 
+
+export type Datasource = {
+  url?: string
+}
+export type Datasources = {
+  db?: Datasource
+}
+
 export const defineExtension = runtime.Extensions.defineExtension as unknown as runtime.Types.Extensions.ExtendsHook<"define", TypeMapCb, runtime.Types.Extensions.DefaultArgs>
 export type DefaultPrismaClient = PrismaClient
 export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
-export type PrismaClientOptions = ({
+export interface PrismaClientOptions {
   /**
-   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-pg`.
+   * Overwrites the datasource url from your schema.prisma file
    */
-  adapter: runtime.SqlDriverAdapterFactory
-  accelerateUrl?: never
-} | {
+  datasources?: Datasources
   /**
-   * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
+   * Overwrites the datasource url from your schema.prisma file
    */
-  accelerateUrl: string
-  adapter?: never
-}) & {
+  datasourceUrl?: string
   /**
    * @default "colorless"
    */
@@ -1257,7 +2244,7 @@ export type PrismaClientOptions = ({
    *  { emit: 'stdout', level: 'error' }
    * 
    * ```
-   * Read more in our [docs](https://pris.ly/d/logging).
+   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
    */
   log?: (LogLevel | LogDefinition)[]
   /**
@@ -1270,6 +2257,10 @@ export type PrismaClientOptions = ({
     timeout?: number
     isolationLevel?: TransactionIsolationLevel
   }
+  /**
+   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+   */
+  adapter?: runtime.SqlDriverAdapterFactory | null
   /**
    * Global configuration for omitting model fields by default.
    * 
@@ -1285,22 +2276,6 @@ export type PrismaClientOptions = ({
    * ```
    */
   omit?: GlobalOmitConfig
-  /**
-   * SQL commenter plugins that add metadata to SQL queries as comments.
-   * Comments follow the sqlcommenter format: https://google.github.io/sqlcommenter/
-   * 
-   * @example
-   * ```
-   * const prisma = new PrismaClient({
-   *   adapter,
-   *   comments: [
-   *     traceContext(),
-   *     queryInsights(),
-   *   ],
-   * })
-   * ```
-   */
-  comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
@@ -1310,6 +2285,17 @@ export type GlobalOmitConfig = {
   cloudVideo?: Prisma.CloudVideoOmit
   videoAnalytics?: Prisma.VideoAnalyticsOmit
   auditLog?: Prisma.AuditLogOmit
+  audioTaskHistory?: Prisma.AudioTaskHistoryOmit
+  audioPreset?: Prisma.AudioPresetOmit
+  masteringChain?: Prisma.MasteringChainOmit
+  cloudAudio?: Prisma.CloudAudioOmit
+  audioAnalytics?: Prisma.AudioAnalyticsOmit
+  pdfTaskHistory?: Prisma.PdfTaskHistoryOmit
+  pdfSignatureTemplate?: Prisma.PdfSignatureTemplateOmit
+  pdfPreset?: Prisma.PdfPresetOmit
+  pdfWatermarkTemplate?: Prisma.PdfWatermarkTemplateOmit
+  cloudPdfFile?: Prisma.CloudPdfFileOmit
+  pdfAnalytics?: Prisma.PdfAnalyticsOmit
 }
 
 /* Types for Logging */

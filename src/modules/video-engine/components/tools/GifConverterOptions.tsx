@@ -41,7 +41,7 @@ export function GifConverterOptions() {
           <p className="text-pink-400/50 text-[10px] font-medium">Reduces color banding artifacts</p>
         </div>
         <Switch
-          defaultChecked={true}
+          checked={(task.options?.dither as boolean) ?? true}
           onCheckedChange={(checked: boolean) => setOptions({ dither: checked })}
         />
       </div>

@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  // Task 94: Firebase Security Rules (PDF Bucket)
+  match /b/{bucket}/o {
+    
+    // Omni-Tool Universal Route Guard
+    match /{userId}/{allPaths=**} {
+      // Must be authenticated matching path or via signed URLs
+      // Since Omni-Tool relies heavily on Admin Signed URLs generated server-side, 
+      // these bucket rules can be completely closed out to public PUT/DELETE operations.
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false; 
+    }
+    
+    // Legacy / Public / Temporary (if needed)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

@@ -19,7 +19,7 @@ export function ReverseOptions() {
           <p className="text-purple-400/50 text-[10px] font-medium">Also reverses the audio track</p>
         </div>
         <Switch
-          defaultChecked={true}
+          checked={(task.options?.reverseAudio as boolean) ?? true}
           onCheckedChange={(checked: boolean) => setOptions({ reverseAudio: checked })}
         />
       </div>

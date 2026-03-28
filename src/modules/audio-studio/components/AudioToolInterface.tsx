@@ -9,10 +9,10 @@ import {
 import { useAudioStore } from "../store/useAudioStore";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { AudioOperation } from "../types";
+import { AudioToolCommand } from "../core/command-matrix";
 
 interface AudioToolInterfaceProps {
-  toolId: AudioOperation;
+  toolId: AudioToolCommand;
   title: string;
   description: string;
   options?: React.ReactNode;

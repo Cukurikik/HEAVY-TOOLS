@@ -1,304 +1,227 @@
-"use client";
-
 import { create } from "zustand";
-import { AudioTask, AudioOperation } from "../types";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { idbStorage } from "@/lib/idb-storage";
+import { useSettingsStore } from "@/store/useSettingsStore";
+import type { AudioToolCommand } from "../core/command-matrix";
 
 // ═══════════════════════════════════════════════════
-// Initial State
+// Types
 // ═══════════════════════════════════════════════════
 
-const INITIAL_TASK: AudioTask = {
-  id: "",
-  file: null,
-  files: [],
-  operation: "idle",
-  options: {},
-  status: "idle",
-  progress: 0,
-  resultUrl: "",
-  error: "",
-};
+export interface AudioTask {
+  id: string;
+  file: File | null;
+  files: File[]; // Secondary inputs (e.g. for Merger)
+  operation: AudioToolCommand | "idle";
+  status: "idle" | "loading" | "processing" | "success" | "error";
+  progress: number;
+  options: Record<string, unknown>;
+  resultUrl?: string;
+  error?: string;
+}
 
-interface AudioStore {
+export interface AudioStore {
   task: AudioTask;
   ffmpegLogs: string[];
   setFile: (file: File) => void;
   addFiles: (files: File[]) => void;
-  setOperation: (operation: AudioTask["operation"]) => void;
+  setOperation: (operation: AudioToolCommand) => void;
   setOptions: (options: Record<string, unknown>) => void;
   processAudio: () => Promise<void>;
   reset: () => void;
 }
 
-// ═══════════════════════════════════════════════════
-// Track WORKERFS mount state
-// ═══════════════════════════════════════════════════
-let isMounted = false;
+const initialTask: AudioTask = {
+  id: "",
+  file: null,
+  files: [],
+  operation: "idle",
+  status: "idle",
+  progress: 0,
+  options: {},
+};
 
 // ═══════════════════════════════════════════════════
-// MediaRecorder Handler (Voice/Audio Recorder)
+// Zustand Store (IDB Persisted & Native WASM Spawn)
 // ═══════════════════════════════════════════════════
 
-async function handleRecording(
-  set: (fn: (state: { task: AudioTask }) => Partial<{ task: AudioTask }>) => void,
-  options: Record<string, unknown>
-) {
-  try {
-    set(() => ({
-      task: { ...INITIAL_TASK, operation: "voice-recorder" as AudioOperation, status: "processing", progress: 10 },
-    }));
+export const useAudioStore = create<AudioStore>()(
+  persist(
+    (set, get) => ({
+      task: { ...initialTask },
+      ffmpegLogs: [],
 
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    const chunks: BlobPart[] = [];
-    recorder.ondataavailable = (e) => chunks.push(e.data);
-    recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
-      stream.getTracks().forEach((t) => t.stop());
-      set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
-    };
-    recorder.start();
-    const duration = (options.duration as number) || 10;
-    set((s) => ({ task: { ...s.task, progress: 50 } }));
-    await new Promise((r) => setTimeout(r, duration * 1000));
-    if (recorder.state !== "inactive") recorder.stop();
-  } catch (err) {
-    console.error("Audio Recording Error:", err);
-    set((s) => ({
-      task: { ...s.task, status: "error", error: err instanceof Error ? err.message : "Recording failed. Check microphone permissions." },
-    }));
-  }
-}
+      setFile: (file) =>
+        set((state) => ({
+          task: {
+            ...state.task,
+            file,
+            id: crypto.randomUUID(),
+            status: "idle",
+            progress: 0,
+            resultUrl: undefined,
+            error: undefined,
+          },
+          ffmpegLogs: [],
+        })),
 
-// ═══════════════════════════════════════════════════
-// Web Audio API Analysis Handler (BPM/Key/Waveform/Spectrum)
-// ═══════════════════════════════════════════════════
+      addFiles: (files) =>
+        set((state) => ({
+          task: {
+            ...state.task,
+            files: [...state.task.files, ...files],
+            file: state.task.file || files[0] || null,
+            id: state.task.id || crypto.randomUUID(),
+            status: "idle",
+            progress: 0,
+            resultUrl: undefined,
+            error: undefined,
+          },
+        })),
 
-async function handleAnalysis(
-  set: (fn: (state: { task: AudioTask }) => Partial<{ task: AudioTask }>) => void,
-  file: File
-) {
-  try {
-    set((s) => ({ task: { ...s.task, status: "processing", progress: 10, error: "" } }));
-    const audioCtx = new OfflineAudioContext(2, 44100 * 30, 44100);
-    const arrayBuffer = await file.arrayBuffer();
-    set((s) => ({ task: { ...s.task, progress: 40 } }));
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    set((s) => ({ task: { ...s.task, progress: 70 } }));
-    const wavBlob = audioBufferToWav(audioBuffer);
-    const url = URL.createObjectURL(wavBlob);
-    set((s) => ({ task: { ...s.task, status: "success", progress: 100, resultUrl: url } }));
-  } catch (err) {
-    console.error("Audio Analysis Error:", err);
-    set((s) => ({
-      task: { ...s.task, status: "error", error: "Audio analysis failed. Please try a different file." },
-    }));
-  }
-}
+      setOperation: (operation) =>
+        set((state) => ({
+          task: { ...state.task, operation, options: {} },
+        })),
 
-// ═══════════════════════════════════════════════════
-// Zustand Store
-// ═══════════════════════════════════════════════════
+      setOptions: (options) =>
+        set((state) => ({
+          task: { ...state.task, options: { ...state.task.options, ...options } },
+        })),
 
-export const useAudioStore = create<AudioStore>((set, get) => ({
-  task: { ...INITIAL_TASK },
-  ffmpegLogs: [],
+      processAudio: async () => {
+        const { task } = get();
 
-  setFile: (file) =>
-    set((state) => ({
-      task: {
-        ...state.task,
-        file,
-        id: crypto.randomUUID(),
-        status: "idle",
-        progress: 0,
-        resultUrl: "",
-        error: "",
+        // 1. Voice-Recorder (Analogous to Screen Recorder, handling natively without FFmpeg immediately if needed, but here we route generally)
+        // If Voice Recorder implementation was native browser it would go here. For now, we assume all pass through WASM or Native.
+
+        if (!task.file || task.operation === "idle") return;
+
+        set((state) => ({
+          task: { ...state.task, status: "processing", progress: 0, error: undefined },
+          ffmpegLogs: [],
+        }));
+
+        try {
+          // ═══════════════════════════════════════════════════
+          // Client WASM Tools (Background Thread API)
+          // ═══════════════════════════════════════════════════
+          
+          const worker = new Worker(new URL('@/workers/audio.worker.ts', import.meta.url));
+
+          worker.onmessage = (e: MessageEvent) => {
+            const { type, status, progress, message, resultUrls, error } = e.data;
+
+            if (type === 'STATUS') {
+              // Internal status tracking ignored by UI
+            } else if (type === 'LOG') {
+              set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, message] }));
+            } else if (type === 'PROGRESS') {
+              set((state) => ({ task: { ...state.task, progress } }));
+            } else if (type === 'SUCCESS') {
+              set((state) => ({
+                task: { ...state.task, status: "success", progress: 100, resultUrl: resultUrls[0] },
+              }));
+              worker.terminate();
+            } else if (type === 'ERROR') {
+              set((state) => ({
+                task: {
+                  ...state.task,
+                  status: "error",
+                  error: error || "Audio DSP Processing failed.",
+                },
+              }));
+              worker.terminate();
+            }
+          };
+
+          worker.onerror = (err) => {
+            console.error("Audio Worker generic error:", err);
+            set((state) => ({
+              task: {
+                ...state.task,
+                status: "error",
+                error: "Background Worker Crash. Memory limit or absolute isolation failure.",
+              },
+            }));
+            worker.terminate();
+          };
+
+          // ⚡ Access Global Settings from the Settings Brain
+          const settings = useSettingsStore.getState().settings || {};
+          const workerPoolLimit = settings['jumlah-maksimal-web-worker-pool-auto-os-cores'] ?? 50;
+          const hardwareAcceleration = settings['pilihan-hardware-acceleration-auto-webgpu-str'] ?? 'Auto';
+
+          // Blast payload to the isolated worker thread
+          worker.postMessage({
+            type: 'PROCESS_AUDIO',
+            payload: {
+              toolSlug: task.operation,
+              file: task.file,
+              secondaryFiles: task.files, // Essential for mergers
+              options: {
+                ...task.options,
+                _omniEngineConfig: {
+                  workerPoolLimit,
+                  hardwareAcceleration,
+                }
+              }
+            }
+          });
+
+        } catch (error) {
+          console.error("Audio orchestrator root error:", error);
+          set((state) => ({
+            task: {
+              ...state.task,
+              status: "error",
+              error: error instanceof Error ? error.message : "Engine spawn failure.",
+            },
+          }));
+        }
       },
-      ffmpegLogs: [],
-    })),
 
-  addFiles: (files) =>
-    set((state) => ({
-      task: {
-        ...state.task,
-        files: [...state.task.files, ...files],
-        file: state.task.file || files[0] || null,
-        id: state.task.id || crypto.randomUUID(),
-        status: "idle",
-        progress: 0,
-        resultUrl: "",
-        error: "",
-      },
-    })),
-
-  setOperation: (operation) =>
-    set((state) => ({
-      task: { ...state.task, operation, options: {} },
-    })),
-
-  setOptions: (newOpts) =>
-    set((state) => ({
-      task: { ...state.task, options: { ...state.task.options, ...newOpts } },
-    })),
-
-  processAudio: async () => {
-    const { task } = get();
-
-    // Voice/Audio Recorder → MediaRecorder API
-    if (task.operation === "voice-recorder" || task.operation === "audio-recorder") {
-      await handleRecording(set as any, task.options);
-      return;
-    }
-
-    // Analysis tools → Web Audio API
-    if (["waveform-visualizer", "spectrum-analyzer", "bpm-detector", "key-finder"].includes(task.operation)) {
-      if (!task.file) return;
-      await handleAnalysis(set as any, task.file);
-      return;
-    }
-
-    // All other tools → FFmpeg WASM with dynamic engine dispatch
-    if (!task.file || task.operation === "idle") return;
-
-    set((state) => ({
-      task: { ...state.task, status: "processing", progress: 0, error: "" },
-      ffmpegLogs: [],
-    }));
-
-    let ffmpeg: any = null;
-
-    try {
-      const { getFFmpeg } = await import("../../video-engine/lib/ffmpeg-core");
-      const engines = await import("../engines");
-
-      const onProgress = (progress: number) => {
-        set((state) => ({ task: { ...state.task, progress: Math.min(Math.round(progress * 100), 99) } }));
-      };
-
-      const onLog = (message: string) => {
-        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, message] }));
-      };
-
-      ffmpeg = await getFFmpeg(onProgress, onLog);
-
-      // Safely unmount if left from a crashed run
-      if (isMounted) {
-        try { await ffmpeg.unmount('/opt'); } catch (_) {}
-        isMounted = false;
-      }
-
-      try { await ffmpeg.createDir('/opt'); } catch (_) {}
-
-      // Mount file via WORKERFS (zero-copy)
-      // @ts-ignore
-      await ffmpeg.mount('WORKERFS', { files: task.file ? [task.file] : task.files }, '/opt');
-      isMounted = true;
-
-      const fileToProcess = task.file || task.files[0];
-      const inputName = '/opt/' + fileToProcess.name;
-
-      // Dynamic engine dispatch — same pattern as video store
-      const engineKeyParts = task.operation.split('-');
-      const engineKey = engineKeyParts.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-
-      const buildFn = (engines as any)[`build${engineKey}Args`];
-      const getOutput = (engines as any)[`get${engineKey}OutputName`];
-      const getMime = (engines as any)[`get${engineKey}MimeType`];
-
-      if (!buildFn) throw new Error(`Audio engine not found for: ${task.operation}`);
-
-      const outputName = getOutput(task.options);
-      const args = await buildFn(inputName, outputName, task.options, ffmpeg, task.files);
-
-      const ret = await ffmpeg.exec(args);
-      if (ret !== 0) {
-        throw new Error(`FFmpeg process failed with code ${ret}. Check your audio file or settings.`);
-      }
-
-      const outputData = await ffmpeg.readFile(outputName) as Uint8Array;
-
-      // Unmount + cleanup
-      try { await ffmpeg.unmount('/opt'); isMounted = false; } catch (_) {}
-      try { await ffmpeg.deleteFile(outputName); } catch (_) {}
-      try { await ffmpeg.deleteFile('concat.txt'); } catch (_) {}
-
-      const blob = new Blob([outputData.buffer as ArrayBuffer], {
-        type: getMime ? getMime(task.options) : 'audio/mpeg'
-      });
-      const url = URL.createObjectURL(blob);
-
-      set((state) => ({
-        task: { ...state.task, status: "success", progress: 100, resultUrl: url },
-      }));
-    } catch (error) {
-      console.error("Audio processing error:", error);
-
-      if (ffmpeg && isMounted) {
-        try { await ffmpeg.unmount('/opt'); } catch (_) {}
-        isMounted = false;
-      }
-
-      set((state) => ({
-        task: {
-          ...state.task,
-          status: "error",
-          error: error instanceof Error ? error.message : "Processing failed. Please try again.",
-        },
-      }));
-    }
-  },
-
-  reset: () =>
-    set({
-      task: { ...INITIAL_TASK },
-      ffmpegLogs: [],
+      reset: () =>
+        set({
+          task: { ...initialTask },
+          ffmpegLogs: [],
+        }),
     }),
-}));
-
-// ═══════════════════════════════════════════════════
-// WAV Encoder (for analysis tools)
-// ═══════════════════════════════════════════════════
-
-function audioBufferToWav(buffer: AudioBuffer): Blob {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const format = 1;
-  const bitDepth = 16;
-  const blockAlign = (numChannels * bitDepth) / 8;
-  const byteRate = sampleRate * blockAlign;
-  const dataSize = buffer.length * blockAlign;
-  const headerSize = 44;
-  const arrayBuffer = new ArrayBuffer(headerSize + dataSize);
-  const view = new DataView(arrayBuffer);
-
-  const writeString = (offset: number, str: string) => {
-    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-  };
-
-  writeString(0, "RIFF");
-  view.setUint32(4, 36 + dataSize, true);
-  writeString(8, "WAVE");
-  writeString(12, "fmt ");
-  view.setUint32(16, 16, true);
-  view.setUint16(20, format, true);
-  view.setUint16(22, numChannels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, byteRate, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, bitDepth, true);
-  writeString(36, "data");
-  view.setUint32(40, dataSize, true);
-
-  let offset = 44;
-  for (let i = 0; i < buffer.length; i++) {
-    for (let ch = 0; ch < numChannels; ch++) {
-      const sample = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
-      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
-      offset += 2;
+    {
+      name: 'audio-store',
+      storage: createJSONStorage(() => idbStorage),
+      // Prevent serializing browser-locked Files/Blobs into IDB Strings which breaks instances heavily!
+      partialize: (state) => ({ task: { ...state.task, file: null, files: [] } }),
     }
-  }
+  )
+);
 
-  return new Blob([arrayBuffer], { type: "audio/wav" });
+// ═══════════════════════════════════════════════════
+// BroadcastChannel: Cross-Tab Synchronization
+// ═══════════════════════════════════════════════════
+
+if (typeof window !== 'undefined') {
+  const channel = new BroadcastChannel('omni-audio-store-sync');
+  let isApplyingRemoteState = false;
+
+  useAudioStore.subscribe((state) => {
+    if (!isApplyingRemoteState) {
+      // Don't sync the heavy File objects over BroadcastChannel (cloning errors)
+      channel.postMessage({
+        type: 'SYNC',
+        payload: { task: { ...state.task, file: null, files: [] } },
+      });
+    }
+  });
+
+  channel.onmessage = (event) => {
+    if (event.data?.type === 'SYNC') {
+      isApplyingRemoteState = true;
+      useAudioStore.setState(event.data.payload, false);
+      // Wait for React batching
+      queueMicrotask(() => {
+        isApplyingRemoteState = false;
+      });
+    }
+  };
 }

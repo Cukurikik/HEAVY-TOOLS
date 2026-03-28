@@ -42,7 +42,7 @@ export const audioConverterSchema = z.object({
 export const masteringHubSchema = z.object({
   chain: z.array(z.object({
     type: z.enum(['eq', 'compressor', 'limiter', 'reverb', 'saturation']),
-    params: z.record(z.any())
+    params: z.record(z.string(), z.any())
   })),
   targetLufs: z.number().min(-24).max(-5).default(-14),
   truePeak: z.number().min(-3).max(0).default(-1)
@@ -74,7 +74,7 @@ export const denoiseSchema = z.object({
 
 // 9. Equalizer (10-Band)
 export const equalizerSchema = z.object({
-  bands: z.record(z.number().min(-24).max(24)).refine(val => Object.keys(val).length > 0, "Minimal 1 band diubah")
+  bands: z.record(z.string(), z.number().min(-24).max(24)).refine(val => Object.keys(val).length > 0, "Minimal 1 band diubah")
 });
 
 // 10. Reverb

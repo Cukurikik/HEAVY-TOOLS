@@ -1,0 +1,30 @@
+﻿AspectRatioOptions.tsx: ratio, customRatio, mode, barColor
+AudioExtractorOptions.tsx: audioFormat, audioBitrate, sampleRate
+BatchProcessorOptions.tsx: batchOperation, batchCrf
+BlackWhiteOptions.tsx: intensity, contrast, sepia
+ChapterMarkerOptions.tsx: chapters
+ColorGraderOptions.tsx: brightness, contrast, saturation, hue, gamma
+CompressorOptions.tsx: crf, preset, bitrate, audioBitrate
+ConverterOptions.tsx: format, crf, resolution, audioCodec
+FlipperOptions.tsx: direction
+FrameInterpolatorOptions.tsx: fps, meMode
+GifConverterOptions.tsx: fps, scale, maxColors, dither
+HdrTonemapperOptions.tsx: algorithm, desaturation
+LoopEngineOptions.tsx: loops, infiniteGif
+MergerOptions.tsx: format, reencode
+MetadataEditorOptions.tsx: title, author, copyright, year, genre, comment
+NoiseReducerOptions.tsx: spatial, temporal
+ProEditorOptions.tsx: codec, crf, profile, preset, tune, pixFmt
+ResolutionUpscalerOptions.tsx: scale, algorithm, targetRes
+ReverseOptions.tsx: reverseAudio
+RotatorOptions.tsx: degrees, customAngle
+ScreenRecorderOptions.tsx: resolution, fps, systemAudio, microphone
+SlowMotionOptions.tsx: factor, interpolate, keepAudio
+SpeedControlOptions.tsx: speed, keepAudio
+StabilizerOptions.tsx: shakiness, accuracy, smoothing
+SubtitleBurnerOptions.tsx: subtitleText, subStart, subEnd, fontSize, fontColor
+ThumbnailExtractorOptions.tsx: timestamp, imageFormat, quality
+TimelapseOptions.tsx: speed, outputFps
+TrimmerOptions.tsx: start, end, codec, format
+VideoSplitterOptions.tsx: segmentDuration
+WatermarkOptions.tsx: text, position, fontSize, opacity, fontColor

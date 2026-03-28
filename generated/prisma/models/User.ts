@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -194,6 +194,15 @@ export type UserWhereInput = {
   videoPresets?: Prisma.VideoPresetListRelationFilter
   watermarks?: Prisma.WatermarkTemplateListRelationFilter
   cloudVideos?: Prisma.CloudVideoListRelationFilter
+  audioTasks?: Prisma.AudioTaskHistoryListRelationFilter
+  audioPresets?: Prisma.AudioPresetListRelationFilter
+  masteringChains?: Prisma.MasteringChainListRelationFilter
+  cloudAudios?: Prisma.CloudAudioListRelationFilter
+  pdfTasks?: Prisma.PdfTaskHistoryListRelationFilter
+  pdfSignatures?: Prisma.PdfSignatureTemplateListRelationFilter
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateListRelationFilter
+  cloudPdfs?: Prisma.CloudPdfFileListRelationFilter
+  pdfPresets?: Prisma.PdfPresetListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -207,6 +216,15 @@ export type UserOrderByWithRelationInput = {
   videoPresets?: Prisma.VideoPresetOrderByRelationAggregateInput
   watermarks?: Prisma.WatermarkTemplateOrderByRelationAggregateInput
   cloudVideos?: Prisma.CloudVideoOrderByRelationAggregateInput
+  audioTasks?: Prisma.AudioTaskHistoryOrderByRelationAggregateInput
+  audioPresets?: Prisma.AudioPresetOrderByRelationAggregateInput
+  masteringChains?: Prisma.MasteringChainOrderByRelationAggregateInput
+  cloudAudios?: Prisma.CloudAudioOrderByRelationAggregateInput
+  pdfTasks?: Prisma.PdfTaskHistoryOrderByRelationAggregateInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateOrderByRelationAggregateInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateOrderByRelationAggregateInput
+  cloudPdfs?: Prisma.CloudPdfFileOrderByRelationAggregateInput
+  pdfPresets?: Prisma.PdfPresetOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -223,6 +241,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   videoPresets?: Prisma.VideoPresetListRelationFilter
   watermarks?: Prisma.WatermarkTemplateListRelationFilter
   cloudVideos?: Prisma.CloudVideoListRelationFilter
+  audioTasks?: Prisma.AudioTaskHistoryListRelationFilter
+  audioPresets?: Prisma.AudioPresetListRelationFilter
+  masteringChains?: Prisma.MasteringChainListRelationFilter
+  cloudAudios?: Prisma.CloudAudioListRelationFilter
+  pdfTasks?: Prisma.PdfTaskHistoryListRelationFilter
+  pdfSignatures?: Prisma.PdfSignatureTemplateListRelationFilter
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateListRelationFilter
+  cloudPdfs?: Prisma.CloudPdfFileListRelationFilter
+  pdfPresets?: Prisma.PdfPresetListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -260,6 +287,15 @@ export type UserCreateInput = {
   videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -273,6 +309,15 @@ export type UserUncheckedCreateInput = {
   videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -286,6 +331,15 @@ export type UserUpdateInput = {
   videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -299,6 +353,15 @@ export type UserUncheckedUpdateInput = {
   videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -435,6 +498,138 @@ export type UserUpdateOneRequiredWithoutCloudVideosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCloudVideosInput, Prisma.UserUpdateWithoutCloudVideosInput>, Prisma.UserUncheckedUpdateWithoutCloudVideosInput>
 }
 
+export type UserCreateNestedOneWithoutAudioTasksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAudioTasksInput, Prisma.UserUncheckedCreateWithoutAudioTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAudioTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAudioTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAudioTasksInput, Prisma.UserUncheckedCreateWithoutAudioTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAudioTasksInput
+  upsert?: Prisma.UserUpsertWithoutAudioTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAudioTasksInput, Prisma.UserUpdateWithoutAudioTasksInput>, Prisma.UserUncheckedUpdateWithoutAudioTasksInput>
+}
+
+export type UserCreateNestedOneWithoutAudioPresetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAudioPresetsInput, Prisma.UserUncheckedCreateWithoutAudioPresetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAudioPresetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAudioPresetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAudioPresetsInput, Prisma.UserUncheckedCreateWithoutAudioPresetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAudioPresetsInput
+  upsert?: Prisma.UserUpsertWithoutAudioPresetsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAudioPresetsInput, Prisma.UserUpdateWithoutAudioPresetsInput>, Prisma.UserUncheckedUpdateWithoutAudioPresetsInput>
+}
+
+export type UserCreateNestedOneWithoutMasteringChainsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasteringChainsInput, Prisma.UserUncheckedCreateWithoutMasteringChainsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasteringChainsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutMasteringChainsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasteringChainsInput, Prisma.UserUncheckedCreateWithoutMasteringChainsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasteringChainsInput
+  upsert?: Prisma.UserUpsertWithoutMasteringChainsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMasteringChainsInput, Prisma.UserUpdateWithoutMasteringChainsInput>, Prisma.UserUncheckedUpdateWithoutMasteringChainsInput>
+}
+
+export type UserCreateNestedOneWithoutCloudAudiosInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCloudAudiosInput, Prisma.UserUncheckedCreateWithoutCloudAudiosInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCloudAudiosInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCloudAudiosNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCloudAudiosInput, Prisma.UserUncheckedCreateWithoutCloudAudiosInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCloudAudiosInput
+  upsert?: Prisma.UserUpsertWithoutCloudAudiosInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCloudAudiosInput, Prisma.UserUpdateWithoutCloudAudiosInput>, Prisma.UserUncheckedUpdateWithoutCloudAudiosInput>
+}
+
+export type UserCreateNestedOneWithoutPdfTasksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfTasksInput, Prisma.UserUncheckedCreateWithoutPdfTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPdfTasksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfTasksInput, Prisma.UserUncheckedCreateWithoutPdfTasksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfTasksInput
+  upsert?: Prisma.UserUpsertWithoutPdfTasksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPdfTasksInput, Prisma.UserUpdateWithoutPdfTasksInput>, Prisma.UserUncheckedUpdateWithoutPdfTasksInput>
+}
+
+export type UserCreateNestedOneWithoutPdfSignaturesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfSignaturesInput, Prisma.UserUncheckedCreateWithoutPdfSignaturesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfSignaturesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPdfSignaturesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfSignaturesInput, Prisma.UserUncheckedCreateWithoutPdfSignaturesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfSignaturesInput
+  upsert?: Prisma.UserUpsertWithoutPdfSignaturesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPdfSignaturesInput, Prisma.UserUpdateWithoutPdfSignaturesInput>, Prisma.UserUncheckedUpdateWithoutPdfSignaturesInput>
+}
+
+export type UserCreateNestedOneWithoutPdfPresetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfPresetsInput, Prisma.UserUncheckedCreateWithoutPdfPresetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfPresetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPdfPresetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfPresetsInput, Prisma.UserUncheckedCreateWithoutPdfPresetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfPresetsInput
+  upsert?: Prisma.UserUpsertWithoutPdfPresetsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPdfPresetsInput, Prisma.UserUpdateWithoutPdfPresetsInput>, Prisma.UserUncheckedUpdateWithoutPdfPresetsInput>
+}
+
+export type UserCreateNestedOneWithoutPdfWatermarksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfWatermarksInput, Prisma.UserUncheckedCreateWithoutPdfWatermarksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfWatermarksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPdfWatermarksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPdfWatermarksInput, Prisma.UserUncheckedCreateWithoutPdfWatermarksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPdfWatermarksInput
+  upsert?: Prisma.UserUpsertWithoutPdfWatermarksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPdfWatermarksInput, Prisma.UserUpdateWithoutPdfWatermarksInput>, Prisma.UserUncheckedUpdateWithoutPdfWatermarksInput>
+}
+
+export type UserCreateNestedOneWithoutCloudPdfsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCloudPdfsInput, Prisma.UserUncheckedCreateWithoutCloudPdfsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCloudPdfsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCloudPdfsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCloudPdfsInput, Prisma.UserUncheckedCreateWithoutCloudPdfsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCloudPdfsInput
+  upsert?: Prisma.UserUpsertWithoutCloudPdfsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCloudPdfsInput, Prisma.UserUpdateWithoutCloudPdfsInput>, Prisma.UserUncheckedUpdateWithoutCloudPdfsInput>
+}
+
 export type UserCreateWithoutVideoTasksInput = {
   id?: string
   email: string
@@ -445,6 +640,15 @@ export type UserCreateWithoutVideoTasksInput = {
   videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVideoTasksInput = {
@@ -457,6 +661,15 @@ export type UserUncheckedCreateWithoutVideoTasksInput = {
   videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVideoTasksInput = {
@@ -485,6 +698,15 @@ export type UserUpdateWithoutVideoTasksInput = {
   videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVideoTasksInput = {
@@ -497,6 +719,15 @@ export type UserUncheckedUpdateWithoutVideoTasksInput = {
   videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVideoPresetsInput = {
@@ -509,6 +740,15 @@ export type UserCreateWithoutVideoPresetsInput = {
   videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVideoPresetsInput = {
@@ -521,6 +761,15 @@ export type UserUncheckedCreateWithoutVideoPresetsInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVideoPresetsInput = {
@@ -549,6 +798,15 @@ export type UserUpdateWithoutVideoPresetsInput = {
   videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVideoPresetsInput = {
@@ -561,6 +819,15 @@ export type UserUncheckedUpdateWithoutVideoPresetsInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWatermarksInput = {
@@ -573,6 +840,15 @@ export type UserCreateWithoutWatermarksInput = {
   videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
   videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWatermarksInput = {
@@ -585,6 +861,15 @@ export type UserUncheckedCreateWithoutWatermarksInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
   videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
   cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWatermarksInput = {
@@ -613,6 +898,15 @@ export type UserUpdateWithoutWatermarksInput = {
   videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
   videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWatermarksInput = {
@@ -625,6 +919,15 @@ export type UserUncheckedUpdateWithoutWatermarksInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
   videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
   cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCloudVideosInput = {
@@ -637,6 +940,15 @@ export type UserCreateWithoutCloudVideosInput = {
   videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
   videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCloudVideosInput = {
@@ -649,6 +961,15 @@ export type UserUncheckedCreateWithoutCloudVideosInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
   videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
   watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCloudVideosInput = {
@@ -677,6 +998,15 @@ export type UserUpdateWithoutCloudVideosInput = {
   videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
   videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCloudVideosInput = {
@@ -689,6 +1019,915 @@ export type UserUncheckedUpdateWithoutCloudVideosInput = {
   videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
   videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
   watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAudioTasksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAudioTasksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAudioTasksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAudioTasksInput, Prisma.UserUncheckedCreateWithoutAudioTasksInput>
+}
+
+export type UserUpsertWithoutAudioTasksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAudioTasksInput, Prisma.UserUncheckedUpdateWithoutAudioTasksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAudioTasksInput, Prisma.UserUncheckedCreateWithoutAudioTasksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAudioTasksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAudioTasksInput, Prisma.UserUncheckedUpdateWithoutAudioTasksInput>
+}
+
+export type UserUpdateWithoutAudioTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAudioTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAudioPresetsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAudioPresetsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAudioPresetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAudioPresetsInput, Prisma.UserUncheckedCreateWithoutAudioPresetsInput>
+}
+
+export type UserUpsertWithoutAudioPresetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAudioPresetsInput, Prisma.UserUncheckedUpdateWithoutAudioPresetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAudioPresetsInput, Prisma.UserUncheckedCreateWithoutAudioPresetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAudioPresetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAudioPresetsInput, Prisma.UserUncheckedUpdateWithoutAudioPresetsInput>
+}
+
+export type UserUpdateWithoutAudioPresetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAudioPresetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMasteringChainsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMasteringChainsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMasteringChainsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasteringChainsInput, Prisma.UserUncheckedCreateWithoutMasteringChainsInput>
+}
+
+export type UserUpsertWithoutMasteringChainsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMasteringChainsInput, Prisma.UserUncheckedUpdateWithoutMasteringChainsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasteringChainsInput, Prisma.UserUncheckedCreateWithoutMasteringChainsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMasteringChainsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMasteringChainsInput, Prisma.UserUncheckedUpdateWithoutMasteringChainsInput>
+}
+
+export type UserUpdateWithoutMasteringChainsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMasteringChainsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCloudAudiosInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCloudAudiosInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCloudAudiosInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCloudAudiosInput, Prisma.UserUncheckedCreateWithoutCloudAudiosInput>
+}
+
+export type UserUpsertWithoutCloudAudiosInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCloudAudiosInput, Prisma.UserUncheckedUpdateWithoutCloudAudiosInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCloudAudiosInput, Prisma.UserUncheckedCreateWithoutCloudAudiosInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCloudAudiosInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCloudAudiosInput, Prisma.UserUncheckedUpdateWithoutCloudAudiosInput>
+}
+
+export type UserUpdateWithoutCloudAudiosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCloudAudiosInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPdfTasksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPdfTasksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPdfTasksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfTasksInput, Prisma.UserUncheckedCreateWithoutPdfTasksInput>
+}
+
+export type UserUpsertWithoutPdfTasksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPdfTasksInput, Prisma.UserUncheckedUpdateWithoutPdfTasksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfTasksInput, Prisma.UserUncheckedCreateWithoutPdfTasksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPdfTasksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPdfTasksInput, Prisma.UserUncheckedUpdateWithoutPdfTasksInput>
+}
+
+export type UserUpdateWithoutPdfTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPdfTasksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPdfSignaturesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPdfSignaturesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPdfSignaturesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfSignaturesInput, Prisma.UserUncheckedCreateWithoutPdfSignaturesInput>
+}
+
+export type UserUpsertWithoutPdfSignaturesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPdfSignaturesInput, Prisma.UserUncheckedUpdateWithoutPdfSignaturesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfSignaturesInput, Prisma.UserUncheckedCreateWithoutPdfSignaturesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPdfSignaturesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPdfSignaturesInput, Prisma.UserUncheckedUpdateWithoutPdfSignaturesInput>
+}
+
+export type UserUpdateWithoutPdfSignaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPdfSignaturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPdfPresetsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPdfPresetsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPdfPresetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfPresetsInput, Prisma.UserUncheckedCreateWithoutPdfPresetsInput>
+}
+
+export type UserUpsertWithoutPdfPresetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPdfPresetsInput, Prisma.UserUncheckedUpdateWithoutPdfPresetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfPresetsInput, Prisma.UserUncheckedCreateWithoutPdfPresetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPdfPresetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPdfPresetsInput, Prisma.UserUncheckedUpdateWithoutPdfPresetsInput>
+}
+
+export type UserUpdateWithoutPdfPresetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPdfPresetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPdfWatermarksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPdfWatermarksInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPdfWatermarksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfWatermarksInput, Prisma.UserUncheckedCreateWithoutPdfWatermarksInput>
+}
+
+export type UserUpsertWithoutPdfWatermarksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPdfWatermarksInput, Prisma.UserUncheckedUpdateWithoutPdfWatermarksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPdfWatermarksInput, Prisma.UserUncheckedCreateWithoutPdfWatermarksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPdfWatermarksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPdfWatermarksInput, Prisma.UserUncheckedUpdateWithoutPdfWatermarksInput>
+}
+
+export type UserUpdateWithoutPdfWatermarksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPdfWatermarksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudPdfs?: Prisma.CloudPdfFileUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCloudPdfsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCloudPdfsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  role?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  videoPresets?: Prisma.VideoPresetUncheckedCreateNestedManyWithoutUserInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  cloudVideos?: Prisma.CloudVideoUncheckedCreateNestedManyWithoutUserInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  audioPresets?: Prisma.AudioPresetUncheckedCreateNestedManyWithoutUserInput
+  masteringChains?: Prisma.MasteringChainUncheckedCreateNestedManyWithoutUserInput
+  cloudAudios?: Prisma.CloudAudioUncheckedCreateNestedManyWithoutUserInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedCreateNestedManyWithoutUserInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedCreateNestedManyWithoutUserInput
+  pdfPresets?: Prisma.PdfPresetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCloudPdfsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCloudPdfsInput, Prisma.UserUncheckedCreateWithoutCloudPdfsInput>
+}
+
+export type UserUpsertWithoutCloudPdfsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCloudPdfsInput, Prisma.UserUncheckedUpdateWithoutCloudPdfsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCloudPdfsInput, Prisma.UserUncheckedCreateWithoutCloudPdfsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCloudPdfsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCloudPdfsInput, Prisma.UserUncheckedUpdateWithoutCloudPdfsInput>
+}
+
+export type UserUpdateWithoutCloudPdfsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCloudPdfsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  videoTasks?: Prisma.VideoTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  videoPresets?: Prisma.VideoPresetUncheckedUpdateManyWithoutUserNestedInput
+  watermarks?: Prisma.WatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  cloudVideos?: Prisma.CloudVideoUncheckedUpdateManyWithoutUserNestedInput
+  audioTasks?: Prisma.AudioTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  audioPresets?: Prisma.AudioPresetUncheckedUpdateManyWithoutUserNestedInput
+  masteringChains?: Prisma.MasteringChainUncheckedUpdateManyWithoutUserNestedInput
+  cloudAudios?: Prisma.CloudAudioUncheckedUpdateManyWithoutUserNestedInput
+  pdfTasks?: Prisma.PdfTaskHistoryUncheckedUpdateManyWithoutUserNestedInput
+  pdfSignatures?: Prisma.PdfSignatureTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfWatermarks?: Prisma.PdfWatermarkTemplateUncheckedUpdateManyWithoutUserNestedInput
+  pdfPresets?: Prisma.PdfPresetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -701,6 +1940,15 @@ export type UserCountOutputType = {
   videoPresets: number
   watermarks: number
   cloudVideos: number
+  audioTasks: number
+  audioPresets: number
+  masteringChains: number
+  cloudAudios: number
+  pdfTasks: number
+  pdfSignatures: number
+  pdfWatermarks: number
+  cloudPdfs: number
+  pdfPresets: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -708,6 +1956,15 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   videoPresets?: boolean | UserCountOutputTypeCountVideoPresetsArgs
   watermarks?: boolean | UserCountOutputTypeCountWatermarksArgs
   cloudVideos?: boolean | UserCountOutputTypeCountCloudVideosArgs
+  audioTasks?: boolean | UserCountOutputTypeCountAudioTasksArgs
+  audioPresets?: boolean | UserCountOutputTypeCountAudioPresetsArgs
+  masteringChains?: boolean | UserCountOutputTypeCountMasteringChainsArgs
+  cloudAudios?: boolean | UserCountOutputTypeCountCloudAudiosArgs
+  pdfTasks?: boolean | UserCountOutputTypeCountPdfTasksArgs
+  pdfSignatures?: boolean | UserCountOutputTypeCountPdfSignaturesArgs
+  pdfWatermarks?: boolean | UserCountOutputTypeCountPdfWatermarksArgs
+  cloudPdfs?: boolean | UserCountOutputTypeCountCloudPdfsArgs
+  pdfPresets?: boolean | UserCountOutputTypeCountPdfPresetsArgs
 }
 
 /**
@@ -748,6 +2005,69 @@ export type UserCountOutputTypeCountCloudVideosArgs<ExtArgs extends runtime.Type
   where?: Prisma.CloudVideoWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAudioTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AudioTaskHistoryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAudioPresetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AudioPresetWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMasteringChainsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MasteringChainWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCloudAudiosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CloudAudioWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPdfTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PdfTaskHistoryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPdfSignaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PdfSignatureTemplateWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPdfWatermarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PdfWatermarkTemplateWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCloudPdfsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CloudPdfFileWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPdfPresetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PdfPresetWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -760,6 +2080,15 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   videoPresets?: boolean | Prisma.User$videoPresetsArgs<ExtArgs>
   watermarks?: boolean | Prisma.User$watermarksArgs<ExtArgs>
   cloudVideos?: boolean | Prisma.User$cloudVideosArgs<ExtArgs>
+  audioTasks?: boolean | Prisma.User$audioTasksArgs<ExtArgs>
+  audioPresets?: boolean | Prisma.User$audioPresetsArgs<ExtArgs>
+  masteringChains?: boolean | Prisma.User$masteringChainsArgs<ExtArgs>
+  cloudAudios?: boolean | Prisma.User$cloudAudiosArgs<ExtArgs>
+  pdfTasks?: boolean | Prisma.User$pdfTasksArgs<ExtArgs>
+  pdfSignatures?: boolean | Prisma.User$pdfSignaturesArgs<ExtArgs>
+  pdfWatermarks?: boolean | Prisma.User$pdfWatermarksArgs<ExtArgs>
+  cloudPdfs?: boolean | Prisma.User$cloudPdfsArgs<ExtArgs>
+  pdfPresets?: boolean | Prisma.User$pdfPresetsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -796,6 +2125,15 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   videoPresets?: boolean | Prisma.User$videoPresetsArgs<ExtArgs>
   watermarks?: boolean | Prisma.User$watermarksArgs<ExtArgs>
   cloudVideos?: boolean | Prisma.User$cloudVideosArgs<ExtArgs>
+  audioTasks?: boolean | Prisma.User$audioTasksArgs<ExtArgs>
+  audioPresets?: boolean | Prisma.User$audioPresetsArgs<ExtArgs>
+  masteringChains?: boolean | Prisma.User$masteringChainsArgs<ExtArgs>
+  cloudAudios?: boolean | Prisma.User$cloudAudiosArgs<ExtArgs>
+  pdfTasks?: boolean | Prisma.User$pdfTasksArgs<ExtArgs>
+  pdfSignatures?: boolean | Prisma.User$pdfSignaturesArgs<ExtArgs>
+  pdfWatermarks?: boolean | Prisma.User$pdfWatermarksArgs<ExtArgs>
+  cloudPdfs?: boolean | Prisma.User$cloudPdfsArgs<ExtArgs>
+  pdfPresets?: boolean | Prisma.User$pdfPresetsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -808,6 +2146,15 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     videoPresets: Prisma.$VideoPresetPayload<ExtArgs>[]
     watermarks: Prisma.$WatermarkTemplatePayload<ExtArgs>[]
     cloudVideos: Prisma.$CloudVideoPayload<ExtArgs>[]
+    audioTasks: Prisma.$AudioTaskHistoryPayload<ExtArgs>[]
+    audioPresets: Prisma.$AudioPresetPayload<ExtArgs>[]
+    masteringChains: Prisma.$MasteringChainPayload<ExtArgs>[]
+    cloudAudios: Prisma.$CloudAudioPayload<ExtArgs>[]
+    pdfTasks: Prisma.$PdfTaskHistoryPayload<ExtArgs>[]
+    pdfSignatures: Prisma.$PdfSignatureTemplatePayload<ExtArgs>[]
+    pdfWatermarks: Prisma.$PdfWatermarkTemplatePayload<ExtArgs>[]
+    cloudPdfs: Prisma.$CloudPdfFilePayload<ExtArgs>[]
+    pdfPresets: Prisma.$PdfPresetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1214,6 +2561,15 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   videoPresets<T extends Prisma.User$videoPresetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$videoPresetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VideoPresetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   watermarks<T extends Prisma.User$watermarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$watermarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WatermarkTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cloudVideos<T extends Prisma.User$cloudVideosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cloudVideosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CloudVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  audioTasks<T extends Prisma.User$audioTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$audioTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AudioTaskHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  audioPresets<T extends Prisma.User$audioPresetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$audioPresetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AudioPresetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  masteringChains<T extends Prisma.User$masteringChainsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$masteringChainsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MasteringChainPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cloudAudios<T extends Prisma.User$cloudAudiosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cloudAudiosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CloudAudioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pdfTasks<T extends Prisma.User$pdfTasksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pdfTasksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PdfTaskHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pdfSignatures<T extends Prisma.User$pdfSignaturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pdfSignaturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PdfSignatureTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pdfWatermarks<T extends Prisma.User$pdfWatermarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pdfWatermarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PdfWatermarkTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  cloudPdfs<T extends Prisma.User$cloudPdfsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cloudPdfsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CloudPdfFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pdfPresets<T extends Prisma.User$pdfPresetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pdfPresetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PdfPresetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1445,11 +2801,6 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Users.
-   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
@@ -1735,6 +3086,222 @@ export type User$cloudVideosArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.CloudVideoScalarFieldEnum | Prisma.CloudVideoScalarFieldEnum[]
+}
+
+/**
+ * User.audioTasks
+ */
+export type User$audioTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AudioTaskHistory
+   */
+  select?: Prisma.AudioTaskHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AudioTaskHistory
+   */
+  omit?: Prisma.AudioTaskHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AudioTaskHistoryInclude<ExtArgs> | null
+  where?: Prisma.AudioTaskHistoryWhereInput
+  orderBy?: Prisma.AudioTaskHistoryOrderByWithRelationInput | Prisma.AudioTaskHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.AudioTaskHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AudioTaskHistoryScalarFieldEnum | Prisma.AudioTaskHistoryScalarFieldEnum[]
+}
+
+/**
+ * User.audioPresets
+ */
+export type User$audioPresetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AudioPreset
+   */
+  select?: Prisma.AudioPresetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AudioPreset
+   */
+  omit?: Prisma.AudioPresetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AudioPresetInclude<ExtArgs> | null
+  where?: Prisma.AudioPresetWhereInput
+  orderBy?: Prisma.AudioPresetOrderByWithRelationInput | Prisma.AudioPresetOrderByWithRelationInput[]
+  cursor?: Prisma.AudioPresetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AudioPresetScalarFieldEnum | Prisma.AudioPresetScalarFieldEnum[]
+}
+
+/**
+ * User.masteringChains
+ */
+export type User$masteringChainsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MasteringChain
+   */
+  select?: Prisma.MasteringChainSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MasteringChain
+   */
+  omit?: Prisma.MasteringChainOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MasteringChainInclude<ExtArgs> | null
+  where?: Prisma.MasteringChainWhereInput
+  orderBy?: Prisma.MasteringChainOrderByWithRelationInput | Prisma.MasteringChainOrderByWithRelationInput[]
+  cursor?: Prisma.MasteringChainWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MasteringChainScalarFieldEnum | Prisma.MasteringChainScalarFieldEnum[]
+}
+
+/**
+ * User.cloudAudios
+ */
+export type User$cloudAudiosArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CloudAudio
+   */
+  select?: Prisma.CloudAudioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CloudAudio
+   */
+  omit?: Prisma.CloudAudioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CloudAudioInclude<ExtArgs> | null
+  where?: Prisma.CloudAudioWhereInput
+  orderBy?: Prisma.CloudAudioOrderByWithRelationInput | Prisma.CloudAudioOrderByWithRelationInput[]
+  cursor?: Prisma.CloudAudioWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CloudAudioScalarFieldEnum | Prisma.CloudAudioScalarFieldEnum[]
+}
+
+/**
+ * User.pdfTasks
+ */
+export type User$pdfTasksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PdfTaskHistory
+   */
+  select?: Prisma.PdfTaskHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PdfTaskHistory
+   */
+  omit?: Prisma.PdfTaskHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PdfTaskHistoryInclude<ExtArgs> | null
+  where?: Prisma.PdfTaskHistoryWhereInput
+  orderBy?: Prisma.PdfTaskHistoryOrderByWithRelationInput | Prisma.PdfTaskHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.PdfTaskHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PdfTaskHistoryScalarFieldEnum | Prisma.PdfTaskHistoryScalarFieldEnum[]
+}
+
+/**
+ * User.pdfSignatures
+ */
+export type User$pdfSignaturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PdfSignatureTemplate
+   */
+  select?: Prisma.PdfSignatureTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PdfSignatureTemplate
+   */
+  omit?: Prisma.PdfSignatureTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PdfSignatureTemplateInclude<ExtArgs> | null
+  where?: Prisma.PdfSignatureTemplateWhereInput
+  orderBy?: Prisma.PdfSignatureTemplateOrderByWithRelationInput | Prisma.PdfSignatureTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.PdfSignatureTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PdfSignatureTemplateScalarFieldEnum | Prisma.PdfSignatureTemplateScalarFieldEnum[]
+}
+
+/**
+ * User.pdfWatermarks
+ */
+export type User$pdfWatermarksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PdfWatermarkTemplate
+   */
+  select?: Prisma.PdfWatermarkTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PdfWatermarkTemplate
+   */
+  omit?: Prisma.PdfWatermarkTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PdfWatermarkTemplateInclude<ExtArgs> | null
+  where?: Prisma.PdfWatermarkTemplateWhereInput
+  orderBy?: Prisma.PdfWatermarkTemplateOrderByWithRelationInput | Prisma.PdfWatermarkTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.PdfWatermarkTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PdfWatermarkTemplateScalarFieldEnum | Prisma.PdfWatermarkTemplateScalarFieldEnum[]
+}
+
+/**
+ * User.cloudPdfs
+ */
+export type User$cloudPdfsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CloudPdfFile
+   */
+  select?: Prisma.CloudPdfFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CloudPdfFile
+   */
+  omit?: Prisma.CloudPdfFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CloudPdfFileInclude<ExtArgs> | null
+  where?: Prisma.CloudPdfFileWhereInput
+  orderBy?: Prisma.CloudPdfFileOrderByWithRelationInput | Prisma.CloudPdfFileOrderByWithRelationInput[]
+  cursor?: Prisma.CloudPdfFileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CloudPdfFileScalarFieldEnum | Prisma.CloudPdfFileScalarFieldEnum[]
+}
+
+/**
+ * User.pdfPresets
+ */
+export type User$pdfPresetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PdfPreset
+   */
+  select?: Prisma.PdfPresetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PdfPreset
+   */
+  omit?: Prisma.PdfPresetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PdfPresetInclude<ExtArgs> | null
+  where?: Prisma.PdfPresetWhereInput
+  orderBy?: Prisma.PdfPresetOrderByWithRelationInput | Prisma.PdfPresetOrderByWithRelationInput[]
+  cursor?: Prisma.PdfPresetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PdfPresetScalarFieldEnum | Prisma.PdfPresetScalarFieldEnum[]
 }
 
 /**

@@ -31,7 +31,7 @@ export function SlowMotionOptions() {
           <p className="text-violet-400/50 text-[10px] font-medium">Uses minterpolate for silky motion</p>
         </div>
         <Switch
-          defaultChecked={true}
+          checked={(task.options?.interpolate as boolean) ?? true}
           onCheckedChange={(checked: boolean) => setOptions({ interpolate: checked })}
         />
       </div>
@@ -41,7 +41,7 @@ export function SlowMotionOptions() {
           <p className="text-blue-400/50 text-[10px] font-medium">Slow down audio with the video</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.keepAudio as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ keepAudio: checked })}
         />
       </div>

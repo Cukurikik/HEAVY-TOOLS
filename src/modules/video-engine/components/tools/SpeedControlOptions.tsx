@@ -31,7 +31,7 @@ export function SpeedControlOptions() {
           <p className="text-blue-400/50 text-[10px] font-medium">Preserve + adjust audio with tempo filter</p>
         </div>
         <Switch
-          defaultChecked={true}
+          checked={(task.options?.keepAudio as boolean) ?? true}
           onCheckedChange={(checked: boolean) => setOptions({ keepAudio: checked })}
         />
       </div>

@@ -21,7 +21,6 @@ export * from "./hdr-tonemapper.engine";
 export * from "./black-white.engine";
 export * from "./slow-motion.engine";
 export * from "./timelapse.engine";
-export * from "./screen-recorder.engine";
 export * from "./metadata-editor.engine";
 export * from "./batch-processor.engine";
 export * from "./chapter-marker.engine";

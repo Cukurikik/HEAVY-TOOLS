@@ -1,0 +1,2 @@
+# This directory holds compiled WASM modules.
+# Run `bash native/scripts/build-wasm.sh` to populate.

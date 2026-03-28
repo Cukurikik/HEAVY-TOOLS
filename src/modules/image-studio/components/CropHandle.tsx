@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+// Note: cropperjs CSS is imported in globals.css via @import
 
 interface CropHandleProps {
   imageUrl: string;

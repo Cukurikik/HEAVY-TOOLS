@@ -1,208 +1,123 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play, CheckCircle, Loader2, FileArchive, Download, AlertCircle } from "lucide-react";
-import { useConverterStore } from "../store/useConverterStore";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { Search } from "lucide-react";
+import { converterTools } from "../constants/tools";
+import Link from "next/link";
+import { useState, useMemo } from "react";
 
-const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.03, delayChildren: 0.1 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 24 } },
+};
 
 export function ConverterDashboard() {
-  const { task, setFiles, setOperation, processConversion, reset } = useConverterStore();
-  const [dragActive, setDragActive] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.size <= MAX_SIZE) {
-        setFiles([file]);
-      }
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setFiles([e.target.files[0]]);
-    }
-  };
+  const filtered = useMemo(() => {
+    if (!search.trim()) return converterTools;
+    const q = search.toLowerCase();
+    return converterTools.filter(
+      (t) =>
+        t.name.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        t.id.includes(q)
+    );
+  }, [search]);
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Upload Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4">1. Select File</h2>
-          <div
-            className={cn(
-              "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
-              dragActive ? "border-amber-500 bg-amber-500/10" : "border-slate-700 hover:border-slate-500",
-              task.files.length > 0 ? "border-emerald-500 bg-emerald-500/10" : ""
-            )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
-            onClick={() => document.getElementById("converter-upload")?.click()}
-          >
-            <input
-              id="converter-upload"
-              type="file"
-              className="hidden"
-              onChange={handleChange}
-            />
-            {task.files.length > 0 ? (
-              <div className="flex flex-col items-center space-y-2">
-                <CheckCircle className="w-10 h-10 text-emerald-400" />
-                <p className="text-emerald-300 font-medium">{task.files[0].name}</p>
-                <p className="text-sm text-emerald-400/70">
-                  {(task.files[0].size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center space-y-2">
-                <FileArchive className="w-10 h-10 text-slate-400" />
-                <p className="text-slate-300 font-medium">Drag & drop your file here</p>
-                <p className="text-sm text-slate-500">or click to browse files</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Tools Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm"
-        >
-          <h2 className="text-xl font-semibold text-white mb-4">2. Select Target Format</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {(["video", "audio", "image", "document"] as const).map((op) => (
-              <button
-                key={op}
-                onClick={() => setOperation(op)}
-                className={cn(
-                  "p-4 rounded-xl border text-left transition-all",
-                  task.operation === op
-                    ? "border-amber-500 bg-amber-500/20 text-amber-300"
-                    : "border-slate-700 bg-slate-800/50 text-slate-400 hover:bg-slate-800 hover:border-slate-600"
-                )}
-              >
-                <span className="capitalize font-medium">{op}</span>
-              </button>
-            ))}
-          </div>
-        </motion.div>
+      {/* Search Bar */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search 30 converter tools..."
+          className="w-full pl-12 pr-4 py-3.5 bg-slate-900/60 border border-white/10 rounded-2xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/50 backdrop-blur-md transition-all"
+        />
       </div>
 
-      {/* Action Section */}
+      {/* Tool Grid */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col items-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
       >
-        <button
-          onClick={processConversion}
-          disabled={task.files.length === 0 || task.operation === "idle" || task.status === "processing"}
-          className={cn(
-            "flex items-center space-x-2 px-8 py-4 rounded-full font-bold text-lg transition-all",
-            task.files.length === 0 || task.operation === "idle"
-              ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-              : task.status === "processing"
-              ? "bg-amber-600 text-white cursor-wait"
-              : task.status === "success"
-              ? "bg-emerald-600 text-white"
-              : "bg-amber-500 hover:bg-amber-400 text-white hover:scale-105 active:scale-95"
-          )}
-        >
-          {task.status === "processing" ? (
-            <>
-              <Loader2 className="w-6 h-6 animate-spin" />
-              <span>Converting... {task.progress}%</span>
-            </>
-          ) : task.status === "success" ? (
-            <>
-              <CheckCircle className="w-6 h-6" />
-              <span>Completed!</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-6 h-6" />
-              <span>{task.status === "error" ? "Retry Conversion" : "Start Conversion"}</span>
-            </>
-          )}
-        </button>
+        {filtered.map((tool) => (
+          <motion.div key={tool.id} variants={cardVariants}>
+            <Link href={`/converter/${tool.id}`} className="block group">
+              <div className="relative h-full p-5 bg-slate-900/50 border border-white/5 rounded-2xl backdrop-blur-md overflow-hidden transition-all duration-300 hover:border-white/15 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1">
+                {/* Gradient glow on hover */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 group-hover:opacity-[0.08] transition-opacity duration-500`}
+                />
 
-        {task.status === "processing" && (
-          <div className="w-full max-w-md mt-6 bg-slate-800 rounded-full h-2 overflow-hidden">
-            <motion.div
-              className="bg-amber-500 h-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${task.progress}%` }}
-              transition={{ duration: 0.2 }}
-            />
-          </div>
-        )}
+                <div className="relative z-10 space-y-3">
+                  {/* Icon */}
+                  <div
+                    className={`w-11 h-11 rounded-xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-lg`}
+                  >
+                    <tool.icon className="w-5.5 h-5.5 text-white" />
+                  </div>
 
-        {task.status === "error" && task.error && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-6 flex flex-col items-center p-4 bg-red-500/10 border border-red-500/20 rounded-xl max-w-lg text-center space-y-2"
-          >
-            <AlertCircle className="w-8 h-8 text-red-400 mb-1" />
-            <p className="text-red-300 font-medium">{task.error}</p>
-            <button
-              onClick={reset}
-              className="text-red-400/80 hover:text-red-300 underline text-sm pt-2"
-            >
-              Reset and try another file
-            </button>
+                  {/* Name */}
+                  <h3 className="text-sm font-bold text-white tracking-tight leading-snug line-clamp-1">
+                    {tool.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
+                    {tool.description}
+                  </p>
+
+                  {/* Execution badge */}
+                  <span
+                    className={`inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full ${
+                      tool.executionType === "client"
+                        ? "bg-emerald-500/15 text-emerald-400"
+                        : tool.executionType === "server"
+                        ? "bg-amber-500/15 text-amber-400"
+                        : "bg-blue-500/15 text-blue-400"
+                    }`}
+                  >
+                    {tool.executionType === "client" ? "⚡ Local" : tool.executionType === "server" ? "☁️ Cloud" : "🔄 Hybrid"}
+                  </span>
+                </div>
+              </div>
+            </Link>
           </motion.div>
-        )}
-
-        {task.status === "success" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mt-6 flex flex-col items-center space-y-4"
-          >
-            <a
-              href={task.outputUrls[0]}
-              download={`converted-${task.files[0]?.name || 'file'}`}
-              className="flex items-center space-x-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full font-bold transition-transform hover:scale-105 active:scale-95"
-            >
-              <Download className="w-5 h-5" />
-              <span>Download Converted File</span>
-            </a>
-            <button
-              onClick={reset}
-              className="text-slate-400 hover:text-white underline text-sm"
-            >
-              Convert another file
-            </button>
-          </motion.div>
-        )}
-
+        ))}
       </motion.div>
+
+      {/* Empty State */}
+      {filtered.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-16"
+        >
+          <p className="text-slate-400 text-lg font-medium">
+            No converter tools match &quot;{search}&quot;
+          </p>
+          <button
+            onClick={() => setSearch("")}
+            className="mt-3 text-blue-400 hover:text-blue-300 text-sm underline underline-offset-4"
+          >
+            Clear search
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }

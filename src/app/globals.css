@@ -1,5 +1,5 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "../styles/vendor/tw-animate.css";
+@import "../styles/vendor/shadcn-tailwind.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -80,22 +80,120 @@
     --font-sans: var(--font-sans);
   }
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
   html {
-    @apply font-sans;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   }
-}
 
-@layer base {
-  * {
-    @apply border-slate-800;
+  /* Omni-Tool Dynamic UI Settings Engine */
+  
+  /* 1. High Contrast Mode */
+  .high-contrast {
+    --border: oklch(1 0 0); /* Pure white borders in dark mode */
+    --ring: oklch(1 0 0);
   }
-  body {
-    @apply bg-slate-950 text-slate-50;
+  .high-contrast * {
+    /* Slightly stronger borders for accessibility */
+    border-color: var(--border) !important;
+  }
+
+  /* 2. Glassmorphism */
+  [data-glass="true"] .bg-background,
+  [data-glass="true"] .bg-card,
+  [data-glass="true"] .bg-sidebar {
+    background-color: color-mix(in srgb, var(--background) 80%, transparent) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+
+  /* 3. Custom Cursor */
+  [data-cursor="true"], [data-cursor="true"] * {
+    cursor: crosshair !important;
+  }
+
+  /* 4. Density */
+  [data-density="compact"] {
+    --radius: 0.25rem;
+  }
+  [data-density="comfortable"] {
+    --radius: 1rem;
+  }
+
+  /* ═══════════════════════════════════════════════════
+   * ⚡ Settings Engine: Dynamic CSS Variable Consumers
+   * These rules consume CSS custom properties set by
+   * onAfterChange hooks in the Settings Engine features.
+   * ═══════════════════════════════════════════════════ */
+
+  /* 5. Global Font Size — set by feature 006 via --omni-font-size */
+  html {
+    font-size: var(--omni-font-size, 16px);
+  }
+
+  /* 6. Animation Disable — set by feature 005 via body class */
+  body.omni-engine-active-005 * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  body.omni-engine-active-005 [data-framer-motion],
+  body.omni-engine-active-005 .motion-safe\:animate-in {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* 7. Glassmorphism Disable — set by feature 013 via body class */
+  body.omni-engine-active-013 .backdrop-blur-xl,
+  body.omni-engine-active-013 .backdrop-blur-md,
+  body.omni-engine-active-013 .backdrop-blur-sm,
+  body.omni-engine-active-013 .backdrop-blur-lg {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 8. High Contrast Mode — set by feature 008 via body class */
+  body.omni-engine-active-008 {
+    filter: contrast(1.3);
+  }
+  body.omni-engine-active-008 * {
+    border-width: 2px;
+  }
+
+  /* 9. Compact Density — set by feature 010 via body class */
+  body.omni-engine-active-010 {
+    --radius: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+  body.omni-engine-active-010 .space-y-8 { gap: 1rem; }
+  body.omni-engine-active-010 .p-8 { padding: 1rem; }
+  body.omni-engine-active-010 .p-6 { padding: 0.75rem; }
+
+  /* 10. Breadcrumbs Toggle — set by feature 020 via data attribute */
+  [data-omni-020="false"] nav[aria-label="breadcrumb"] {
+    display: none !important;
+  }
+
+  /* 11. Custom Scrollbar — set by feature 022 */
+  body.omni-engine-active-022 ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* 12. Skeleton Loading — set by feature 025 via body class */
+  body.omni-engine-active-025 .animate-pulse {
+    animation-name: wave !important;
+  }
+  @keyframes wave {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
   }
 }
 

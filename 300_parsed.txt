@@ -1,0 +1,537 @@
+--- PART 1 ---
+>300 Fitur Pengaturan — Mesin yang Dihidupkan (Bagian 1: #1–150)
+>Fitur Pengaturan
+>Mesin yang Dihidupkan
+>Backend Action
+>TAMPILAN (20 fitur)
+>1. Dark mode toggle
+>CSS var inject + localStorage
+>Prisma save + SSE broadcast
+>2. Ukuran font UI
+>CSS --font-size var update
+>Prisma save + re-render
+>3. Warna aksen tema
+>CSS --color-primary inject
+>Prisma save + all tabs sync
+>4. Sidebar kompak
+>Zustand layoutStore + CSS class
+>Prisma save preference
+>5. Animasi UI on/off
+>Framer Motion reducedMotion flag
+>Prisma + CSS prefers-motion
+>6. Radius sudut komponen
+>CSS --border-radius var inject
+>Prisma save
+>7. Kepadatan informasi
+>CSS --spacing-scale var update
+>Prisma save preference
+>8. Bahasa antarmuka
+>i18n locale loader + rerender
+>Prisma + next-intl locale
+>9. Format tanggal/waktu
+>Intl.DateTimeFormat locale update
+>Prisma save + global formatter
+>10. Jenis font antarmuka
+>CSS @font-face swap + var inject
+>Prisma save
+>11. Tampilan grid/list tool
+>Zustand viewStore mode switch
+>Prisma save layout pref
+>12. Transparansi sidebar
+>CSS --sidebar-opacity var
+>Prisma save
+>13. Warna background kustom
+>CSS --bg-custom inject + validate
+>Prisma save hex value
+>14. Kontras tinggi mode
+>WCAG contrast CSS vars override
+>Prisma + accessibility flag
+>15. Blur glassmorphism
+>CSS backdrop-filter toggle
+>Prisma save + COOP check
+>16. Zoom level default
+>CSS --zoom-base var + meta viewport
+>Prisma save
+>17. Ikon toolbar tampilkan
+>Zustand toolbarStore icon visibility
+>Prisma save array config
+>18. Label teks ikon on/off
+>Zustand toolbarStore label flag
+>Prisma save
+>19. Arah tata letak (LTR/RTL)
+>HTML dir attr + CSS logical props
+>Prisma + i18n direction
+>20. Custom CSS snippet
+>style tag inject + sanitize DOMPurify
+>Prisma save + XSS guard
+>PERFORMA (20 fitur)
+>21. Batas RAM worker
+>Worker postMessage RAM_LIMIT config
+>Worker restart dengan config baru
+>22. Max jobs paralel
+>InMemoryQueue MAX_CONCURRENT update
+>Queue engine reconfigure
+>23. Hardware acceleration
+>TF.js backend switch CPU/WebGPU
+>AI worker reinit dengan backend
+>24. WASM multi-thread
+>FFmpeg core-mt vs single-thread
+>FFmpeg worker reload config
+>25. Cache hasil proses
+>IndexedDB cache policy enable/disable
+>OPFS cache engine toggle
+>26. Timeout watchdog FFmpeg
+>AbortController timeout ms config
+>Watchdog service update TTL
+>27. Lazy load komponen
+>next/dynamic ssr flag + prefetch
+>Prisma + router prefetch config
+>28. Image optimization kualitas
+>next/image quality prop global set
+>Prisma + ISR revalidate
+>29. Prefetch halaman on/off
+>Next.js Link prefetch prop toggle
+>Prisma + route config update
+>30. Render mode SSR/SSG
+>Next.js revalidate + cache strategy
+>Cache bust + Prisma config
+>31. Service Worker cache
+>SW registration + cache strategy
+>SW message postMessage config
+>32. Offline mode (Air-Gap)
+>SW intercept all + block network
+>SW engine full offline mode
+>33. GPU throttle monitor
+>navigator.deviceMemory + thermal API
+>Queue pause on thermal throttle
+>34. Batch size maksimum
+>InMemoryQueue batch limit config
+>Queue engine update max_batch
+>35. Memory cleanup interval
+>setInterval cleanup TTL update
+>Cleanup engine reschedule
+>36. Worker pool size
+>Worker factory spawn N workers
+>Worker pool resize + Prisma
+>37. CDN asset delivery
+>next.config assetPrefix update
+>Build trigger + Prisma
+>38. Retry gagal otomatis
+>InMemoryQueue maxRetries config
+>Queue engine retry policy update
+>39. Kompresi response
+>Next.js compress flag toggle
+>Server config reload + Prisma
+>40. Rate limit per user
+>Middleware rate limiter config
+>Rate limit engine update + Prisma
+>KEAMANAN (20 fitur)
+>41. Enkripsi file output
+>Web Crypto AES-256 auto-wrap
+>Crypto engine enable + key gen
+>42. 2FA autentikasi
+>TOTP secret gen + QR provisioning
+>NextAuth 2FA middleware activate
+>43. Session timeout
+>JWT maxAge update + cookie reset
+>NextAuth session engine reconfigure
+>44. Password policy strength
+>Zod password schema update
+>Auth validator engine update
+>45. CORS allowed origins
+>next.config headers() CORS update
+>Server header engine reload
+>46. CSP header policy
+>Content-Security-Policy header gen
+>Middleware CSP engine update
+>47. RSA key pair rotate
+>Web Crypto RSA generateKeyPair
+>Key vault engine rotate + Prisma
+>48. IP whitelist
+>Middleware IP check array update
+>Middleware engine reload config
+>49. Audit log aktif
+>Prisma middleware log interceptor
+>Audit engine activate + AuditLog table
+>50. File type whitelist
+>Zod + file-type MIME allowed list
+>Upload validator engine update
+>51. Max upload size
+>next.config bodyParser sizeLimit
+>Upload engine size policy update
+>52. Sanitize input aktif
+>DOMPurify + Zod strict mode toggle
+>Input sanitizer engine activate
+>53. HSTS header
+>Strict-Transport-Security header set
+>Next.js headers engine update
+>54. Referrer policy
+>Referrer-Policy header config
+>Middleware header engine update
+>55. Clipboard access block
+>Permissions-Policy header toggle
+>Browser Permission engine update
+>56. Session single device
+>NextAuth session invalidate others
+>Session engine force logout others
+>57. Enkripsi metadata file
+>Web Crypto AES metadata wrapper
+>Crypto engine encrypt Prisma records
+>58. Hapus data akun
+>Prisma cascade delete + fs.rm storage
+>GDPR delete engine full wipe
+>59. Login history log
+>NextAuth events loginAttempt log
+>Audit engine write LoginLog table
+>60. ECDSA digital signature
+>Web Crypto ECDSA keygen + sign
+>Key vault engine + Prisma cert store
+>STORAGE (20 fitur)
+>61. Kuota storage user
+>fs statfs + quota check middleware
+>Storage quota engine + Prisma
+>62. Auto-cleanup hasil proses
+>setInterval cleanup TTL reschedule
+>Cleanup engine interval update
+>63. TTL file output (jam)
+>InMemoryQueue JOB_TTL_MS update
+>Queue + cleanup engine reconfigure
+>64. Direktori output kustom
+>fs.mkdir path validate + env update
+>Storage engine path reconfigure
+>65. OPFS size limit
+>StorageManager.estimate() + quota
+>OPFS worker quota policy update
+>66. Kompresi file tersimpan
+>fflate compress before fs.writeFile
+>Storage engine compress toggle
+>67. Backup workspace .OMNI
+>Zustand snapshot + AES-256 encrypt
+>Backup engine trigger + file write
+>68. Auto backup interval
+>setInterval backup scheduler
+>Backup engine reschedule interval
+>69. IndexedDB cache size
+>idb cache eviction policy update
+>IDB engine quota + eviction config
+>70. Hapus cache sekarang
+>OPFS.removeEntry + idb.clear()
+>Storage engine force wipe execute
+>NOTIFIKASI (20 fitur)
+>71. Push notifikasi browser
+>Notification API permission request
+>SW push engine subscribe
+>72. Notif proses selesai
+>Queue 'done' event → Notification.show()
+>Queue event listener toggle
+>73. Notif proses gagal
+>Queue 'failed' event → toast + push
+>Queue error listener activate
+>74. Suara notifikasi
+>Web Audio API beep on event
+>Audio engine sound engine toggle
+>75. Haptic feedback mobile
+>navigator.vibrate() on event toggle
+>Vibration API engine toggle
+>76. Email digest harian
+>Cron job nodemailer daily digest
+>Email engine schedule + Prisma
+>77. Notif progres realtime
+>SSE ReadableStream progress %
+>SSE engine progress toggle
+>78. Toast durasi tampil
+>Framer Motion toast duration config
+>Toast engine duration update
+>79. Posisi toast layar
+>CSS position top/bottom/left/right
+>Prisma save + Toast position engine
+>80. Notif storage hampir penuh
+>StorageManager.estimate() threshold
+>Storage monitor engine threshold
+>AKUN (20 fitur)
+>81. Ganti password
+>bcrypt hash new + Prisma update
+>Auth engine rehash + session reset
+>82. Foto profil upload
+>sharp resize + fs save + Prisma url
+>Image engine process + CDN serve
+>83. Username ubah
+>Prisma unique check + update
+>Auth session username refresh
+>84. Email ubah
+>Prisma update + verification email
+>Email verify engine + Prisma
+>85. Zona waktu profil
+>Intl.DateTimeFormat timezone update
+>Prisma + global formatter reconfigure
+>86. API key generate
+>crypto.randomUUID() + Prisma save
+>API key engine generate + hash store
+>87. API key revoke
+>Prisma delete + middleware blocklist
+>Auth middleware blocklist update
+>88. Logout semua perangkat
+>NextAuth signOut all + JWT blacklist
+>Session engine invalidate all tokens
+>89. Ekspor data pribadi
+>Prisma findMany + JSON export + zip
+>GDPR export engine trigger
+>90. Webhook URL kustom
+>fetch POST webhook on job done
+>Webhook engine register + Prisma
+>Warna Engine = Kategori Mesin Backend
+>Performa
+>Keamanan
+>Storage
+>Notifikasi
+>Akun
+>Tampilan
+
+--- PART 2 ---
+>300 Fitur Pengaturan — Mesin yang Dihidupkan (Bagian 2: #91–300)
+>Fitur Pengaturan
+>Mesin yang Dihidupkan
+>Backend Action
+>VIDEO ENGINE SETTINGS (30 fitur)
+>91. FFmpeg default codec
+>FFmpeg -c:v flag default config
+>FFmpeg worker config reload
+>92. CRF default kualitas
+>FFmpeg -crf N default value
+>FFmpeg worker default update
+>93. Preset encoding
+>FFmpeg -preset ultrafast/medium/slow
+>FFmpeg config + speed/quality tradeoff
+>94. Format output default
+>Zod schema outputFormat default
+>Prisma + VideoStore default update
+>95. Resolusi output default
+>FFmpeg -vf scale=W:H default
+>FFmpeg worker scale config
+>96. Frame rate default
+>FFmpeg -r N default fps value
+>FFmpeg worker fps config
+>97. Watermark default teks
+>FFmpeg drawtext= default string
+>Prisma + FFmpeg text config
+>98. Hardware encode (h264_nvenc)
+>FFmpeg -c:v h264_nvenc GPU encode
+>FFmpeg worker GPU codec switch
+>99. Bitrate audio video
+>FFmpeg -b:a N default bitrate
+>FFmpeg audio stream config
+>100. Stabilizer sensitivity
+>FFmpeg vidstab shakiness param
+>Stabilizer engine param update
+>101. Subtitle font default
+>FFmpeg subtitles=:force_style font
+>FFmpeg subtitle engine config
+>102. Noise filter strength
+>FFmpeg hqdn3d=luma_strength param
+>Noise filter engine strength update
+>103. GIF palette dithering
+>FFmpeg paletteuse=dither param
+>GIF engine dither config update
+>104. AI upscale model
+>TF.js model path ESRGAN vs SwinIR
+>AI worker model reload
+>105. Interpolation algorithm
+>FFmpeg minterpolate mi_mode param
+>Frame interpolator engine config
+>106. HDR tonemap operator
+>FFmpeg tonemap=hable/reinhard/mobius
+>HDR engine operator switch
+>107. Screen record FPS
+>MediaRecorder videoBitsPerSecond
+>MediaRecorder engine config update
+>108. Video preview kualitas
+>HTML5 video preload strategy
+>VideoPlayer engine config update
+>109. Keep original metadata
+>FFmpeg -map_metadata 0 flag
+>FFmpeg metadata flag update
+>110. Color grading preset
+>FFmpeg eq= curves= preset profile
+>Color engine preset config store
+>111-120. (Video lanjutan)
+>Chapter interval, loop count, speed range
+>FFmpeg / VideoStore engine config
+>AUDIO ENGINE SETTINGS (30 fitur)
+>121. Format output audio
+>FFmpeg -c:a aac/mp3/ogg default
+>Audio worker codec default config
+>122. Sample rate default
+>OfflineAudioContext sampleRate
+>Audio engine ctx reinit sampleRate
+>123. Target LUFS normalisasi
+>FFmpeg loudnorm I=-N target
+>Normalizer engine target update
+>124. Stem split model
+>ONNX model Demucs vs Spleeter
+>ONNX worker model swap + reload
+>125. EQ default preset
+>OfflineAudioContext BiquadFilter preset
+>EQ engine preset load + apply
+>126. Compressor threshold
+>DynamicsCompressorNode threshold
+>Compressor engine param update
+>127. Reverb room type
+>ConvolverNode IR file room/hall/plate
+>Reverb engine IR buffer swap
+>128. MP3 bitrate default
+>lamejs encoder bitrate config
+>MP3 encoder engine bitrate update
+>129. Waveform resolution
+>wavesurfer.js pixelRatio config
+>Waveform renderer config update
+>130. Pitch shift semitone range
+>Phase vocoder semitone ±range
+>Pitch engine range limit update
+>131-150. (Audio lanjutan)
+>Silence threshold, BPM range, spatial mode
+>Audio worker / OfflineAudioCtx config
+>PDF ENGINE SETTINGS (20 fitur)
+>151. OCR bahasa default
+>Tesseract.js lang code config
+>OCR worker lang pack load
+>152. PDF DPI render
+>PDF.js viewport scale = DPI/72
+>PDF renderer DPI config update
+>153. Digital sign cert
+>Web Crypto ECDSA cert import
+>Crypto engine cert store update
+>154. PDF compress level
+>pdf-lib image quality + deflate level
+>PDF compress engine level update
+>155. Watermark opacity
+>pdf-lib drawText opacity param
+>PDF watermark engine update
+>156-170. (PDF lanjutan)
+>LibreOffice path, Puppeteer timeout, font embed
+>PDF engine / server config update
+>LLM / AI ENGINE SETTINGS (30 fitur)
+>171. Model LLM default
+>LLM API model param default
+>LLM engine model switch
+>172. Temperature default
+>API body temperature: 0.0-2.0
+>LLM request builder update
+>173. Max tokens output
+>API body max_tokens param
+>LLM request limit update + Prisma
+>174. System prompt default
+>LLM request system: param inject
+>System prompt engine store + Prisma
+>175. Streaming response
+>SSE stream vs batch response toggle
+>LLM stream engine mode switch
+>176. API key LLM provider
+>Prisma encrypted key + env inject
+>API client reinit with new key
+>177. RAG chunk size
+>Document chunker size param
+>RAG engine chunk config update
+>178. Embedding model
+>Embedding API model param
+>Vector engine model switch
+>179. TTS voice default
+>SpeechSynthesis voice.name select
+>TTS engine voice config update
+>180-200. (LLM lanjutan)
+>Top-p, presence penalty, context window
+>LLM request builder engine update
+>PLUGIN / HARDWARE / NETWORK (40 fitur)
+>201. Plugin .omniplug aktif
+>Sandbox Worker plugin load
+>Plugin engine sandbox spawn
+>202. Plugin permission scope
+>Worker sandbox permission list
+>Plugin ACL engine update
+>203. WebMIDI enable
+>navigator.requestMIDIAccess()
+>MIDI engine listener activate
+>204. Gamepad API enable
+>gamepadconnected event listener
+>Gamepad engine polling start
+>205. Proxy server URL
+>next.config rewrites proxy target
+>Network proxy engine config update
+>206. Network killswitch
+>SW fetch intercept block all
+>SW network killswitch activate
+>207. WebRTC enable
+>RTCPeerConnection enable/disable
+>WebRTC engine init/destroy
+>208-240. (Plugin/HW/Net lanjutan)
+>MIDI channel, Gamepad deadzone, DNS config
+>Respective engine config updates
+>DEVELOPER / DEBUG SETTINGS (30 fitur)
+>241. Debug mode FFmpeg log
+>FFmpeg -loglevel verbose stdout
+>FFmpeg worker log level update
+>242. Console log level
+>Logger service level ERROR/WARN/INFO
+>Logger engine level reconfigure
+>243. React StrictMode on/off
+>next.config reactStrictMode toggle
+>Build config + server restart
+>244. Performance profiler
+>Performance.mark() + measure API
+>Profiler engine activate
+>245. Mock API responses
+>MSW (Mock Service Worker) activate
+>MSW engine start/stop
+>246. Database query log
+>Prisma log: ['query','error'] enable
+>Prisma log engine activate
+>247. Error boundary detail
+>React ErrorBoundary verbose stack
+>Error engine detail mode toggle
+>248-270. (Dev lanjutan)
+>API latency sim, bundle analyzer, type check
+>Dev tool engine activate/config
+>AKSESIBILITAS + KEYBOARD + MISC (30 fitur)
+>271. Screen reader mode
+>ARIA live region + role inject
+>ARIA engine aria-live activate
+>272. Keyboard shortcut kustom
+>useHotkeys remapping config
+>Hotkey engine remap + Prisma
+>273. Focus trap modal
+>focus-trap-react activate/deactivate
+>Focus trap engine toggle
+>274. Dyslexia font mode
+>CSS OpenDyslexic font load + apply
+>Font engine OpenDyslexic load
+>275. Cursor custom
+>CSS cursor: url(custom.svg) inject
+>Cursor engine CSS inject
+>276. Undo history depth
+>Zustand history array max length
+>History engine max depth update
+>277. Auto-save interval
+>setInterval Prisma auto-save task
+>Auto-save engine reschedule
+>278. Drag sensitivity
+>@dnd-kit activationConstraint distance
+>DnD engine sensitivity config
+>279. Modal close ESC
+>useHotkeys Escape key close action
+>Hotkey engine ESC binding
+>280-300. (Aksesibilitas/Misc)
+>Tooltip delay, scroll behavior, confirm dialog
+>UI engine / behavior config update
+>Ringkasan 300 Fitur — Distribusi Kategori
+>Tampilan: 20
+>Performa: 20
+>Keamanan: 20
+>Storage: 20
+>Notifikasi: 20
+>Akun: 20
+>Video Eng: 30
+>Audio Eng: 30
+>PDF Eng: 20
+>LLM Eng: 30
+>Plugin/HW: 40
+>Dev: 30
+>TOTAL: 300 Fitur — Setiap Toggle = Mesin Nyata Dihidupkan

@@ -1,0 +1,21 @@
+{
+  "local-user": {
+    "pemilihan-preset-warna-primary-accent-cyan-em": "#1eff00",
+    "tooltip-hover-delay-instan-500ms-1s-disable_enabled": true,
+    "tooltip-hover-delay-instan-500ms-1s-disable": "Instan",
+    "toggle-rindik-screen-reader-support-aria-labe_enabled": true,
+    "ukuran-font-global-small-medium-large-extra-l_enabled": true,
+    "ukuran-font-global-small-medium-large-extra-l": "Small",
+    "widget-cuaca-waktu-lokal-di-dashboard-toggle_enabled": true,
+    "pemilihan-font-family-inter-roboto-fira-code_enabled": false,
+    "pemilihan-font-family-inter-roboto-fira-code": "Inter",
+    "mode-kontras-tinggi-high-contrast-mode-untuk_enabled": false,
+    "kutipan-motivasi-developer-di-home-on-off_enabled": true,
+    "integrasi-google-gemini-api_enabled": true,
+    "toggle-tema-global-dark-light-system-sync-amo": "Light",
+    "toggle-tema-global-dark-light-system-sync-amo_enabled": true,
+    "integrasi-google-gemini-api": "AIzaTestKey_12345",
+    "discord-webhook-url_enabled": true,
+    "discord-webhook-url": "https://dis"
+  }
+}

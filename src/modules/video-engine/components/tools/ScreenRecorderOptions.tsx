@@ -47,7 +47,7 @@ export function ScreenRecorderOptions() {
           <p className="text-red-400/50 text-[10px] font-medium">Capture system audio (if supported)</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.systemAudio as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ systemAudio: checked })}
         />
       </div>
@@ -57,7 +57,7 @@ export function ScreenRecorderOptions() {
           <p className="text-blue-400/50 text-[10px] font-medium">Include microphone audio</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.microphone as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ microphone: checked })}
         />
       </div>

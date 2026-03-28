@@ -1,4 +1,7 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { idbStorage } from "@/lib/idb-storage";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import type { VideoOperation } from "../types";
 
 // ═══════════════════════════════════════════════════
@@ -109,7 +112,9 @@ let isMounted = false;
 // Zustand Store
 // ═══════════════════════════════════════════════════
 
-export const useVideoStore = create<VideoStore>((set, get) => ({
+export const useVideoStore = create<VideoStore>()(
+  persist(
+    (set, get) => ({
   task: { ...initialTask },
   ffmpegLogs: [],
 
@@ -167,95 +172,80 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       ffmpegLogs: [],
     }));
 
-    // BUG FIX: Track ffmpeg reference for cleanup in finally block
-    let ffmpeg: any = null;
-
     try {
       // ═══════════════════════════════════════════════════
-      // Client WASM Tools (Background Thread)
-      // All 29 non-screen-recorder tools use FFmpeg WASM
+      // Client WASM Tools (Background Thread API)
+      // Delegating the 29 Tool array mathematically mapping to the FFmpeg Worker.
       // ═══════════════════════════════════════════════════
-      const { getFFmpeg } = await import('../lib/ffmpeg-core');
-      const engines = await import('../engines');
+      
+      const worker = new Worker(new URL('@/workers/ffmpeg.worker.ts', import.meta.url));
 
-      const onProgress = (progress: number) => {
-        set((state) => ({ task: { ...state.task, progress: Math.min(Math.round(progress * 100), 99) } }));
+      worker.onmessage = (e: MessageEvent) => {
+        const { type, status, progress, message, resultUrls, error } = e.data;
+
+        if (type === 'STATUS') {
+          // Status tracking
+        } else if (type === 'LOG') {
+          set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, message] }));
+        } else if (type === 'PROGRESS') {
+          set((state) => ({ task: { ...state.task, progress } }));
+        } else if (type === 'SUCCESS') {
+          set((state) => ({
+            task: { ...state.task, status: "success", progress: 100, resultUrl: resultUrls[0] },
+          }));
+          worker.terminate();
+        } else if (type === 'ERROR') {
+          set((state) => ({
+            task: {
+              ...state.task,
+              status: "error",
+              error: error || "Processing failed.",
+            },
+          }));
+          worker.terminate();
+        }
       };
-      
-      const onLog = (message: string) => {
-        set((state) => ({ ffmpegLogs: [...state.ffmpegLogs, message] }));
+
+      worker.onerror = (err) => {
+        console.error("Worker generic error:", err);
+        set((state) => ({
+          task: {
+            ...state.task,
+            status: "error",
+            error: "Background Worker Crash. Memory limit or isolation failure.",
+          },
+        }));
+        worker.terminate();
       };
 
-      // Spawns native worker safely, or returns warm singleton instance
-      ffmpeg = await getFFmpeg(onProgress, onLog);
+      // ⚡ Access Global Settings from the Settings Brain
+      const settings = useSettingsStore.getState().settings || {};
+      const workerPoolLimit = settings['jumlah-maksimal-web-worker-pool-auto-os-cores'] ?? 50; 
+      const hardwareAcceleration = settings['pilihan-hardware-acceleration-auto-webgpu-str'] ?? 'Auto';
 
-      // BUG FIX: Safely unmount previous mount if it was left behind from a crashed run
-      if (isMounted) {
-        try { await ffmpeg.unmount('/opt'); } catch (_) {}
-        isMounted = false;
-      }
+      // Blast payload to the isolated worker thread
+      worker.postMessage({
+        type: 'PROCESS_VIDEO',
+        payload: {
+          toolSlug: task.operation,
+          file: task.file,
+          options: {
+            ...task.options,
+            _omniEngineConfig: {
+               workerPoolLimit,
+               hardwareAcceleration,
+            }
+          }
+        }
+      });
 
-      try {
-        await ffmpeg.createDir('/opt');
-      } catch (e) { /* Ignore if exists */ }
-
-      // Mounting files as Blobs using WORKERFS zero-copy feature
-      // @ts-ignore
-      await ffmpeg.mount('WORKERFS', { files: task.file ? [task.file] : task.files }, '/opt');
-      isMounted = true;
-
-      const fileToProcess = task.file || task.files[0];
-      const inputName = '/opt/' + fileToProcess.name;
-      
-      const engineKeyParts = task.operation.split('-');
-      const engineKey = engineKeyParts.map((p: string) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-      
-      const buildFn = (engines as any)[`build${engineKey}Args`];
-      const getOutput = (engines as any)[`get${engineKey}OutputName`];
-      const getMime = (engines as any)[`get${engineKey}MimeType`];
-      
-      if (!buildFn) throw new Error(`Engine not found for operation: ${task.operation}`);
-
-      const outputName = getOutput(task.options);
-      const args = await buildFn(inputName, outputName, task.options, ffmpeg, task.files);
-      
-      const ret = await ffmpeg.exec(args);
-      if (ret !== 0) {
-        throw new Error(`FFmpeg process failed with code ${ret}. File may be corrupted or settings are invalid.`);
-      }
-
-      const outputData = await ffmpeg.readFile(outputName) as Uint8Array;
-
-      // BUG FIX: Unmount BEFORE creating blob (moved to finally block as safety net)
-      try { await ffmpeg.unmount('/opt'); isMounted = false; } catch (_) {}
-
-      // BUG FIX: Clean up temporary files written by engines (subtitles, metadata, concat, etc.)
-      try { await ffmpeg.deleteFile(outputName); } catch (_) {}
-      try { await ffmpeg.deleteFile('sub.srt'); } catch (_) {}
-      try { await ffmpeg.deleteFile('metadata.txt'); } catch (_) {}
-      try { await ffmpeg.deleteFile('palette.png'); } catch (_) {}
-      try { await ffmpeg.deleteFile('concat.txt'); } catch (_) {}
-
-      const blob = new Blob([outputData.buffer as ArrayBuffer], { type: getMime ? getMime(task.options) : 'video/mp4' });
-      const url = URL.createObjectURL(blob);
-      
-      set((state) => ({
-        task: { ...state.task, status: "success", progress: 100, resultUrl: url },
-      }));
     } catch (error) {
-      console.error("Video processing error:", error);
-
-      // BUG FIX: ALWAYS unmount on error to prevent "mount point already exists" on retry
-      if (ffmpeg && isMounted) {
-        try { await ffmpeg.unmount('/opt'); } catch (_) {}
-        isMounted = false;
-      }
-
+      console.error("Video orchestrator error:", error);
       set((state) => ({
         task: {
           ...state.task,
           status: "error",
-          error: error instanceof Error ? error.message : "Processing failed. Please try a different file or settings.",
+          error: error instanceof Error ? error.message : "Engine spawn failure.",
         },
       }));
     }
@@ -266,4 +256,39 @@ export const useVideoStore = create<VideoStore>((set, get) => ({
       task: { ...initialTask },
       ffmpegLogs: [],
     }),
-}));
+    }),
+    {
+      name: 'video-store',
+      storage: createJSONStorage(() => idbStorage),
+      partialize: (state) => ({ task: { ...state.task, file: null, files: [] } }),
+    }
+  )
+);
+
+// ═══════════════════════════════════════════════════
+// BroadcastChannel: Cross-Tab Synchronization
+// ═══════════════════════════════════════════════════
+
+if (typeof window !== 'undefined') {
+  const channel = new BroadcastChannel('omni-video-store-sync');
+  let isApplyingRemoteState = false;
+
+  useVideoStore.subscribe((state) => {
+    if (!isApplyingRemoteState) {
+      channel.postMessage({
+        type: 'SYNC',
+        payload: { task: { ...state.task, file: null, files: [] } },
+      });
+    }
+  });
+
+  channel.onmessage = (event) => {
+    if (event.data?.type === 'SYNC') {
+      isApplyingRemoteState = true;
+      useVideoStore.setState(event.data.payload, false);
+      queueMicrotask(() => {
+        isApplyingRemoteState = false;
+      });
+    }
+  };
+}

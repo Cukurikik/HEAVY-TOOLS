@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     // Generate secure URL
     // Extract key from the URL or filename logic
     const key = record.fileUrl.split('/').slice(-2).join('/') 
-    const downloadUrl = await generateDownloadUrl('audio-exports', key)
+    const downloadUrl = await generateDownloadUrl(key)
 
     return NextResponse.json({ success: true, downloadUrl })
   } catch (error) {

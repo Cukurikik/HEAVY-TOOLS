@@ -16,6 +16,15 @@ const nextConfig = {
     'require-in-the-middle',
     'express'
   ],
+
+  // Turbopack config (Next.js 16+ default bundler)
+  turbopack: {
+    resolveAlias: {
+      // Stub out react-native-fs which jsmediatags tries to load in browser/SSR
+      'react-native-fs': './empty-module.js',
+    },
+  },
+
   async headers() {
     return [
       {
@@ -34,6 +43,31 @@ const nextConfig = {
         ],
       },
       {
+        source: '/models/pdf/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Content-Type', value: 'application/wasm' }
+        ],
+      },
+      {
+        source: '/models/converter/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Content-Type', value: 'application/wasm' }
+        ],
+      },
+      {
+        // ⚡ Native C++ WASM Modules (compiled via Emscripten)
+        source: '/wasm/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Content-Type', value: 'application/wasm' }
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
@@ -45,36 +79,22 @@ const nextConfig = {
       },
     ];
   },
-  webpack(config) {
-    // Ensure resolve.fallback exists and set Node.js polyfills to false
+  // Webpack config (used when building with --webpack flag)
+  webpack: (config, { isServer }) => {
+    // Stub out react-native-fs which jsmediatags tries to load in browser/SSR
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react-native-fs': false,
+    };
     config.resolve.fallback = {
-      ...(config.resolve.fallback || {}),
+      ...config.resolve.fallback,
       fs: false,
       path: false,
-      crypto: false,
-      'react-native-fs': false
     };
-    
-    // Ensure experiments exists before spreading
     config.experiments = {
-      ...(config.experiments || {}),
+      ...config.experiments,
       asyncWebAssembly: true,
-      layers: true
     };
-    
-    // Check if similar rule already exists to avoid duplication
-    const jsRuleExists = config.module.rules.some(
-      rule => rule.test && rule.test.toString().includes('\\.m?js$')
-    );
-    
-    if (!jsRuleExists) {
-      config.module.rules.push({
-        test: /\.m?js$/,
-        type: "javascript/auto",
-        resolve: { fullySpecified: false },
-      });
-    }
-    
     return config;
   },
 };

@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -1190,11 +1190,6 @@ export type VideoPresetFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` VideoPresets.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of VideoPresets.
-   */
   distinct?: Prisma.VideoPresetScalarFieldEnum | Prisma.VideoPresetScalarFieldEnum[]
 }
 

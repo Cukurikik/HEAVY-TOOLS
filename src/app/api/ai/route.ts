@@ -1,20 +1,87 @@
 import { NextRequest } from "next/server";
 import { DASHSCOPE_MODELS, getAllModelIds, getApiEndpoint } from "@/lib/ai-models";
+import fs from "fs/promises";
+import path from "path";
 
-const FALLBACK_KEYS = [
-  process.env.ALIBABA_CLOUD_API_KEY,
-  "sk-baadd0ecc39547d68b00872b10f95e87", // Secondary key
-  "sk-4be34075ee564d4d85fd6357f70898e2"  // Tertiary key
-].filter(Boolean) as string[];
+// ============================================================================
+// BYOK (Bring Your Own Key) Reader — reads user's API keys from Settings Hub
+// Priority: User Settings (BYOK) → Environment Variables → Hardcoded Fallbacks
+// ============================================================================
+const SETTINGS_FILE = path.join(process.cwd(), "data", "user_settings.json");
 
-const GEMINI_FALLBACK_KEYS = [
-  process.env.GEMINI_API_KEY,
-  process.env.GEMINI_API_KEY_2,
-  process.env.GEMINI_API_KEY_3,
-  process.env.GEMINI_API_KEY_4,
-  process.env.GEMINI_API_KEY_5,
-  process.env.GEMINI_API_KEY_6
-].filter(Boolean) as string[];
+/**
+ * Read a specific BYOK value from user_settings.json by its slug.
+ * Settings are stored per-user; we default to 'local-user'.
+ */
+async function readByokKey(slug: string): Promise<string | null> {
+  try {
+    const raw = await fs.readFile(SETTINGS_FILE, "utf-8");
+    const db = JSON.parse(raw);
+    const userSettings = db["local-user"] || {};
+    // The key might be stored directly as the slug value, or may be null/empty
+    const val = userSettings[slug];
+    if (val && typeof val === "string" && val.trim().length > 0) {
+      return val.trim();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Build the final API key arrays with BYOK priority.
+ * User-provided keys from Settings Hub are checked FIRST.
+ */
+async function buildAlibabaKeys(): Promise<string[]> {
+  const byokAlibaba = await readByokKey("integrasi-groq-api-inference-super-cepat"); // Groq uses same DashScope-style
+  const keys = [
+    byokAlibaba,
+    process.env.ALIBABA_CLOUD_API_KEY,
+    "sk-baadd0ecc39547d68b00872b10f95e87",
+    "sk-4be34075ee564d4d85fd6357f70898e2"
+  ].filter(Boolean) as string[];
+  return keys;
+}
+
+async function buildGeminiKeys(): Promise<string[]> {
+  // BYOK: User's own Gemini key from Settings Hub (feature 064)
+  const byokGemini = await readByokKey("integrasi-google-gemini-api");
+  const keys = [
+    byokGemini,
+    process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3,
+    process.env.GEMINI_API_KEY_4,
+    process.env.GEMINI_API_KEY_5,
+    process.env.GEMINI_API_KEY_6
+  ].filter(Boolean) as string[];
+  return keys;
+}
+
+async function buildOpenAIKeys(): Promise<string[]> {
+  // BYOK: User's own OpenAI key from Settings Hub (feature 062)
+  const byokOpenAI = await readByokKey("integrasi-openai-api-model-gpt-4o-dall-e-3-ma");
+  const keys = [
+    byokOpenAI,
+    process.env.OPENAI_API_KEY,
+  ].filter(Boolean) as string[];
+  return keys;
+}
+
+async function buildAnthropicKeys(): Promise<string[]> {
+  // BYOK: User's own Anthropic key from Settings Hub (feature 063)
+  const byokAnthropic = await readByokKey("integrasi-anthropic-api-claude-3-5-sonnet");
+  const keys = [
+    byokAnthropic,
+    process.env.ANTHROPIC_API_KEY,
+  ].filter(Boolean) as string[];
+  return keys;
+}
+
+// These are resolved dynamically per-request now (BYOK priority)
+let FALLBACK_KEYS: string[] = [];
+let GEMINI_FALLBACK_KEYS: string[] = [];
 
 function getModelCategory(modelId: string): string {
   const model = DASHSCOPE_MODELS.find(m => m.id === modelId);
@@ -35,6 +102,10 @@ export async function POST(req: NextRequest) {
     if (!supportedModels.includes(model)) {
       return Response.json({ error: `Unsupported model: ${model}` }, { status: 400 });
     }
+
+    // ─── BYOK: Build key arrays dynamically per-request ──────────────
+    FALLBACK_KEYS = await buildAlibabaKeys();
+    GEMINI_FALLBACK_KEYS = await buildGeminiKeys();
 
     const serviceCategory = getModelCategory(model);
     const apiType = getModelApiType(model);

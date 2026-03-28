@@ -1,10 +1,11 @@
 'use client';
-import React, { useCallback, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Download, Loader2, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
 import { usePdfStore } from '../store/usePdfStore';
 
 interface PdfToolInterfaceProps {
+  toolId: string;
   title: string;
   description: string;
   gradient: string;
@@ -12,8 +13,13 @@ interface PdfToolInterfaceProps {
   children?: React.ReactNode;
 }
 
-export default function PdfToolInterface({ title, description, gradient, acceptMultiple = false, children }: PdfToolInterfaceProps) {
-  const { task, setFiles, processPdf, reset } = usePdfStore();
+export default function PdfToolInterface({ toolId, title, description, gradient, acceptMultiple = false, children }: PdfToolInterfaceProps) {
+  const { task, setFiles, setOperation, processPdf, reset } = usePdfStore();
+
+  // Sync the store operation to match the current tool slug on mount/change
+  useEffect(() => {
+    if (toolId) setOperation(toolId as any);
+  }, [toolId, setOperation]);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

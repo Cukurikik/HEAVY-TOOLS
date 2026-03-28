@@ -36,7 +36,7 @@ export function MergerOptions() {
           <p className="text-amber-400/50 text-[10px] font-medium">Enable if videos have different codecs/resolutions</p>
         </div>
         <Switch
-          defaultChecked={false}
+          checked={(task.options?.reencode as boolean) ?? false}
           onCheckedChange={(checked: boolean) => setOptions({ reencode: checked })}
         />
       </div>
