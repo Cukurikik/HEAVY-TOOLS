@@ -2,14 +2,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import * as Icons from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { PDF_TOOLS } from '../constants/tools';
 
 export default function PdfForgeDashboard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {PDF_TOOLS.map((tool, i) => {
-        const IconComponent = (Icons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[tool.icon] || Icons.FileText;
+        const IconComponent = tool.icon || FileText;
         return (
           <motion.div key={tool.id}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
