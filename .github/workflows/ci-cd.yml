@@ -30,7 +30,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
@@ -52,7 +51,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm vitest run --reporter=verbose
@@ -75,7 +73,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build

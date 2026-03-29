@@ -16,17 +16,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: '9'
+          node-version: '20'
+          cache: 'npm'
           
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
         
       - name: Run Audio Unit Tests
         run: npx vitest run src/__tests__/audio-*
