@@ -3,8 +3,8 @@ import { DASHSCOPE_MODELS, getAllModelIds, getApiEndpoint } from "@/lib/ai-model
 
 const FALLBACK_KEYS = [
   process.env.ALIBABA_CLOUD_API_KEY,
-  "sk-baadd0ecc39547d68b00872b10f95e87", // Secondary key
-  "sk-4be34075ee564d4d85fd6357f70898e2"  // Tertiary key
+  process.env.ALIBABA_CLOUD_API_KEY_2,
+  process.env.ALIBABA_CLOUD_API_KEY_3
 ].filter(Boolean) as string[];
 
 const GEMINI_FALLBACK_KEYS = [
