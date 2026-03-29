@@ -43,3 +43,23 @@ next-env.d.ts
 *.db
 *.sqlite
 /prisma/dev.db
+
+# Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.flakes/
+.pyre/
+.pytest_cache/
+.tox/
+.env.python

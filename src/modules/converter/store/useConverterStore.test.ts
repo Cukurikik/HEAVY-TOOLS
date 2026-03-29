@@ -15,14 +15,18 @@ describe('useConverterStore', () => {
 
   it('should initialize with default state', () => {
     const { task } = useConverterStore.getState();
-    expect(task.id).toBe('');
-    expect(task.files).toEqual([]);
-    expect(task.operation).toBe('idle');
-    expect(task.status).toBe('idle');
-    expect(task.progress).toBe(0);
-    expect(task.outputUrls).toEqual([]);
-    expect(task.options).toEqual({});
-    expect(task.outputFormat).toBe('');
+    const { createdAt, ...taskWithoutDate } = task;
+    expect(taskWithoutDate).toEqual({
+      id: '',
+      files: [],
+      operation: 'idle',
+      status: 'idle',
+      progress: 0,
+      outputUrls: [],
+      options: {},
+      outputFormat: ''
+    });
+    expect(createdAt).toBeInstanceOf(Date);
   });
 
   it('should set file and generate a new id', () => {
@@ -73,7 +77,7 @@ describe('useConverterStore', () => {
     it('should error if operation has no matching engine', async () => {
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       useConverterStore.getState().setFiles([file]);
-      // Default operation is 'idle', which has no engine
+      useConverterStore.getState().setOperation('idle');
       await useConverterStore.getState().processConversion();
 
       const { task } = useConverterStore.getState();
@@ -122,13 +126,17 @@ describe('useConverterStore', () => {
     useConverterStore.getState().reset();
 
     const { task } = useConverterStore.getState();
-    expect(task.id).toBe('');
-    expect(task.files).toEqual([]);
-    expect(task.operation).toBe('idle');
-    expect(task.status).toBe('idle');
-    expect(task.progress).toBe(0);
-    expect(task.outputUrls).toEqual([]);
-    expect(task.options).toEqual({});
-    expect(task.outputFormat).toBe('');
+    const { createdAt, ...taskWithoutDate } = task;
+    expect(taskWithoutDate).toEqual({
+      id: '',
+      files: [],
+      operation: 'idle',
+      status: 'idle',
+      progress: 0,
+      outputUrls: [],
+      options: {},
+      outputFormat: ''
+    });
+    expect(createdAt).toBeInstanceOf(Date);
   });
 });
