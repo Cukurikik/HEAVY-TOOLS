@@ -1,0 +1,19 @@
+# ninja log v7
+25	6658	7964358527010147	CMakeFiles/omni-audio-dsp.dir/src/audio-dsp/audio_dsp.cpp.o	dff48942241972ff
+3	7260	7964358526784155	CMakeFiles/omni-image-kernel.dir/src/image-kernel/image_kernel.cpp.o	e8995b67ae16403b
+53	7277	7964358527298673	CMakeFiles/omni-crypto-engine.dir/src/bindings/crypto_embind.cpp.o	77e45fb9836e37e6
+34	7286	7964358527101559	CMakeFiles/omni-audio-dsp.dir/src/bindings/audio_embind.cpp.o	d0c77058f2927b5d
+15	7318	7964358526915340	CMakeFiles/omni-image-kernel.dir/src/bindings/image_embind.cpp.o	9c2f2b648a99f5b9
+44	8147	7964358527200878	CMakeFiles/omni-crypto-engine.dir/src/crypto-engine/crypto_engine.cpp.o	c2df49278dbdd3fb
+8148	52400	7964358608240976	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-crypto-engine.js	8d807d30d437eab9
+7289	52403	7964358599667092	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-audio-dsp.js	3496984784383aa7
+7326	52411	7964358600077248	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-image-kernel.js	9954dbe8ef42495
+35	1804	7964359068814599	CMakeFiles/omni-audio-dsp.dir/src/audio-dsp/audio_dsp.cpp.o	dff48942241972ff
+17	1885	7964359068628771	CMakeFiles/omni-image-kernel.dir/src/image-kernel/image_kernel.cpp.o	e8995b67ae16403b
+46	2029	7964359068924512	CMakeFiles/omni-audio-dsp.dir/src/bindings/audio_embind.cpp.o	d0c77058f2927b5d
+26	2083	7964359068718283	CMakeFiles/omni-image-kernel.dir/src/bindings/image_embind.cpp.o	9c2f2b648a99f5b9
+55	2303	7964359069010634	CMakeFiles/omni-crypto-engine.dir/src/crypto-engine/crypto_engine.cpp.o	c2df49278dbdd3fb
+64	2349	7964359069092529	CMakeFiles/omni-crypto-engine.dir/src/bindings/crypto_embind.cpp.o	77e45fb9836e37e6
+2030	6252	7964359088764774	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-audio-dsp.js	3496984784383aa7
+2084	6323	7964359089313963	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-image-kernel.js	9954dbe8ef42495
+2350	6545	7964359091964947	C:/Users/IKYY/Downloads/HEAVY-TOOLS/public/wasm/omni-crypto-engine.js	8d807d30d437eab9

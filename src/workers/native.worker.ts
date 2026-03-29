@@ -95,7 +95,7 @@ self.onmessage = async (e: MessageEvent) => {
         // or transfer directly for small results
         if (result.byteLength > 1024 * 1024) {
           // > 1MB: use Blob URL
-          const blob = new Blob([result as unknown as BlobPart], { type: 'application/octet-stream' });
+          const blob = new Blob([result as any], { type: 'application/octet-stream' });
           const url = URL.createObjectURL(blob);
           self.postMessage({
             type: 'SUCCESS',

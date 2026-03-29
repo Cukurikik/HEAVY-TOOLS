@@ -1,124 +1,162 @@
 /**
- * Omni-Tool Native Web Worker for Authentic FFmpeg WASM Audio Processing (Phase 26)
+ * Omni-Tool Native Web Worker for Hybrid Audio Processing (Phase 26.2)
  * 
  * Architecture:
- * - Uses SharedArrayBuffer threads where COOP/COEP allows.
- * - Injects the 30-Tier Audio Command Matrix generated in Phase 26.
- * - Synchronously monitors output logs to parse highly-accurate percentage tracking.
- * - Designed specifically for Digital Signal Processing (DSP) like Reverb, Compression, and Mastering.
+ * - Dual-Path: C++ Native WASM Kernel for high-performance DSP + FFmpeg for Codecs.
+ * - WASM SIMD optimized kernels for Pitch Shifting, EQ, and Compression.
+ * - FFmpeg handles decoding/encoding between formats (MP3/WAV/FLAC).
  */
 
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-import { AudioCommandMatrix, AudioToolCommand, AudioCommandPayload } from '@/modules/audio-studio/core/command-matrix';
+import { AudioCommandMatrix, AudioCommandPayload } from '@/modules/audio-studio/core/command-matrix';
+import { NativeEngine } from '@/lib/native-engine';
 
-// Singleton instance inside the worker
+// Singleton instances
 let ffmpeg: FFmpeg | null = null;
 const CORE_VERSION = '0.12.6';
 const baseURL = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/esm`;
 
 /**
- * Initializes FFmpeg Core strictly once per WebWorker lifecycle
+ * Tools supported by the C++ Native Engine (faster + high precision)
+ */
+const NATIVE_AUDIO_TOOLS = ['equalizer', 'compressor', 'pitch-shifter', 'normalizer'];
+
+/**
+ * Initializes FFmpeg Core
  */
 async function loadFFmpeg() {
   if (ffmpeg) return ffmpeg;
-
   ffmpeg = new FFmpeg();
-
-  // Route FFmpeg terminal logs directly to the main thread for the Logger Dashboard
-  ffmpeg.on('log', ({ message }) => {
-    self.postMessage({ type: 'LOG', message });
-  });
-
-  // Tap into the native progress API for exact visual tracking
-  ffmpeg.on('progress', ({ progress }) => {
-    self.postMessage({ type: 'PROGRESS', progress: Math.min(Math.round(progress * 100), 100) });
-  });
-
+  ffmpeg.on('log', ({ message }) => self.postMessage({ type: 'LOG', message: `[FFMPEG] ${message}` }));
+  ffmpeg.on('progress', ({ progress }) => self.postMessage({ type: 'PROGRESS', progress: Math.min(Math.round(progress * 100), 100) }));
+  
   const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript');
   const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm');
   
-  // Conditionally load multi-threading core if environment permits
   try {
     const workerURL = await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript');
     await ffmpeg.load({ coreURL, wasmURL, workerURL });
-    self.postMessage({ type: 'LOG', message: '[WASM AUDIO] Multi-Threaded FFmpeg Active.' });
   } catch (err) {
     await ffmpeg.load({ coreURL, wasmURL });
-    self.postMessage({ type: 'LOG', message: '[WASM AUDIO] Fallback: Single-Thread FFmpeg Active.' });
+  }
+  return ffmpeg;
+}
+
+/**
+ * Processes audio using the C++ WASM Native Engine
+ */
+async function processWithNativeKernel(instance: FFmpeg, payload: any) {
+  const { toolSlug, file, options = {}, outputFormat = 'mp3' } = payload;
+  const inputFilename = `raw_input_${Date.now()}`;
+  const pcmFilename = `decoded.f32le`;
+  const processedFilename = `processed.f32le`;
+  const outputFilename = `native_output.${outputFormat}`;
+
+  self.postMessage({ type: 'STATUS', status: 'native_kernel_init' });
+
+  // 1. Decode to raw float PCM (single channel for DSP simplicity, or handle multi)
+  // We use 44.1kHz s16le for wide compatibility and then cast in C++ if needed, 
+  // but better to decode to f32le directly.
+  const sampleRate = options.sampleRate || 44100;
+  await instance.writeFile(inputFilename, await fetchFile(file));
+  
+  self.postMessage({ type: 'LOG', message: '[NativeAudio] Decoding to raw PCM...' });
+  await instance.exec(['-i', inputFilename, '-f', 'f32le', '-ac', '1', '-ar', sampleRate.toString(), pcmFilename]);
+
+  // 2. Load C++ Kernel
+  const kernel = await NativeEngine.load('audio-dsp');
+  const rawPcm = await instance.readFile(pcmFilename);
+  const floatPcm = new Float32Array((rawPcm as any).buffer);
+
+  self.postMessage({ type: 'STATUS', status: 'native_dsp_running' });
+  self.postMessage({ type: 'LOG', message: `[NativeAudio] Running C++ DSP: ${toolSlug}` });
+
+  let resultPcm: Float32Array;
+
+  // 3. Execute specific C++ operation
+  switch (toolSlug) {
+    case 'equalizer':
+      resultPcm = kernel.equalize(floatPcm, floatPcm.length, sampleRate, 
+        options.lowGain || 0, options.midGain || 0, options.highGain || 0);
+      break;
+    case 'compressor':
+      resultPcm = kernel.compress(floatPcm, floatPcm.length, sampleRate,
+        options.threshold || -20, options.ratio || 4, options.attack || 10, options.release || 100);
+      break;
+    case 'pitch-shifter':
+      resultPcm = kernel.pitchShift(floatPcm, floatPcm.length, sampleRate, options.semitones || 0);
+      break;
+    case 'normalizer':
+      resultPcm = kernel.normalize(floatPcm, floatPcm.length, options.targetDb || -1);
+      break;
+    default:
+      throw new Error(`Native tool ${toolSlug} not implemented in worker wrapper`);
   }
 
-  return ffmpeg;
+  // 4. Encode back to target format
+  self.postMessage({ type: 'LOG', message: '[NativeAudio] Encoding result...' });
+  await instance.writeFile(processedFilename, new Uint8Array(resultPcm.buffer));
+  
+  // FFmpeg command to wrap raw PCM back into container
+  // -f f32le -ar [sr] -ac 1 -i [in] [out]
+  await instance.exec([
+    '-f', 'f32le', '-ar', sampleRate.toString(), '-ac', '1', 
+    '-i', processedFilename, 
+    outputFilename
+  ]);
+
+  const outputData = await instance.readFile(outputFilename);
+  
+  // Cleanup
+  await instance.deleteFile(inputFilename);
+  await instance.deleteFile(pcmFilename);
+  await instance.deleteFile(processedFilename);
+  await instance.deleteFile(outputFilename);
+
+  return outputData;
 }
 
 self.onmessage = async (e: MessageEvent) => {
   const { type, payload } = e.data;
 
   if (type === 'PROCESS_AUDIO') {
-    self.postMessage({ type: 'STATUS', status: 'initializing_ffmpeg' });
+    self.postMessage({ type: 'STATUS', status: 'initializing_engines' });
     
     try {
-      const { toolSlug, file, secondaryFiles = [], options = {}, outputFormat = 'mp3' } = payload;
-      
+      const { toolSlug, file, outputFormat = 'mp3', options = {} } = payload;
       const instance = await loadFFmpeg();
       
-      const inputFilename = `input_${Date.now()}_${file.name}`;
-      const outputFilename = `output_${Date.now()}.${outputFormat}`;
+      let finalData: Uint8Array;
 
-      // 1. Write the primary raw audio into FFmpeg's isolated Origin Virtual File System (MEMFS)
-      await instance.writeFile(inputFilename, await fetchFile(file));
-      
-      const secondaryInputs: string[] = [];
-      
-      // 2. Handle Secondary Inputs (e.g. for Audio Merger)
-      if (toolSlug === 'merger' && secondaryFiles.length > 0) {
-        let concatContent = `file '${inputFilename}'\n`;
-        
-        for (let i = 0; i < secondaryFiles.length; i++) {
-          const secFile = secondaryFiles[i];
-          const secName = `sec_${i}_${secFile.name}`;
-          await instance.writeFile(secName, await fetchFile(secFile));
-          concatContent += `file '${secName}'\n`;
-          secondaryInputs.push(secName);
+      // ROUTING: Check if we should use Native C++ or FFmpeg fallback
+      if (NATIVE_AUDIO_TOOLS.includes(toolSlug) && !payload.forceFfmpeg) {
+        try {
+          finalData = await processWithNativeKernel(instance, payload) as Uint8Array;
+        } catch (nativeErr: any) {
+          self.postMessage({ type: 'LOG', message: `[NativeAudio] Kernel failed: ${nativeErr.message}. Falling back to FFmpeg.` });
+          return self.postMessage({ type: 'RETRY_FFMPEG', originalPayload: payload }); // Optional retry signal
         }
+      } else {
+        // Standard FFmpeg path
+        const inputFilename = `in_${Date.now()}`;
+        const outputFilename = `out_${Date.now()}.${outputFormat}`;
+        await instance.writeFile(inputFilename, await fetchFile(file));
         
-        // Write the required concat.txt file for safe concat demuxer
-        const listName = `concat_list_${Date.now()}.txt`;
-        await instance.writeFile(listName, concatContent);
-        secondaryInputs.push(listName); // Specifically using this as the primary resolution bypass if needed
+        const args = AudioCommandMatrix.resolve(toolSlug, {
+          inputPath: inputFilename,
+          outputPath: outputFilename,
+          options,
+          secondaryInputs: []
+        });
+
+        await instance.exec(args);
+        finalData = await instance.readFile(outputFilename) as Uint8Array;
+        await instance.deleteFile(inputFilename);
+        await instance.deleteFile(outputFilename);
       }
 
-      self.postMessage({ type: 'STATUS', status: 'processing_dsp' });
-
-      // 3. Resolve the massive 30-Tier DSP Command Matrix 
-      const matrixPayload: AudioCommandPayload = {
-        inputPath: toolSlug === 'merger' ? secondaryInputs.find(s => s.endsWith('.txt')) || inputFilename : inputFilename,
-        outputPath: outputFilename,
-        options,
-        secondaryInputs
-      };
-
-      const args = AudioCommandMatrix.resolve(toolSlug as AudioToolCommand, matrixPayload);
-      
-      self.postMessage({ type: 'LOG', message: `Executing: ffmpeg ${args.join(' ')}` });
-
-      // 4. Blast the command into the WASM Core
-      await instance.exec(args);
-
-      self.postMessage({ type: 'STATUS', status: 'finalizing_chunks' });
-
-      // 5. Retrieve the processed raw buffer 
-      const data = await instance.readFile(outputFilename);
-      
-      // 6. Memory Cleanup (Prevent Leaks)
-      await instance.deleteFile(inputFilename);
-      await instance.deleteFile(outputFilename);
-      for (const sName of secondaryInputs) {
-        try { await instance.deleteFile(sName); } catch (e) {}
-      }
-
-      // 7. Send back via Blob Object URL securely bypassing serialization bounds
-      const finalBlob = new Blob([new Uint8Array(data as unknown as ArrayBufferLike) as any], { type: `audio/${outputFormat}` });
+      const finalBlob = new Blob([finalData as any], { type: `audio/${outputFormat}` });
       const objectUrl = URL.createObjectURL(finalBlob);
 
       self.postMessage({ 
@@ -128,12 +166,12 @@ self.onmessage = async (e: MessageEvent) => {
       });
 
     } catch (error: any) {
-      self.postMessage({ type: 'ERROR', error: error.message || 'Fatal Audio Engine Failure' });
+      self.postMessage({ type: 'ERROR', error: error.message || 'Audio Engine Failure' });
     }
 
   } else if (type === 'TERMINATE') {
-    self.postMessage({ type: 'LOG', message: 'Termination Order Received. Core shutdown.' });
     if (ffmpeg) ffmpeg.terminate();
-    self.close(); // Clean suicide
+    self.close();
   }
 };
+

@@ -1,0 +1,5 @@
+C:/Users/IKYY/Downloads/HEAVY-TOOLS/native/build/CMakeFiles/omni-image-kernel.dir
+C:/Users/IKYY/Downloads/HEAVY-TOOLS/native/build/CMakeFiles/omni-audio-dsp.dir
+C:/Users/IKYY/Downloads/HEAVY-TOOLS/native/build/CMakeFiles/omni-crypto-engine.dir
+C:/Users/IKYY/Downloads/HEAVY-TOOLS/native/build/CMakeFiles/edit_cache.dir
+C:/Users/IKYY/Downloads/HEAVY-TOOLS/native/build/CMakeFiles/rebuild_cache.dir
