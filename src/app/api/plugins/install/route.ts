@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { pluginDb } from '@/lib/db';
 import AdmZip from 'adm-zip';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'fs';
-import { join, resolve } from 'path';
+import { join, resolve, basename } from 'path';
 import { validateManifest } from '@/lib/validators/plugin';
 import { PLUGINS_DIR } from '@/modules/plugin-engine/system/health-monitor';
 
@@ -20,8 +20,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File harus berformat ZIP' }, { status: 400 });
     }
 
+    // Sanitize user-provided filename to prevent path traversal vulnerability
+    const safeFileName = basename(file.name);
     const buffer = Buffer.from(await file.arrayBuffer());
-    tempZipPath = join(process.cwd(), '.next', 'tmp', `${Date.now()}-${file.name}`);
+    tempZipPath = join(process.cwd(), '.next', 'tmp', `${Date.now()}-${safeFileName}`);
     
     if (!existsSync(join(process.cwd(), '.next', 'tmp'))) {
       mkdirSync(join(process.cwd(), '.next', 'tmp'), { recursive: true });

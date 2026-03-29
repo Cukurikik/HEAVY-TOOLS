@@ -126,7 +126,9 @@ export async function POST(
 
     const tmpDir = `/tmp/omni/video`;
     await fs.mkdir(tmpDir, { recursive: true });
-    const inputPath = `${tmpDir}/${crypto.randomUUID()}_${file.name}`;
+    // Sanitize user-provided filename to prevent path traversal vulnerability
+    const safeFileName = path.basename(file.name);
+    const inputPath = `${tmpDir}/${crypto.randomUUID()}_${safeFileName}`;
     
     // Write file to disk
     const arrayBuffer = await file.arrayBuffer();
@@ -138,7 +140,7 @@ export async function POST(
       success: true,
       jobId,
       tool,
-      fileName: file.name,
+      fileName: safeFileName,
       fileSize: file.size,
       status: "queued",
       message: `Job queued.`,
