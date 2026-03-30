@@ -410,13 +410,13 @@ export default function DedicatedAssistantPage() {
               
               {/* Attachments & Tools Header */}
               <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5">
-                 <button className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-indigo-400 transition-colors" title="Attach file">
+                 <button aria-label="Attach file" className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-indigo-400 transition-colors" title="Attach file">
                     <Paperclip className="w-4 h-4" />
                  </button>
-                 <button className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-emerald-400 transition-colors" title="Send Image to Vision Model">
+                 <button aria-label="Send Image to Vision Model" className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-emerald-400 transition-colors" title="Send Image to Vision Model">
                     <ImageIcon className="w-4 h-4" />
                  </button>
-                 <button className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-amber-400 transition-colors" title="Voice Input">
+                 <button aria-label="Voice Input" className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-amber-400 transition-colors" title="Voice Input">
                     <Mic className="w-4 h-4" />
                  </button>
                  <div className="flex-1" />
@@ -441,6 +441,7 @@ export default function DedicatedAssistantPage() {
                 {isLoading ? (
                   <button 
                     onClick={() => {/* Implement Cancel */}}
+                    aria-label="Cancel"
                     className="shrink-0 w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors border border-red-500/30"
                   >
                     <StopCircle className="w-5 h-5" />
@@ -449,6 +450,7 @@ export default function DedicatedAssistantPage() {
                   <button
                     onClick={handleSubmit}
                     disabled={!inputValue.trim()}
+                    aria-label="Send message"
                     className="shrink-0 w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:hover:bg-indigo-600 border border-indigo-400/30 shadow-lg shadow-indigo-500/20 group"
                   >
                     <Send className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
