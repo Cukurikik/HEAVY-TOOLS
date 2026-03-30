@@ -1,0 +1,3 @@
+## 2024-05-18 - Missing ARIA Labels on Icon-only Buttons
+**Learning:** Found a pattern of missing `aria-label` attributes on icon-only buttons (like tool icons or action buttons). While these buttons occasionally had `title` attributes for tooltips, they lacked the `aria-label` necessary for robust screen reader accessibility.
+**Action:** When working on custom interactive components, particularly icon-only actions (like chat submission, attachments, etc.), ensure to explicitly include `aria-label` along with standard `title` tooltips to properly expose functionality to assistive technologies.
