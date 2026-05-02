@@ -24,7 +24,7 @@ describe('isFeatureActive', () => {
 
   it('should return false when a feature flag is explicitly false', () => {
     // Set a flag to false
-    FEATURE_FLAGS.enableAiUpscaler = false;
+    FEATURE_FLAGS.enableAiUpscaler = false as any;
     expect(isFeatureActive('enableAiUpscaler')).toBe(false);
   });
 
