@@ -1,6 +1,0 @@
-🧹 [code health improvement] refactor self.onmessage switch statement into separate handler functions
-
-🎯 What: Refactored the large switch statement in `self.onmessage` of `src/workers/converter.worker.ts` into individual handler functions (e.g. `handleMagicByteDetector`, `handleHashGenerator`) mapped by a `handlers` object lookup.
-💡 Why: The huge switch statement made the worker difficult to read and maintain. By isolating logic per tool into separate handler functions, the module is much cleaner, more maintainable, and prevents regressions when adding new converters.
-✅ Verification: Ran `pnpm exec tsc --noEmit` and successfully passed all type checks. Run full `pnpm test` suite and successfully passed all unit tests including the patched `useConverterStore.test.ts` and `usePdfStore.test.ts`.
-✨ Result: `converter.worker.ts` is now logically grouped, much easier to read, and ready for further decoupled extension.
