@@ -15,3 +15,8 @@ if (typeof global !== 'undefined') {
     } as any;
   }
 }
+
+// Ensure URL is present in jsdom
+if (typeof global.URL === 'undefined' || typeof global.URL !== 'function') {
+  global.URL = (await import('url')).URL as any;
+}
