@@ -6,7 +6,7 @@
     "dev": "cross-env PORT=3000 next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint src --ext .ts,.tsx",
     "test": "vitest",
     "genkit:ui": "genkit start -- cross-env PORT=3000 next dev --webpack"
   },
