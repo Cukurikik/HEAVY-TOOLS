@@ -28,16 +28,46 @@ export async function GET(request: NextRequest) {
     let deletedCount = 0
     let failedCount = 0
 
-    // Delete physical objects from bucket and DB records
-    for (const video of staleVideos) {
-      try {
-        const key = `${video.userId}/${video.fileName}`
-        await deleteCloudObject(key)
-        await db.cloudVideo.delete({ where: { id: video.id } })
-        deletedCount++
-      } catch (err) {
-        console.error(`Failed to delete video ${video.id}:`, err)
-        failedCount++
+    // Delete physical objects from bucket and DB records in optimized chunks
+    const CHUNK_SIZE = 50
+    for (let i = 0; i < staleVideos.length; i += CHUNK_SIZE) {
+      const chunk = staleVideos.slice(i, i + CHUNK_SIZE)
+
+      const results = await Promise.allSettled(
+        chunk.map(async (video) => {
+          const key = `${video.userId}/${video.fileName}`
+          await deleteCloudObject(key)
+          return video.id
+        })
+      )
+
+      const successfulIds: string[] = []
+      results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          successfulIds.push(result.value as string)
+        } else {
+          console.error(`Failed to delete storage object for video ${chunk[index].id}:`, result.reason)
+          failedCount++
+        }
+      })
+
+      if (successfulIds.length > 0) {
+        try {
+          // Bulk DB deletion
+          await db.cloudVideo.deleteMany({
+            where: {
+              id: { in: successfulIds }
+            }
+          })
+          deletedCount += successfulIds.length
+        } catch (dbErr) {
+          console.error(`Bulk DB deletion failed for chunk starting at index ${i}:`, dbErr)
+          // Fallback or just count as failures?
+          // Since storage is deleted, but DB is not, we have an orphaned record.
+          // For simplicity in this optimization, we add to failedCount.
+          // Adjust this as necessary based on exact required semantics.
+          failedCount += successfulIds.length
+        }
       }
     }
 
