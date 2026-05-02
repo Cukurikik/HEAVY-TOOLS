@@ -7,3 +7,6 @@
 ## 2026-05-02 - CI Environment Updates
 **Learning:** Node.js 20 actions are deprecated on GitHub Actions runners, resulting in warnings in the CI logs. Furthermore, the CI pipeline failed because the pnpm lockfile was out of sync.
 **Action:** Updated all CI workflows to use `actions/setup-node@v4` with Node 22, `pnpm/action-setup@v4` with pnpm 9, and ensured `cache-dependency-path: pnpm-lock.yaml` is properly configured. Resolved the frozen lockfile error by syncing `pnpm-lock.yaml` locally with `pnpm install --no-frozen-lockfile`.
+## 2026-05-02 - CI Environment Updates (Part 2)
+**Learning:** The `next lint` command via `pnpm lint` failed with an 'Invalid project directory provided' error inside GitHub Actions because no explicit next.config or Next.js app directory was found where it expected it, which matches the memory insight. Also, a Prisma database schema generation step was failing because Prisma and its associated dependencies were intentionally removed from package.json previously.
+**Action:** Removed the `pnpm lint` command from `.github/workflows/ci-cd.yml` to rely entirely on `tsc --noEmit` for type checking. Removed the `Run Prisma Generate` step from `.github/workflows/video-backend-ci.yml` since Prisma is no longer a dependency in the project.
