@@ -167,30 +167,43 @@ export async function GET(request: NextRequest) {
     }
 
     // ─── ASSEMBLE RESPONSE ───
+    let videoOps = 0;
+    let imageOps = 0;
+    let pdfOps = 0;
+    let llmTokens = 0;
+
+    for (let i = 0; i < engineStats.length; i++) {
+      const stat = engineStats[i];
+      if (stat.engineType === 'video') videoOps = stat.totalTasks;
+      else if (stat.engineType === 'image') imageOps = stat.totalTasks;
+      else if (stat.engineType === 'pdf') pdfOps = stat.totalTasks;
+      else if (stat.engineType === 'llm') llmTokens = stat.totalTasks;
+    }
+
     const dashboardData: AdminDashboardData = {
       quotaOverview: {
         identifier: 'global-aggregate',
         tier: 'free',
         usage: {
-          video_ops: engineStats.find(e => e.engineType === 'video')?.totalTasks || 0,
-          image_ops: engineStats.find(e => e.engineType === 'image')?.totalTasks || 0,
-          pdf_ops: engineStats.find(e => e.engineType === 'pdf')?.totalTasks || 0,
-          llm_tokens: engineStats.find(e => e.engineType === 'llm')?.totalTasks || 0,
+          video_ops: videoOps,
+          image_ops: imageOps,
+          pdf_ops: pdfOps,
+          llm_tokens: llmTokens,
           bandwidth_bytes: totalBandwidthToday,
         },
         limits: FREE_TIER_LIMITS,
         remaining: {
-          video_ops: FREE_TIER_LIMITS.video_ops - (engineStats.find(e => e.engineType === 'video')?.totalTasks || 0),
-          image_ops: FREE_TIER_LIMITS.image_ops - (engineStats.find(e => e.engineType === 'image')?.totalTasks || 0),
-          pdf_ops: FREE_TIER_LIMITS.pdf_ops - (engineStats.find(e => e.engineType === 'pdf')?.totalTasks || 0),
-          llm_tokens: FREE_TIER_LIMITS.llm_tokens - (engineStats.find(e => e.engineType === 'llm')?.totalTasks || 0),
+          video_ops: FREE_TIER_LIMITS.video_ops - videoOps,
+          image_ops: FREE_TIER_LIMITS.image_ops - imageOps,
+          pdf_ops: FREE_TIER_LIMITS.pdf_ops - pdfOps,
+          llm_tokens: FREE_TIER_LIMITS.llm_tokens - llmTokens,
           bandwidth_bytes: FREE_TIER_LIMITS.bandwidth_bytes - totalBandwidthToday,
         },
         percentages: {
-          video_ops: Math.round(((engineStats.find(e => e.engineType === 'video')?.totalTasks || 0) / FREE_TIER_LIMITS.video_ops) * 100),
-          image_ops: Math.round(((engineStats.find(e => e.engineType === 'image')?.totalTasks || 0) / FREE_TIER_LIMITS.image_ops) * 100),
-          pdf_ops: Math.round(((engineStats.find(e => e.engineType === 'pdf')?.totalTasks || 0) / FREE_TIER_LIMITS.pdf_ops) * 100),
-          llm_tokens: Math.round(((engineStats.find(e => e.engineType === 'llm')?.totalTasks || 0) / FREE_TIER_LIMITS.llm_tokens) * 100),
+          video_ops: Math.round((videoOps / FREE_TIER_LIMITS.video_ops) * 100),
+          image_ops: Math.round((imageOps / FREE_TIER_LIMITS.image_ops) * 100),
+          pdf_ops: Math.round((pdfOps / FREE_TIER_LIMITS.pdf_ops) * 100),
+          llm_tokens: Math.round((llmTokens / FREE_TIER_LIMITS.llm_tokens) * 100),
           bandwidth_bytes: Math.round((totalBandwidthToday / FREE_TIER_LIMITS.bandwidth_bytes) * 100),
         },
         resetAt: new Date(Date.now() + 86400000).toISOString(),
