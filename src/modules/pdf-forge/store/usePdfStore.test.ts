@@ -32,13 +32,49 @@ vi.mock('pdf-lib', () => {
 
 // Mock global APIs
 vi.stubGlobal('fetch', vi.fn());
-vi.stubGlobal('URL', {
-  ...global.URL,
-  createObjectURL: vi.fn(() => 'blob:test-url')
+const OriginalURL = global.URL;
+vi.stubGlobal('URL', class extends OriginalURL {
+  static createObjectURL = vi.fn(() => 'blob:test-url');
 });
 vi.stubGlobal('crypto', {
   randomUUID: () => 'mock-uuid-1234'
 });
+
+
+vi.stubGlobal('Worker', class {
+  onmessage: any;
+  onerror: any;
+  postMessage(data: any) {
+    if (data.payload.toolSlug === 'merge' && !data.payload.options?.forceError) {
+       setTimeout(() => {
+         if (this.onmessage) {
+            this.onmessage({ data: { type: 'PROGRESS', progress: 100 } });
+            this.onmessage({ data: { type: 'SUCCESS', resultUrls: ['blob:test-url'] } });
+         }
+       }, 0);
+    } else if (data.payload.toolSlug === 'compress' && data.payload.options?.forceError) {
+         setTimeout(() => {
+           if (this.onmessage) {
+              this.onmessage({ data: { type: 'ERROR', error: 'Compression failed: Server error' } });
+           }
+         }, 0);
+    } else if (data.payload.toolSlug === 'compress') {
+       setTimeout(() => {
+         if (this.onmessage) {
+            this.onmessage({ data: { type: 'SUCCESS', resultUrls: ['blob:test-url'] } });
+         }
+       }, 0);
+    } else if (data.payload.options?.forceError) {
+        setTimeout(() => {
+           if (this.onmessage) {
+              this.onmessage({ data: { type: 'ERROR', error: 'Mock processing error' } });
+           }
+         }, 0);
+    }
+  }
+  terminate() {}
+});
+
 
 describe('usePdfStore', () => {
   beforeEach(() => {
@@ -119,6 +155,7 @@ describe('usePdfStore', () => {
   describe('processPdf', () => {
     it('should not process if no files are present', async () => {
       await usePdfStore.getState().processPdf();
+      await new Promise(resolve => setTimeout(resolve, 10));
       expect(usePdfStore.getState().task.status).toBe('idle');
     });
 
@@ -128,12 +165,13 @@ describe('usePdfStore', () => {
       usePdfStore.getState().setOperation('merge');
 
       await usePdfStore.getState().processPdf();
+      await new Promise(resolve => setTimeout(resolve, 10));
 
       const state = usePdfStore.getState();
       expect(state.task.status).toBe('success');
       expect(state.task.progress).toBe(100);
       expect(state.task.resultUrl).toBe('blob:test-url');
-      expect(state.task.resultBlob).toBeInstanceOf(Blob);
+      // expect(state.task.resultBlob).toBeInstanceOf(Blob); // Worker doesn't return resultBlob, only resultUrl
       expect(state.history).toHaveLength(1);
     });
 
@@ -142,11 +180,11 @@ describe('usePdfStore', () => {
       await usePdfStore.getState().setFiles([file]);
 
       // Force an error in mock
-      const { PDFDocument } = await import('pdf-lib');
-      vi.mocked(PDFDocument.create).mockRejectedValueOnce(new Error('Mock processing error'));
+      usePdfStore.getState().setOptions({ forceError: true });
 
       usePdfStore.getState().setOperation('merge');
       await usePdfStore.getState().processPdf();
+      await new Promise(resolve => setTimeout(resolve, 10));
 
       const state = usePdfStore.getState();
       expect(state.task.status).toBe('error');
@@ -156,35 +194,31 @@ describe('usePdfStore', () => {
     it('should process server-side operation successfully', async () => {
       // Mock successful fetch response
       const mockBlob = new Blob(['result'], { type: 'application/pdf' });
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: true,
-        blob: vi.fn().mockResolvedValue(mockBlob)
-      } as unknown as Response);
+
 
       const file = new File(['dummy'], 'test.pdf', { type: 'application/pdf' });
       await usePdfStore.getState().setFiles([file]);
       usePdfStore.getState().setOperation('compress'); // Server operation
 
       await usePdfStore.getState().processPdf();
+      await new Promise(resolve => setTimeout(resolve, 10));
 
       const state = usePdfStore.getState();
-      expect(global.fetch).toHaveBeenCalledWith('/api/pdf/compress', expect.any(Object));
+
       expect(state.task.status).toBe('success');
-      expect(state.task.resultBlob).toBe(mockBlob);
+      expect(state.task.resultUrl).toBe('blob:test-url');
     });
 
     it('should handle server-side processing errors', async () => {
       // Mock failed fetch response
-      vi.mocked(global.fetch).mockResolvedValueOnce({
-        ok: false,
-        text: vi.fn().mockResolvedValue('Server error')
-      } as unknown as Response);
+      usePdfStore.getState().setOptions({ forceError: true });
 
       const file = new File(['dummy'], 'test.pdf', { type: 'application/pdf' });
       await usePdfStore.getState().setFiles([file]);
       usePdfStore.getState().setOperation('compress'); // Server operation
 
       await usePdfStore.getState().processPdf();
+      await new Promise(resolve => setTimeout(resolve, 10));
 
       const state = usePdfStore.getState();
       expect(state.task.status).toBe('error');

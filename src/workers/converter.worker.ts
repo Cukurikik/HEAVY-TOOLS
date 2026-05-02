@@ -34,19 +34,13 @@ function fail(msg: string) {
 // MAIN MESSAGE HANDLER
 // ═══════════════════════════════════════════════════
 
-self.onmessage = async (e: MessageEvent) => {
-  const { type, payload } = e.data;
 
-  if (type === 'PROCESS_CONVERSION') {
-    try {
-      const { toolSlug, file, options = {} } = payload;
+// ═══════════════════════════════════════════════════
+// TOOL HANDLERS
+// ═══════════════════════════════════════════════════
 
-      switch (toolSlug) {
+async function handleMagicByteDetector(file: File | undefined, options: any, toolSlug: string) {
 
-        // ════════════════════════════════════════════
-        // 1. MAGIC BYTE DETECTOR
-        // ════════════════════════════════════════════
-        case 'magic-byte-detector': {
           if (!file) throw new Error('A file is required for byte analysis.');
           log('Sniffing file header magic bytes...');
           progress(10);
@@ -128,13 +122,11 @@ self.onmessage = async (e: MessageEvent) => {
           };
           const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
           successBlob(blob, { inferredFormat, hexDump: hexString });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 2. HASH GENERATOR (Web Crypto API)
-        // ════════════════════════════════════════════
-        case 'hash-generator': {
+}
+
+async function handleHashGenerator(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A file is required for hashing.');
           const algorithm = (options.algorithm as string) || 'SHA-256';
           log(`Hashing ${file.name} with ${algorithm}...`);
@@ -160,13 +152,11 @@ self.onmessage = async (e: MessageEvent) => {
           };
           const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
           successBlob(blob, { hash: result['SHA-256'], algorithm: 'SHA-256' });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 3. BASE64 ENCODER/DECODER
-        // ════════════════════════════════════════════
-        case 'base64': {
+}
+
+async function handleBase64(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A file is required for Base64 encoding.');
           log(`Base64 encoding ${file.name}...`);
           if (file.size > 200 * 1024 * 1024) throw new Error('File exceeds 200MB Base64 limit.');
@@ -184,13 +174,11 @@ self.onmessage = async (e: MessageEvent) => {
           const blob = new Blob([dataUri], { type: 'text/plain' });
           progress(95);
           successBlob(blob, { snippet: dataUri.substring(0, 100) + '...', lengthChars: dataUri.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 4. HEX ENCODER
-        // ════════════════════════════════════════════
-        case 'hex-encoder': {
+}
+
+async function handleHexEncoder(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A file is required for Hex encoding.');
           log(`Hex dumping ${file.name}...`);
           if (file.size > 100 * 1024 * 1024) throw new Error('File exceeds 100MB Hex limit.');
@@ -206,13 +194,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([dump], { type: 'text/plain' });
           successBlob(blob, { lines: Math.ceil(bytes.length / 16), totalBytes: bytes.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 5. CSV → JSON
-        // ════════════════════════════════════════════
-        case 'csv-json': {
+}
+
+async function handleCsvJson(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A CSV file is required.');
           log('Parsing CSV to JSON...');
           progress(10);
@@ -231,13 +217,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
           successBlob(blob, { rowsConverted: data.length, columns: headers.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 6. JSON ↔ YAML
-        // ════════════════════════════════════════════
-        case 'json-yaml': {
+}
+
+async function handleJsonYaml(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A JSON or YAML file is required.');
           log('Converting JSON ↔ YAML...');
           progress(10);
@@ -253,13 +237,11 @@ self.onmessage = async (e: MessageEvent) => {
             const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
             successBlob(blob, { direction: 'YAML → JSON' });
           }
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 7. XML → JSON
-        // ════════════════════════════════════════════
-        case 'xml-json': {
+}
+
+async function handleXmlJson(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('An XML file is required.');
           log('Parsing XML to JSON...');
           progress(10);
@@ -268,13 +250,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
           successBlob(blob, { direction: 'XML → JSON' });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 8. MARKDOWN → HTML
-        // ════════════════════════════════════════════
-        case 'markdown-html': {
+}
+
+async function handleMarkdownHtml(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A Markdown file is required.');
           log('Converting Markdown to HTML...');
           progress(10);
@@ -284,26 +264,22 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([fullHtml], { type: 'text/html' });
           successBlob(blob, { direction: 'MD → HTML' });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 9. COLOR CONVERTER
-        // ════════════════════════════════════════════
-        case 'color-converter': {
+}
+
+async function handleColorConverter(file: File | undefined, options: any, toolSlug: string) {
+
           log('Converting colors...');
           const input = (options.color as string) || '#FF5733';
           const colors = convertColor(input);
           progress(80);
           const blob = new Blob([JSON.stringify(colors, null, 2)], { type: 'application/json' });
           successBlob(blob, { hex: colors.hex });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 10. UNIT CONVERTER
-        // ════════════════════════════════════════════
-        case 'unit-converter': {
+}
+
+async function handleUnitConverter(file: File | undefined, options: any, toolSlug: string) {
+
           log('Converting units...');
           const value = (options.value as number) || 1;
           const from = (options.from as string) || 'km';
@@ -315,13 +291,11 @@ self.onmessage = async (e: MessageEvent) => {
             formula: `${value} ${from} = ${result} ${to}`,
           }, null, 2)], { type: 'application/json' });
           successBlob(blob, { result: `${result} ${to}` });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 11. TIMEZONE CONVERTER
-        // ════════════════════════════════════════════
-        case 'timezone-converter': {
+}
+
+async function handleTimezoneConverter(file: File | undefined, options: any, toolSlug: string) {
+
           log('Converting timezones...');
           const inputTime = (options.time as string) || new Date().toISOString();
           const fromTz = (options.from as string) || 'UTC';
@@ -335,13 +309,11 @@ self.onmessage = async (e: MessageEvent) => {
             unixMs: date.getTime(),
           }, null, 2)], { type: 'application/json' });
           successBlob(blob, { converted: formatted });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 12. NUMBER SYSTEM CONVERTER
-        // ════════════════════════════════════════════
-        case 'number-system': {
+}
+
+async function handleNumberSystem(file: File | undefined, options: any, toolSlug: string) {
+
           log('Converting number systems...');
           const num = (options.value as number) || 255;
           const blob = new Blob([JSON.stringify({
@@ -351,13 +323,11 @@ self.onmessage = async (e: MessageEvent) => {
             hexPadded: num.toString(16).toUpperCase().padStart(Math.ceil(num.toString(16).length / 2) * 2, '0'),
           }, null, 2)], { type: 'application/json' });
           successBlob(blob, { hex: num.toString(16).toUpperCase() });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 13. ENCODING CONVERTER (UTF-8 / Latin1 / etc.)
-        // ════════════════════════════════════════════
-        case 'encoding-converter': {
+}
+
+async function handleEncodingConverter(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A text file is required.');
           log('Converting text encoding...');
           progress(10);
@@ -370,13 +340,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(80);
           const blob = new Blob([encoded], { type: 'text/plain;charset=utf-8' });
           successBlob(blob, { encoding: targetEncoding, chars: decoded.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 14. QR CODE GENERATOR (SVG-based, no library)
-        // ════════════════════════════════════════════
-        case 'qr-generator': {
+}
+
+async function handleQrGenerator(file: File | undefined, options: any, toolSlug: string) {
+
           const text = (options.text as string) || (file ? await file.text() : 'https://omni-tool.app');
           log(`Generating QR code for: "${text.substring(0, 50)}..."`);
           progress(10);
@@ -384,13 +352,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([svg], { type: 'image/svg+xml' });
           successBlob(blob, { content: text.substring(0, 100) });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 15. BARCODE GENERATOR (Code128 SVG)
-        // ════════════════════════════════════════════
-        case 'barcode-generator': {
+}
+
+async function handleBarcodeGenerator(file: File | undefined, options: any, toolSlug: string) {
+
           const text = (options.text as string) || (file ? await file.text() : '1234567890');
           log(`Generating barcode for: "${text}"`);
           progress(10);
@@ -398,22 +364,16 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([svg], { type: 'image/svg+xml' });
           successBlob(blob, { content: text });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 16-19. MEDIA CONVERTERS (delegate to FFmpeg)
-        // ════════════════════════════════════════════
-        case 'image-converter':
-        case 'video-converter':
-        case 'audio-converter': {
+}
+
+async function handleAudioConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error(`${toolSlug} requires FFmpeg WASM. Use the dedicated Video/Audio/Image hub tools instead.`);
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 20. DOCUMENT CONVERTER (text re-encode)
-        // ════════════════════════════════════════════
-        case 'document-converter': {
+async function handleDocumentConverter(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A document file is required.');
           log('Re-encoding document as UTF-8 plain text...');
           progress(10);
@@ -421,13 +381,11 @@ self.onmessage = async (e: MessageEvent) => {
           const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
           progress(90);
           successBlob(blob, { chars: text.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 21. ARCHIVE EXTRACTOR (ZIP only with DecompressionStream)
-        // ════════════════════════════════════════════
-        case 'archive-extractor': {
+}
+
+async function handleArchiveExtractor(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('An archive file is required.');
           log('Extracting ZIP archive file listing...');
           progress(10);
@@ -436,13 +394,11 @@ self.onmessage = async (e: MessageEvent) => {
           progress(80);
           const blob = new Blob([JSON.stringify({ archiveName: file.name, totalEntries: entries.length, entries }, null, 2)], { type: 'application/json' });
           successBlob(blob, { totalEntries: entries.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 22. ARCHIVE CREATOR (ZIP with Compression Streams API)
-        // ════════════════════════════════════════════
-        case 'archive-creator': {
+}
+
+async function handleArchiveCreator(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A file is required to create archive.');
           log(`Creating ZIP archive containing ${file.name}...`);
           progress(10);
@@ -450,34 +406,26 @@ self.onmessage = async (e: MessageEvent) => {
           progress(90);
           const blob = new Blob([zipBytes as unknown as BlobPart], { type: 'application/zip' });
           successBlob(blob, { originalSize: file.size, archiveSize: zipBytes.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 23. FONT CONVERTER
-        // ════════════════════════════════════════════
-        case 'font-converter': {
+}
+
+async function handleFontConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error('Font conversion (TTF/OTF/WOFF/WOFF2) requires the opentype.js library. Queued for future integration.');
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 24. EBOOK CONVERTER
-        // ════════════════════════════════════════════
-        case 'ebook-converter': {
+async function handleEbookConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error('eBook conversion (EPUB/MOBI/AZW3) requires calibre-WASM. Queued for future integration.');
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 25. CAD CONVERTER
-        // ════════════════════════════════════════════
-        case 'cad-converter': {
+async function handleCadConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error('CAD conversion (DXF/DWG) requires an AutoCAD parser. Queued for future integration.');
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 26. VECTOR CONVERTER (SVG pass-through)
-        // ════════════════════════════════════════════
-        case 'vector-converter': {
+async function handleVectorConverter(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('An SVG file is required.');
           log('Normalizing SVG vector file...');
           const text = await file.text();
@@ -488,27 +436,21 @@ self.onmessage = async (e: MessageEvent) => {
           }
           const blob = new Blob([normalized], { type: 'image/svg+xml' });
           successBlob(blob, { chars: normalized.length });
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 27. HEIC CONVERTER
-        // ════════════════════════════════════════════
-        case 'heic-converter': {
+}
+
+async function handleHeicConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error('HEIC/HEIF conversion requires libheif WASM. Queued for future integration. Use the Image hub tools for format conversion.');
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 28. RAW CONVERTER
-        // ════════════════════════════════════════════
-        case 'raw-converter': {
+async function handleRawConverter(file: File | undefined, options: any, toolSlug: string) {
+
           throw new Error('RAW photo conversion (CR2/NEF/ARW/DNG) requires dcraw WASM. Queued for future integration.');
-        }
+}
 
-        // ════════════════════════════════════════════
-        // 29. SUBTITLE CONVERTER (SRT ↔ VTT)
-        // ════════════════════════════════════════════
-        case 'subtitle-converter': {
+async function handleSubtitleConverter(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A subtitle file is required.');
           log('Converting subtitle format...');
           progress(10);
@@ -539,13 +481,11 @@ self.onmessage = async (e: MessageEvent) => {
             const blob = new Blob([numbered], { type: 'application/x-subrip' });
             successBlob(blob, { direction: 'VTT → SRT' });
           }
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 30. SPREADSHEET CONVERTER (TSV ↔ CSV)
-        // ════════════════════════════════════════════
-        case 'spreadsheet-converter': {
+}
+
+async function handleSpreadsheetConverter(file: File | undefined, options: any, toolSlug: string) {
+
           if (!file) throw new Error('A spreadsheet file (CSV/TSV) is required.');
           log('Converting spreadsheet format...');
           progress(10);
@@ -563,13 +503,11 @@ self.onmessage = async (e: MessageEvent) => {
             const blob = new Blob([tsv], { type: 'text/tab-separated-values' });
             successBlob(blob, { direction: 'CSV → TSV' });
           }
-          break;
-        }
 
-        // ════════════════════════════════════════════
-        // 31. CURRENCY CONVERTER (Static rates)
-        // ════════════════════════════════════════════
-        case 'currency-converter': {
+}
+
+async function handleCurrencyConverter(file: File | undefined, options: any, toolSlug: string) {
+
           log('Converting currency...');
           const amount = (options.amount as number) || 100;
           const from = (options.from as string) || 'USD';
@@ -589,12 +527,55 @@ self.onmessage = async (e: MessageEvent) => {
             note: 'Rates are approximate offline reference values.',
           }, null, 2)], { type: 'application/json' });
           successBlob(blob, { result: `${Math.round(result * 100) / 100} ${to}` });
-          break;
-        }
 
-        default:
-          throw new Error(`Converter tool [${toolSlug}] is not recognized by the Converter Engine.`);
+}
+
+const handlers: Record<string, (file: File | undefined, options: any, toolSlug: string) => Promise<void> | void> = {
+  'magic-byte-detector': handleMagicByteDetector,
+  'hash-generator': handleHashGenerator,
+  'base64': handleBase64,
+  'hex-encoder': handleHexEncoder,
+  'csv-json': handleCsvJson,
+  'json-yaml': handleJsonYaml,
+  'xml-json': handleXmlJson,
+  'markdown-html': handleMarkdownHtml,
+  'color-converter': handleColorConverter,
+  'unit-converter': handleUnitConverter,
+  'timezone-converter': handleTimezoneConverter,
+  'number-system': handleNumberSystem,
+  'encoding-converter': handleEncodingConverter,
+  'qr-generator': handleQrGenerator,
+  'barcode-generator': handleBarcodeGenerator,
+  'image-converter': handleAudioConverter,
+  'video-converter': handleAudioConverter,
+  'audio-converter': handleAudioConverter,
+  'document-converter': handleDocumentConverter,
+  'archive-extractor': handleArchiveExtractor,
+  'archive-creator': handleArchiveCreator,
+  'font-converter': handleFontConverter,
+  'ebook-converter': handleEbookConverter,
+  'cad-converter': handleCadConverter,
+  'vector-converter': handleVectorConverter,
+  'heic-converter': handleHeicConverter,
+  'raw-converter': handleRawConverter,
+  'subtitle-converter': handleSubtitleConverter,
+  'spreadsheet-converter': handleSpreadsheetConverter,
+  'currency-converter': handleCurrencyConverter,
+};
+
+self.onmessage = async (e: MessageEvent) => {
+  const { type, payload } = e.data;
+
+  if (type === 'PROCESS_CONVERSION') {
+    try {
+      const { toolSlug, file, options = {} } = payload;
+      const handler = handlers[toolSlug];
+      if (handler) {
+        await handler(file, options, toolSlug);
+      } else {
+        throw new Error(`Converter tool [${toolSlug}] is not recognized by the Converter Engine.`);
       }
+
 
     } catch (error: any) {
       fail(error.message || 'Fatal Converter Thread Error');

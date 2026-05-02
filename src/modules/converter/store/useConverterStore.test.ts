@@ -4,6 +4,11 @@ vi.mock('heic2any', () => ({ default: vi.fn() }));
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useConverterStore } from './useConverterStore';
 
+const OriginalURL = global.URL;
+vi.stubGlobal('URL', class extends OriginalURL {
+  static createObjectURL = vi.fn(() => 'blob:test-url');
+});
+
 describe('useConverterStore', () => {
   beforeEach(() => {
     useConverterStore.getState().reset();
@@ -75,14 +80,17 @@ describe('useConverterStore', () => {
     });
 
     it('should error if operation has no matching engine', async () => {
+      // mock getWorkerForOperation to return null and engineFunc to not exist
+      vi.stubGlobal('Worker', undefined); // Force fallback to main thread
       const file = new File(['test'], 'test.txt', { type: 'text/plain' });
       useConverterStore.getState().setFiles([file]);
-      useConverterStore.getState().setOperation('idle');
+      useConverterStore.getState().setOperation('idle-nonexistent');
       await useConverterStore.getState().processConversion();
 
       const { task } = useConverterStore.getState();
       expect(task.status).toBe('error');
       expect(task.error).toContain('Engine logic missing');
+      vi.unstubAllGlobals();
     });
 
     it('should simulate processing state transitions', async () => {
