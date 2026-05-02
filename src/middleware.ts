@@ -251,12 +251,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ─── 4. AUTHENTICATION GUARD ───
-  const isAuthPage = path.startsWith('/login') || path.startsWith('/register');
-  const sessionToken = request.cookies.get('auth-session-cookie')?.value;
-  // (Auth enforcement commented out until NextAuth is fully configured)
-  // if (!sessionToken && isDashboardPage) return NextResponse.redirect(new URL('/login', request.url));
-
   // ─── 5. CONSTRUCT RESPONSE WITH SECURITY HEADERS ───
   const response = NextResponse.next();
 
