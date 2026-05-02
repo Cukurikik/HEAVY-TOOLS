@@ -1,13 +1,10 @@
 /**
  * Auth Module Stub
- * Provides a placeholder auth helper until NextAuth is fully configured.
- * Once NextAuth is set up, replace this with the real auth() export.
+ * Provides a placeholder auth helper until an authentication provider (e.g. NextAuth) is fully configured.
+ *
+ * @returns A mocked session object for local development.
  */
-
-export async function auth() {
-  // TODO: Replace with NextAuth.js v5 when configured
-  // import NextAuth from 'next-auth';
-  // export const { auth } = NextAuth({ providers: [...] });
+export async function auth(): Promise<Session | null> {
   return {
     user: {
       id: 'local-user',
