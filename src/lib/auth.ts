@@ -1,21 +1,37 @@
-/**
- * Auth Module Stub
- * Provides a placeholder auth helper until NextAuth is fully configured.
- * Once NextAuth is set up, replace this with the real auth() export.
- */
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import GitHub from 'next-auth/providers/github';
+import Google from 'next-auth/providers/google';
 
-export async function auth() {
-  // TODO: Replace with NextAuth.js v5 when configured
-  // import NextAuth from 'next-auth';
-  // export const { auth } = NextAuth({ providers: [...] });
-  return {
-    user: {
-      id: 'local-user',
-      name: 'Omni-Tool User',
-      email: 'user@omni-tool.local',
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    GitHub,
+    Google,
+    Credentials({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      authorize: async (credentials) => {
+        // Mock default user to maintain current functionality
+        return {
+          id: 'local-user',
+          name: 'Omni-Tool User',
+          email: 'user@omni-tool.local',
+        };
+      },
+    }),
+  ],
+  callbacks: {
+    session: ({ session, token }) => {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
     },
-  };
-}
+  },
+});
 
 export type Session = {
   user: {
