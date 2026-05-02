@@ -160,22 +160,9 @@ async function checkQuotaAtEdge(
 }
 
 // ═══════════════════════════════════════════════════
-// MAIN MIDDLEWARE
+// MIDDLEWARE HELPERS
 // ═══════════════════════════════════════════════════
-export async function middleware(request: NextRequest) {
-  const ip = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
-  const userAgent = request.headers.get('user-agent');
-  const path = request.nextUrl.pathname;
-  const ipHash = await hashIpForQuota(ip);
-  const isLocalhost = request.nextUrl.hostname === 'localhost' || request.nextUrl.hostname === '127.0.0.1';
-
-  // ─── 0. DEVELOPMENT BYPASS ───
-  // Completely skip rate limiting, bot rejection, and quotas for local development
-  if (isLocalhost || process.env.NODE_ENV === 'development') {
-    return applySecurityHeaders(NextResponse.next());
-  }
-
-  // ─── 1. PERIMETER DEFENSE: Bot Rejection ───
+function handleBotRejection(userAgent: string | null, ipHash: string, path: string): NextResponse | null {
   if (isMaliciousBot(userAgent)) {
     recordSecurityEvent({
       type: 'bot_block',
@@ -190,8 +177,10 @@ export async function middleware(request: NextRequest) {
       { status: 403, headers: { 'Content-Type': 'application/json' } }
     );
   }
+  return null;
+}
 
-  // ─── 2. SLIDING WINDOW RATE LIMITER ───
+async function handleRateLimiting(ip: string, ipHash: string, path: string) {
   const isApiRoute = path.startsWith('/api/');
   const rateLimitResult = await enforceRateLimit(ip, {
     burst: isApiRoute ? 10 : 30,
@@ -207,10 +196,13 @@ export async function middleware(request: NextRequest) {
       details: `Rate limit hit. Status: ${rateLimitResult.status}`,
     });
 
-    return buildRateLimitResponse(rateLimitResult);
+    return { response: buildRateLimitResponse(rateLimitResult) };
   }
 
-  // ─── 3. FIRESTORE TIER-LIMIT QUOTA INTERCEPTION ───
+  return { headers: rateLimitResult.headers };
+}
+
+async function handleQuotaInterception(request: NextRequest, path: string, ipHash: string): Promise<NextResponse | null> {
   // Only intercept media manipulation APIs, skip health/admin/webhook routes
   if (isMediaApiRequest(path) && !shouldBypassQuota(path)) {
     const engineType = getEngineType(path);
@@ -250,6 +242,36 @@ export async function middleware(request: NextRequest) {
       }
     }
   }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════
+// MAIN MIDDLEWARE
+// ═══════════════════════════════════════════════════
+export async function middleware(request: NextRequest) {
+  const ip = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
+  const userAgent = request.headers.get('user-agent');
+  const path = request.nextUrl.pathname;
+  const ipHash = await hashIpForQuota(ip);
+  const isLocalhost = request.nextUrl.hostname === 'localhost' || request.nextUrl.hostname === '127.0.0.1';
+
+  // ─── 0. DEVELOPMENT BYPASS ───
+  // Completely skip rate limiting, bot rejection, and quotas for local development
+  if (isLocalhost || process.env.NODE_ENV === 'development') {
+    return applySecurityHeaders(NextResponse.next());
+  }
+
+  // ─── 1. PERIMETER DEFENSE: Bot Rejection ───
+  const botResponse = handleBotRejection(userAgent, ipHash, path);
+  if (botResponse) return botResponse;
+
+  // ─── 2. SLIDING WINDOW RATE LIMITER ───
+  const rateLimitState = await handleRateLimiting(ip, ipHash, path);
+  if (rateLimitState.response) return rateLimitState.response;
+
+  // ─── 3. FIRESTORE TIER-LIMIT QUOTA INTERCEPTION ───
+  const quotaResponse = await handleQuotaInterception(request, path, ipHash);
+  if (quotaResponse) return quotaResponse;
 
   // ─── 4. AUTHENTICATION GUARD ───
   const isAuthPage = path.startsWith('/login') || path.startsWith('/register');
@@ -261,7 +283,9 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   // Rate limit headers
-  Object.entries(rateLimitResult.headers).forEach(([k, v]) => response.headers.set(k, v));
+  if (rateLimitState.headers) {
+    Object.entries(rateLimitState.headers).forEach(([k, v]) => response.headers.set(k, v));
+  }
 
   return applySecurityHeaders(response);
 }
