@@ -45,47 +45,57 @@ export async function GET(request: NextRequest) {
       const now = Date.now();
       const twentyFourHoursAgo = new Date(now - 86400000);
 
+      const engineStatsMap = new Map<EngineType, EngineStats>();
+
+      // Initialize with zero data
       for (const engine of ENGINES) {
-        try {
-          const tasksSnapshot = await db.collection('ephemeral_tasks')
-            .where('engine_type', '==', engine)
-            .where('created_at', '>=', twentyFourHoursAgo)
-            .get();
-
-          let successCount = 0;
-          let errorCount = 0;
-          let totalBytes = 0;
-
-          tasksSnapshot.forEach(doc => {
-            const data = doc.data();
-            if (data.status === 'success') successCount++;
-            else if (data.status === 'error') errorCount++;
-            totalBytes += data.file_size || 0;
-          });
-
-          const total = successCount + errorCount;
-          engineStats.push({
-            engineType: engine,
-            totalTasks: tasksSnapshot.size,
-            successCount,
-            errorCount,
-            successRate: total > 0 ? Math.round((successCount / total) * 100) : 100,
-            totalBytesProcessed: totalBytes,
-          });
-
-          totalBandwidthToday += totalBytes;
-        } catch {
-          // Engine query failed — push zero stats
-          engineStats.push({
-            engineType: engine,
-            totalTasks: 0,
-            successCount: 0,
-            errorCount: 0,
-            successRate: 100,
-            totalBytesProcessed: 0,
-          });
-        }
+        engineStatsMap.set(engine, {
+          engineType: engine,
+          totalTasks: 0,
+          successCount: 0,
+          errorCount: 0,
+          successRate: 100,
+          totalBytesProcessed: 0,
+        });
       }
+
+      try {
+        const tasksSnapshot = await db.collection('ephemeral_tasks')
+          .where('engine_type', 'in', ENGINES)
+          .where('created_at', '>=', twentyFourHoursAgo)
+          .get();
+
+        tasksSnapshot.forEach(doc => {
+          const data = doc.data();
+          const engine = data.engine_type as EngineType;
+
+          if (!engineStatsMap.has(engine)) return;
+
+          const stats = engineStatsMap.get(engine)!;
+          stats.totalTasks++;
+
+          if (data.status === 'success') {
+            stats.successCount++;
+          } else if (data.status === 'error') {
+            stats.errorCount++;
+          }
+
+          const bytes = data.file_size || 0;
+          stats.totalBytesProcessed += bytes;
+          totalBandwidthToday += bytes;
+        });
+
+        // Calculate success rates
+        for (const stats of engineStatsMap.values()) {
+          const total = stats.successCount + stats.errorCount;
+          stats.successRate = total > 0 ? Math.round((stats.successCount / total) * 100) : 100;
+        }
+      } catch (error) {
+        // Query failed - we already have zero-filled default stats in the map
+        console.warn('[Admin Stats] Failed to query ephemeral_tasks:', error);
+      }
+
+      engineStats = Array.from(engineStatsMap.values());
 
       // ─── RECENT ERRORS ───
       try {
