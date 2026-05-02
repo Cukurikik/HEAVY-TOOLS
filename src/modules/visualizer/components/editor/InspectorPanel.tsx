@@ -98,12 +98,6 @@ export default function InspectorPanel() {
         <div className="h-20" /> {/* Bottom padding */}
       </div>
 
-      <style dangerouslySetInnerHTML={{__html:`
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(20,184,166,0.5); }
-      `}}/>
     </div>
   )
 }

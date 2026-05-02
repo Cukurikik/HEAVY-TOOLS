@@ -1,4 +1,4 @@
-## 2024-05-18 - Prevent Sensitive Error Data Leakage
-**Vulnerability:** Raw error objects from FFmpeg and browser APIs (`error.message` and `console.error`) were being rendered directly in the user interface and browser console.
-**Learning:** Returning unhandled exception messages to the client risks exposing internal stack traces, system paths, and unexpected framework vulnerabilities to potential attackers.
-**Prevention:** Catch error blocks should log a sanitized version of the error or omit sensitive details, while the state presented to the user should be a generic, friendly, and secure fallback message (e.g. "Processing failed securely").
+## 2024-05-24 - [CRITICAL] Fix dangerouslySetInnerHTML in InspectorPanel
+**Vulnerability:** Usage of `dangerouslySetInnerHTML` for a static style tag exposes the component to potential cross-site scripting (XSS) vulnerabilities if the string were ever dynamically generated or manipulated.
+**Learning:** Hardcoded styles should never be injected via `dangerouslySetInnerHTML`.
+**Prevention:** Always refactor inline `<style>` tags with `dangerouslySetInnerHTML` into standard CSS files (e.g. globals.css) or standard styled components.
