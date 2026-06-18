@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useVisualizerStore, ElementType } from '@/modules/audio-studio/store/useVisualizerStore'
 
 const TYPE_ICONS: Record<ElementType, string> = {
@@ -12,6 +12,8 @@ const TYPE_ICONS: Record<ElementType, string> = {
 export default function LayerPanel() {
   const { elements, activeElementId, setActiveElement, addElement, removeElement } = useVisualizerStore()
   const [showAddMenu, setShowAddMenu] = useState(false)
+
+  const reversedElements = useMemo(() => [...elements].reverse(), [elements])
 
   return (
     <div className="w-72 bg-[#0d0d12] border-r border-white/5 flex flex-col h-full text-sm text-slate-300 font-sans shadow-2xl z-10">
@@ -51,7 +53,7 @@ export default function LayerPanel() {
       </div>
       
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-1">
-        {[...elements].reverse().map((el, i) => (
+        {reversedElements.map((el, i) => (
           <div 
             key={el.id} 
             className={`

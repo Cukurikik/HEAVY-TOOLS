@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -97,6 +97,8 @@ export default function LayerPanel() {
   const { elements, loadScene, addElement } = useVisualizerStore()
   const [showAddMenu, setShowAddMenu] = useState(false)
 
+  const reversedElementsMemo = useMemo(() => [...elements].reverse(), [elements])
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -171,10 +173,10 @@ export default function LayerPanel() {
         >
           <div className="flex flex-col gap-1">
             <SortableContext 
-              items={[...elements].reverse().map(e => e.id)}
+              items={reversedElementsMemo.map(e => e.id)}
               strategy={verticalListSortingStrategy}
             >
-              {[...elements].reverse().map(el => (
+              {reversedElementsMemo.map(el => (
                 <SortableLayerItem key={el.id} el={el} />
               ))}
             </SortableContext>
