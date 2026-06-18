@@ -1,0 +1,3 @@
+## 2024-05-24 - Semantic HTML and ARIA Labels for Icon Buttons
+**Learning:** Found a pattern in this app's custom UI components (like `Navbar.tsx`) where interactive icon-only elements were either missing `aria-label`s or built using non-semantic `div` elements instead of `<button>`, causing poor screen reader experiences and missing keyboard focus outlines (`focus-visible`).
+**Action:** Always ensure interactive components like triggers and icon buttons use semantic `<button>` tags, accept and set `aria-label` (and `title` for hover tooltips), and include `focus-visible:outline-none focus-visible:ring-2` to guarantee keyboard accessibility.
