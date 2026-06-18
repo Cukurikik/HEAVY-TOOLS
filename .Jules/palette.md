@@ -1,0 +1,3 @@
+## 2026-03-22 - Missing ARIA Labels on Icon-Only Buttons
+**Learning:** In the Assistant page, several interactive buttons were relying solely on icons (e.g., `Paperclip`, `Mic`, `Send`, `StopCircle`) and hover titles without explicit ARIA labels. This causes screen readers to potentially skip these crucial interactions or announce them vaguely, making the primary assistant interface inaccessible for keyboard and screen reader users.
+**Action:** Always add `aria-label` to icon-only buttons, especially for main inputs and form submissions. Use clear, descriptive labels like "Attach file" or "Submit command" rather than just the icon's generic name.
